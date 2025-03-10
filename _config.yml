@@ -7,14 +7,11 @@
 title: Tey Bannerman
 email: tey.bannerman@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Tey Bannerman helps organisations harness the power of AI to transform how they
-   work and create. As an entrepreneur, product designer, and Partner at
-   McKinsey & Company, he's guided organisations through the maze of emerging tech 
-   without losing sight of what matters: creating value for real people.
+  Design-led AI strategy & implementation | AI & design expert
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: tey
-github_username:  teybannerman
+linkedin_username: teybannerman
 
 # Build settings
 theme: minima

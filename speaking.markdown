@@ -10,6 +10,8 @@ Drawing from hands-on experience as a product design leader, leading AI transfor
 
 My presentations combine energy and evidence - real-world examples, data-backed insights, and actionable frameworks that audiences can apply immediately. I've been told my talks strike the right balance between inspiring new thinking and providing practical take-home value.
 
+> Perhaps the best measure of a speaker's impact is being invited back. I'm proud to have been a repeat speaker at prestigious events including World AI Cannes Festival, Design Matters, and 3daysofdesign - where audiences consistently rate my sessions among their most valuable experiences.
+
 ## Speaking topics
 
 ### Leadership in the age of AI
@@ -26,7 +28,3 @@ Ethics isn't just a theoretical concern in AI - it's a practical implementation 
 
 ### Behavioural design for digital success
 The most sophisticated technology means nothing if it doesn't change human behaviour. I dig into the often-overlooked behavioural dimension of technology adoption, exploring how successful organisations account for how people actually make decisions, form habits, and respond to change. Learn practical techniques for designing digital experiences that align with human psychology.
-
-## Return engagements
-
-Perhaps the best measure of a speaker's impact is being invited back. I'm proud to have been a repeat speaker at prestigious events including World AI Cannes Festival, Design Matters, and 3daysofdesign - where audiences consistently rate my sessions among their most valuable experiences.
