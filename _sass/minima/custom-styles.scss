@@ -11,6 +11,14 @@ p, li, quote {
 	font-size: 1.8rem;
 }
 
+.home-strapline {
+	display: block;
+	font-size: 8.9rem;
+	font-weight: 900;
+	line-height: 0.75em;
+	padding-bottom: 0.4em;
+}
+
 h2 {
 	font-weight: 900;
 	font-size: 1.4rem;
@@ -24,7 +32,44 @@ h2 {
 	border-top: none;
 }
 
+.post-list {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.post-list > li {
+	border-radius: 5px;
+	border: 1px solid #ddd;
+	width: 214px;
+	padding: 16px;
+	margin-bottom: 18px;
+	margin-right: 18px;
+	padding-bottom: 24px;
+}
+
+.post-list > li h3 {
+	line-height: 1.6em;
+	padding-top: 12px;
+}
+
+.post-list > li h4 {
+	margin-top: 12px;
+	margin-bottom: 8px;
+	line-height: 1.4em;
+}
+
 .social-media-list {
 	display: block;
 }
 
+@media screen and (max-width: 850px) {
+	.home-strapline {
+		font-size: 5rem;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.post-list > li {
+		width: 180px;
+	}
+}

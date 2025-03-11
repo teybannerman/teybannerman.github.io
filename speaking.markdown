@@ -1,10 +1,11 @@
 ---
 layout: page
 title: Speaking
+strapline: Insights that spark action
 permalink: /speaking/
 ---
 
-I speak about the practical realities of implementing AI, leadership, and design in today's organisations. Not abstract theories or distant futures, but what's actually working right now - and what's harder than the headlines suggest.
+**I speak at global conferences and events about the practical realities of implementing AI, leadership, and design in today's organisations.** Not abstract theories or distant futures, but what's actually working right now - and what's harder than the headlines suggest.
 
 **Drawing from hands-on experience** as a product design leader, leading AI transformations, and building innovation capabilities across industries, I deliver insights you won't find in typical keynotes. I've been in the trenches, wrestling with the messy details of implementation, and those battle-tested insights form the core of every talk.
 
@@ -26,17 +27,25 @@ I speak about the practical realities of implementing AI, leadership, and design
 
 ## Speaking topics
 
-### Leadership in the age of AI
-As AI reshapes organizations, leadership approaches must evolve. I examine how successful leaders are adapting their decision-making processes, team structures, and management styles to thrive amid technological transformation. Based on research across diverse organizations and my experience guiding executive teams, I offer practical insights for leading with confidence in this new landscape.
-
-### Human-centered AI design
-Drawing from extensive experience designing AI-powered products and services, I explore how organizations can create digital experiences that combine technological intelligence with human judgment. Featuring practical approaches to designing AI that people actually want to use, trust, and benefit from in their daily lives.
-
-### Design & creativity as a competitive advantage
-I explore how organisations are using design methodologies to identify the right problems to solve, create more compelling solutions, and dramatically improve adoption. Discover how design approaches can be a powerful driver of business growth.
-
-### Responsible AI development
-Ethics isn't just a theoretical concern in AI - it's a practical implementation challenge. I share concrete approaches to building responsible AI, from identifying potential issues early to creating governance that enables rather than hinders innovation. Learn how forward-thinking organisations are addressing bias, transparency, and accountability while still moving quickly and creating business value.
-
-### Behavioural design for digital success
-The most sophisticated technology means nothing if it doesn't change human behaviour. I dig into the often-overlooked behavioural dimension of technology adoption, exploring how successful organisations account for how people actually make decisions, form habits, and respond to change. Learn practical techniques for designing digital experiences that align with human psychology.
+<ul class="post-list">
+	<li>
+		<h4>Leadership in the age of AI</h4>
+		As AI reshapes organizations, leadership approaches must evolve. I examine how successful leaders are adapting their decision-making processes, team structures, and management styles to thrive amid technological transformation. Based on research across diverse organizations and my experience guiding executive teams, I offer practical insights for leading with confidence in this new landscape.
+	</li>
+	<li>
+		<h4>Human-centered AI design</h4>
+		Drawing from extensive experience designing AI-powered products and services, I explore how organizations can create digital experiences that combine technological intelligence with human judgment. Featuring practical approaches to designing AI that people actually want to use, trust, and benefit from in their daily lives.
+	</li>
+	<li>
+		<h4>Design & creativity as a competitive advantage</h4>
+		I explore how organisations are using design methodologies to identify the right problems to solve, create more compelling solutions, and dramatically improve adoption. Discover how design approaches can be a powerful driver of business growth.
+	</li>
+	<li>
+		<h4>Responsible AI development</h4>
+		Ethics isn't just a theoretical concern in AI - it's a practical implementation challenge. I share concrete approaches to building responsible AI, from identifying potential issues early to creating governance that enables rather than hinders innovation. Learn how forward-thinking organisations are addressing bias, transparency, and accountability while still moving quickly and creating business value.
+	</li>
+	<li>
+		<h4>Behavioural design for digital success</h4>
+		The most sophisticated technology means nothing if it doesn't change human behaviour. I dig into the often-overlooked behavioural dimension of technology adoption, exploring how successful organisations account for how people actually make decisions, form habits, and respond to change. Learn practical techniques for designing digital experiences that align with human psychology.
+	</li>
+</ul>
