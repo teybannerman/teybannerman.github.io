@@ -6,11 +6,23 @@ permalink: /speaking/
 
 I speak about the practical realities of implementing AI, leadership, and design in today's organisations. Not abstract theories or distant futures, but what's actually working right now - and what's harder than the headlines suggest.
 
-Drawing from hands-on experience as a product design leader, leading AI transformations, and building innovation capabilities across industries, I deliver insights you won't find in typical keynotes. I've been in the trenches, wrestling with the messy details of implementation, and those battle-tested insights form the core of every talk.
+**Drawing from hands-on experience** as a product design leader, leading AI transformations, and building innovation capabilities across industries, I deliver insights you won't find in typical keynotes. I've been in the trenches, wrestling with the messy details of implementation, and those battle-tested insights form the core of every talk.
 
-My presentations combine energy and evidence - real-world examples, data-backed insights, and actionable frameworks that audiences can apply immediately. I've been told my talks strike the right balance between inspiring new thinking and providing practical take-home value.
+**My presentations combine energy and evidence** - real-world examples, data-backed insights, and actionable frameworks that audiences can apply immediately. I've been told my talks strike the right balance between inspiring new thinking and providing practical take-home value; and  audiences consistently rate my sessions among their most valuable experiences.
 
-> Perhaps the best measure of a speaker's impact is being invited back. I'm proud to have been a repeat speaker at prestigious events including World AI Cannes Festival, Design Matters, and 3daysofdesign - where audiences consistently rate my sessions among their most valuable experiences.
+**A sampling of conferences and events I've taken the stage at:**
+- World AI Cannes Festival, Cannes (2025, 2024, 2023)
+- Design Matters, Copenhagen (2025, 2024, 2022, 2018)
+- 3daysofdesign, Copenhagen (2025, 2024)
+- Founders Forum Global, Oxford (2024)
+- AI Festival, Milan (2025)
+- Packaging Innovations, Birmingham (2025)
+- Bucharest Tech Week, Bucharest (2024)
+- Leading Design, London (2024)
+- AI Hot 100 Conference, New York (2024)
+- Miro Canvas Leadership Summit, London (2024)
+- Nedbank Create, Johannesburg (2023)
+- Google Industry Webinar Series (2023)
 
 ## Speaking topics
 

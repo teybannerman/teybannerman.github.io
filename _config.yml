@@ -8,15 +8,30 @@ title: Tey Bannerman
 email: tey.bannerman@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   Design-led AI strategy & implementation | AI & design expert
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: / # the subpath of your site, e.g. /blog
+url: http://teybannerman.github.io # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: tey
 linkedin_username: teybannerman
 
+author:
+  name: Tey Bannerman
+  email: tey.bannerman@gmail.com
+
+minima:
+  social_links:
+    - title: LinkedIn @teybannerman
+      icon: linkedin
+      url: "https://linkedin.com/in/teybannerman"
+    - title: Twitter @tey
+      icon: x-twitter
+      url: "https://x.com/tey"
+
 # Build settings
-theme: minima
+#theme: minima
+remote_theme: jekyll/minima
 plugins:
   - jekyll-feed
+  - jekyll-remote-theme
 
 # Exclude from processing.
 # The following items will not be processed, by default.
