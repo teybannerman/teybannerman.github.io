@@ -25,6 +25,12 @@ permalink: /speaking/
 - Nedbank Create, Johannesburg (2023)
 - Google Industry Webinar Series (2023)
 
+## What people say
+
+> Tey cuts through the usual tech hyperbole with refreshing clarity and unexpected humor. He speaks about complex technical concepts with the rare combination of depth and accessibility that comes from having both built the systems and led the teams.
+>
+> Attendee, WebSummit
+
 ## Speaking topics
 
 <ul class="post-list">

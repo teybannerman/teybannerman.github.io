@@ -3,6 +3,7 @@ layout: base
 ---
 <article class="page post">
 
+{% unless page.hidetitle %}
   {%- if page.strapline -%}
   <header class="home-strapline">
     {{ page.strapline }}
@@ -12,6 +13,7 @@ layout: base
     <h1 class="post-title">{{ page.title | escape }}</h1>
   </header>
   {%- endif -%}
+{% endunless %}
 
   <div class="post-content">
     {{ content }}

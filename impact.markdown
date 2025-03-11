@@ -23,9 +23,15 @@ _12-month transformation_
 
 ## Feeding 10 million: The digital delivery revolution
 
-When digital challengers threatened to disrupt the food delivery landscape, I led a comprehensive digital experience transformation for a global food chain, scaling across 16 countries. By establishing robust design systems, data-driven decision frameworks, and seamless cross-regional coordination, we created a best-in-class platform that defended market share while opening new revenue streams. This wasn't just a technical upgrade—it was a complete reimagining of how 10+ million customers interact with a beloved global brand.
+When digital challengers threatened to disrupt the food delivery landscape, I led a comprehensive digital experience transformation for a global food chain, scaling across 16 countries. By establishing robust design systems, data-driven decision frameworks, and seamless cross-regional coordination, we created a best-in-class platform that defended market share while opening new revenue streams. This wasn't just a technical upgrade - it was a complete reimagining of how 10+ million customers interact with a beloved global brand.
 
 _14-month global implementation_
+
+## The trust exchange: Turning data privacy into a brand advantage ##
+
+I led a transformative project with a multinational cosmetics conglomerate that redefined how their portfolio of iconic brands approaches consumer data. What began as a data strategy exploration evolved into something far more fundamental: creating a new relationship between brands and consumers based on transparency, control, and mutual value. We designed an innovative experience that made this value exchange transparent and intuitive. The solution allowed consumers to see precisely what data was being collected across all touchpoints, understand how it benefited their experience, and easily control their preferences - all while maintaining a seamless brand experience. The results transformed the conglomerate's approach to consumer relationships, substantially improving consumer trust metrics, and positioning their prestige brands as leaders in consumer-centric data practices before regulatory changes made it mandatory.
+
+_3-month global initiative_
 
 ## Formula for the future: Pioneering generative AI for global brands
 
