@@ -27,6 +27,7 @@ p, li, quote {
 h2 {
 	font-weight: 900;
 	font-size: 1.4rem;
+	line-height: 1.1em;
 }
 
 .site-title {
@@ -35,6 +36,10 @@ h2 {
 }
 .site-header {
 	border-top: none;
+}
+
+.post-list-heading {
+	padding-top: 24px;	
 }
 
 .post-list {
@@ -71,10 +76,18 @@ h2 {
 	.home-strapline {
 		font-size: 5rem;
 	}
-}
-
-@media screen and (max-width: 600px) {
 	.post-list > li {
 		width: 180px;
 	}
 }
+
+@media screen and (max-width: 600px) {
+	.home-strapline {
+		font-size: 4rem;
+	}
+	.post-list > li {
+		width: 100%;
+		margin-right: 0;
+	}
+}
+
