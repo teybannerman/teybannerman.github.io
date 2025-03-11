@@ -11,7 +11,7 @@ permalink: /about/
 
 **What sets my approach apart** is a relentless focus on solving real problems rather than chasing technological novelty. I believe the best innovations are those that enhance human capabilities without creating new dependencies, and that's the philosophy I bring to every engagement, whether I'm advising executive teams, running interactive workshops, or speaking at global conferences.
 
-### The beliefs behind my work
+## The beliefs behind my work
 
 <ul class="post-list">
 	<li>
