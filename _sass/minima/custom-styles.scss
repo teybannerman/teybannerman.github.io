@@ -1,6 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 body {
-	font-family: Roboto, Open Sans, Helvetica Neue, Helvetica, Arial, sans serif;
+	font-family: Helvetica Neue, Helvetica, Arial, sans serif;
+}
+
+.site-title, .home-strapline, h1, h2, h3, h4 {
+	font-family: Inter, Helvetica Neue, Helvetica, Arial, sans serif;
 }
 
 p, li, quote {
@@ -14,7 +19,7 @@ p, li, quote {
 .home-strapline {
 	display: block;
 	font-size: 8.9rem;
-	font-weight: 900;
+	font-weight: 700;
 	line-height: 0.75em;
 	padding-bottom: 0.4em;
 }
@@ -25,13 +30,13 @@ p, li, quote {
 
 
 h2 {
-	font-weight: 900;
+	font-weight: 700;
 	font-size: 1.4rem;
 	line-height: 1.1em;
 }
 
 .site-title {
-	font-weight: 900;
+	font-weight: 700;
 
 }
 .site-header {
