@@ -77,6 +77,10 @@ h2 {
 	display: block;
 }
 
+.footer-col p {
+	font-size: 0.86em;
+}
+
 @media screen and (max-width: 850px) {
 	.home-strapline {
 		font-size: 5rem;
@@ -95,5 +99,17 @@ h2 {
 		width: 100%;
 		margin-right: 0;
 	}
+	.footer-col {
+		display: flex;
+	}
+	.footer-col p {
+		font-size: 0.75em;
+	}
 }
 
+@media screen and (max-width: 420px) {
+	.home-strapline {
+		font-size: 3.1rem;
+		line-height: 0.82em;
+	}
+}
