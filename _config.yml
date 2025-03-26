@@ -6,10 +6,10 @@
 
 title: Tey Bannerman
 email: tey.bannerman@gmail.com
-description: >- # this means to ignore newlines until "baseurl:"
-  Design-led AI strategy & implementation || AI & design expert
-baseurl: / # the subpath of your site, e.g. /blog
-url: https://teybannerman.github.io # the base hostname & protocol for your site, e.g. http://example.com
+description: >- 
+  AI x Design, Strategy & implementation, Human-centered AI expert
+baseurl: /
+url: https://teybannerman.github.io
 twitter_username: tey
 linkedin_username: teybannerman
 
