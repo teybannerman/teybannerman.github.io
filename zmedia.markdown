@@ -12,6 +12,9 @@ If you're interested in having similar discussions at your event or publication,
 
 ## Press I've been featured in
 
+April 2025: FDM UK - 
+[How AI and collaboration are transforming packaging and supply chains][m9]
+
 February 2025: Packaging Insights - 
 [Generative AI and packaging: McKinsey design expert on new tech and human creativity][m2]
 
@@ -51,3 +54,4 @@ July 2019: McKinsey.com -
 [m6]: https://packagingeurope.com/comment/an-introduction-to-chaos-packaging/12208.article
 [m7]: https://www.dairyreporter.com/Article/2025/02/17/using-artificial-intelligence-ai-to-design-packaging/
 [m8]: https://www.mckinsey.com/about-us/new-at-mckinsey-blog/a-new-world-record-for-formula-e-propelled-by-mckinseys-ai
+[m9]: https://foodanddrinkmanufacturinguk.co.uk/the-hidden-revolution-how-ai-and-collaboration-are-transforming-packaging-and-supply-chains/
