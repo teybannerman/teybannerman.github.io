@@ -23,7 +23,7 @@ minima:
       icon: linkedin
       url: "https://linkedin.com/in/teybannerman"
     - title: Twitter @tey
-      icon: x-twitter
+      icon: twitter
       url: "https://x.com/tey"
 
 # Build settings
