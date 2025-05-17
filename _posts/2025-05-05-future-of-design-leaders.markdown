@@ -19,18 +19,11 @@ The need for human-centered innovation has never been greater. The complexity of
 
 The diagnosis isn't that design leadership is dying - it's that yesterday's design leadership model simply cannot survive tomorrow's realities.
 
-Ten years ago, leaders typically focused on 4-5 critical issues at any one point in time. Today, that number has doubled to 9.5. 
-
-[CHART: McKinsey critical issues comparison - 2014: 4.5 vs 2024: 9.5]
-[LINK: McKinsey Leadership in a Post-Pandemic World report]
-
-Yet somehow we expect the same leadership models, mindsets and methods to handle twice the complexity. It's like trying to run modern software on a computer from 2014 - technically possible but painfully inefficient and ultimately unsustainable.
-
 ## The uncomfortable truth about design leadership today
 
-When I began my career, a design leader needed mastery of craft, team management, and enough business acumen to negotiate for resources. The rest could be delegated or diffused through carefully constructed processes.
+When I began my career, a design leader needed mastery of craft, team management, and just enough business acumen to negotiate for resources. The rest could be delegated or diffused through carefully constructed processes.
 
-That era is emphatically over.
+That era is over.
 
 The evolving landscape around us demands an equally profound evolution in how we lead. The evidence is everywhere if we're willing to see it.
 
@@ -42,8 +35,6 @@ Our tools have transformed dramatically. The UXTools annual survey shows how rap
 [LINK: UXTools annual survey data]
 
 And that was before generative AI entered the chat. Recent data shows 83% of creatives have already experimented with AI tools in their work, fundamentally changing what's possible, who can do what, and how fast.
-
-[LINK: Adobe's State of Creativity report]
 
 As our tools evolve from enablers of execution to partners in creation, the design leader's role must evolve from craft master to possibility orchestrator.
 
