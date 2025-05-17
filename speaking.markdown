@@ -14,6 +14,7 @@ permalink: /speaking/
 **A sampling of conferences and events I've taken the stage at:**
 - World AI Cannes Festival, Cannes (2025, 2024, 2023)
 - Design Matters, Copenhagen (2025, 2024, 2022, 2018)
+- iF Design Trend Conference, Berlin (2025)
 - 3daysofdesign, Copenhagen (2025, 2024)
 - Founders Forum Global, Oxford (2024)
 - AI Festival, Milan (2025)

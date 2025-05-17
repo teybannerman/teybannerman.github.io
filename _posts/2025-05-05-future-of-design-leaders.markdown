@@ -4,7 +4,7 @@ title:  "The one about the future of design leadership"
 date:   2025-05-05 22:11:51 +0000
 categories: design leadership 
 ---
-# The necessary evolution: why yesterday's design leader won't survive tomorrow
+## The necessary evolution: why yesterday's design leader won't survive tomorrow
 
 Let's start with some uncomfortable truths:
 
@@ -15,11 +15,13 @@ Let's start with some uncomfortable truths:
 
 The evidence suggests design leadership as we've known it is on life support. And yet...
 
-The need for human-centered innovation has never been greater. The complexity of our challenges has never been higher. The potential for design to shape not just products but entire systems has never been more apparent.
+**The need for human-centered innovation has never been greater.** The complexity of our challenges has never been higher. The potential for design to shape not just products but entire systems has never been more apparent.
 
 The diagnosis isn't that design leadership is dying - it's that yesterday's design leadership model simply cannot survive tomorrow's realities.
 
 ## The uncomfortable truth about design leadership today
+
+I've led teams from startups to the largest companies in the world. I've been in countless executive boardrooms where I was 'the first designer they'd ever met at this level,'. But the path to leadership wasn't mapped for designers when I began. This lack of established pathways made me acutely aware of how design leadership has had to improvise and evolve - often painfully - to be relevant in tomorrow's world.
 
 When I began my career, a design leader needed mastery of craft, team management, and just enough business acumen to negotiate for resources. The rest could be delegated or diffused through carefully constructed processes.
 
@@ -31,10 +33,9 @@ The evolving landscape around us demands an equally profound evolution in how we
 
 Our tools have transformed dramatically. The UXTools annual survey shows how rapidly our design toolsets have expanded and shifted.
 
-[CHART: UXTools survey visualization showing tool evolution from 2017-2023]
-[LINK: UXTools annual survey data]
+<div class="flourish-embed flourish-bar-chart-race" style="margin-bottom:12px" data-src="visualisation/20111188?820669"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/visualisation/20111188/thumbnail" width="100%" alt="bar-chart-race visualization" /></noscript></div>
 
-And that was before generative AI entered the chat. Recent data shows 83% of creatives have already experimented with AI tools in their work, fundamentally changing what's possible, who can do what, and how fast.
+Few other disciplines see such rapid and constant change in the tools that are central to their work. And that was before generative AI entered the chat. Recent data shows 83% of creatives have already experimented with AI tools in their work, fundamentally changing what's possible, who can do what, and how fast.
 
 As our tools evolve from enablers of execution to partners in creation, the design leader's role must evolve from craft master to possibility orchestrator.
 
@@ -42,38 +43,29 @@ As our tools evolve from enablers of execution to partners in creation, the desi
 
 Meanwhile, below the surface of productivity metrics and delivery schedules, there's a human cost that's becoming impossible to ignore.
 
-[CHART: Burnout quadrant showing 49% "stretching", 13% "drowning", 29% "faring well", 9% "managing"]
-[LINK: McKinsey's Well at Work study]
+The [McKinsey Health Institute](https://www.mckinsey.com/mhi/our-insights/addressing-employee-burnout-are-you-solving-the-right-problem) surveyed 15,000 employees across 15 countries, on every continent around the world. And found that over half of employees are not faring well at work, either "stretching" (functioning but overwhelmed by work stressors), "drowning" (underperforming and overwhelmed), or "managing" (functioning poorly but low burnout symptoms). Only 49% are effectively addressing work stressors while growing and developing.
 
-Nearly half our teams are "stretching" - functioning well but not coping well, overwhelmed by work stressors. Another 13% are "drowning" - both underperforming and overwhelmed. Only 29% are truly thriving.
-
-And the primary culprit isn't workload or complexity - it's toxic workplace behaviour, which research shows is the biggest driver of negative workplace outcomes.
+And the primary culprit isn't workload or complexity - it's toxic workplace behaviour, which functions as an innovation tax, costing organizations both talent and creativity. McKinsey's research shows employees who experience high levels of toxic behavior at work are 8x more likely to experience burnout symptoms, and 6x more likely to want to leave the company.
 
 The design leader who can't create psychological safety while navigating complexity won't have a team left to lead.
 
 ## Generation shift: the myths and realities
 
-By next year, Generation Z will account for 27% of the global workforce, bringing different expectations, working styles, and values into our teams.
+The most significant workforce transformation since the Industrial Revolution is happening right now: for the first time in history, five generations work side by side, with Gen Z already accounting for almost a third of the global workforce.
 
-[LINK: Zurich 'Future of work' study, February 2024]
+But the real story isn't just the rise of Gen Z - it's that the diversity of perspectives, expectations, and working styles has never been greater.
 
-But the real story isn't just the rise of Gen Z - it's that for the first time in history, our teams routinely include 4-5 generations working side by side. From Baby Boomers to Generation Alpha, the diversity of perspectives, expectations, and working styles has never been greater.
+![What makes people stay at their jobs](/images/generational-differences.jpg)
 
-[LINK: McKinsey "Gen-What: Debunking age-based myths" article]
+New [research](https://www.mckinsey.com/capabilities/people-and-organizational-performance/our-insights/gen-what-debunking-age-based-myths-about-worker-preferences) challenges the simplistic narratives we tell about generational differences. While Gen Z does indeed prioritize purpose and meaning over pure compensation, they still value adequate compensation and workplace flexibility. The difference isn't what they want but how willing they are to leave when they don't get it.
 
-McKinsey's research challenges the simplistic narratives we tell about generational differences. While Gen Z does indeed prioritize purpose and meaning over pure compensation, they still value adequate compensation and workplace flexibility. The difference isn't what they want but how willing they are to leave when they don't get it.
-
-[CHART: "What makes people stay in their job" visualization]
-
-As the Deloitte Global Millennial Survey shows, younger generations are significantly less tolerant of toxic workplace behaviors and poor management practices. They expect companies to have a positive impact not just on their careers, but on society.
-
-[LINK: Deloitte Global Millennial Survey]
+As the [Deloitte Global Millennial Survey](https://www.deloitte.com/global/en/issues/work/genz-millennial-survey.html) shows, younger generations are significantly less tolerant of toxic workplace behaviors and poor management practices. They expect companies to have a positive impact not just on their careers, but on society.
 
 What this means for design leadership is profound: the command-and-control approaches that might have been tolerated by previous generations simply won't fly with the new generation of talent. The days of "paying your dues" through grueling hours and thankless tasks are over - not because young designers are lazy, but because they're wise enough to recognize that there are better ways to work and learn.
 
 ## The four evolutions every design leader must embrace
 
-As the old saying goes, "Change happens when the pain of staying the same is greater than the pain of change." For design leadership, we've reached that tipping point.
+One of my favourite saying is, **"Change happens when the pain of staying the same is greater than the pain of change."** For design leadership, we've reached that tipping point.
 
 The evolution needs to happen across four critical dimensions:
 1. How we create value
@@ -87,13 +79,12 @@ Let's unpack each one.
 
 The first shift involves moving from creating value through competitive differentiation to unlocking value through collaborative creation.
 
-As one Financial Services Design Director put it: "The purpose of design is to unlock the creative potential of the organisation."
+![The evolving role of design](/images/design-org-evolution.jpg)
 
-[LINK: EY Seren Leading Design Works 2024]
 
-This isn't just philosophical - it's practical. When designers help design the business itself - its processes, ways of working, and business models - the entire business performs better.
+As one Design Director at a large bank put it in EY Seren's [Leading Design Works](https://www.leadingdesign.works/) report, "The purpose of design is to unlock the creative potential of the organisation."
 
-[CHART: Yesterday/Today/Tomorrow design leadership positioning showing evolution from separated functions to integrated co-creation]
+McKinsey's Business Value of Design study found that the highest-performing organizations embedded design in strategic planning processes and gave designers influence over core value-creation functions - not just product. When designers help design the business itself - its processes, ways of working, and business models - the entire business performs better.
 
 Yesterday's design leader defended territory and fought for a seat at the table. Tomorrow's design leader doesn't need a seat because they're helping build a better table.
 
@@ -112,7 +103,7 @@ Research shows that just four kinds of behavior account for 89% of leadership ef
 
 Notice what's not on the list: technical brilliance, charismatic presentations, or strategic genius. The most effective leaders focus on bringing people together to solve problems that matter.
 
-In an industry obsessed with pixel-perfect execution, perhaps the most radical act is prioritising people over perfection.
+In an industry obsessed with perfect execution, perhaps the most radical act is prioritising people over perfection.
 
 ## Evolution 3: beyond command, to collaboration
 
@@ -124,10 +115,9 @@ But the pyramid is crumbling under the weight of today's challenges.
 
 When requirements change weekly, technologies emerge monthly, and business models pivot quarterly, rigid hierarchies become innovation bottlenecks. When teams need to adapt rapidly to shifting contexts, the lag time between front-line discovery and executive decision becomes unsustainable.
 
-[CHART: Team comparison table with cycling/relay/rowing models]
-[LINK: Harvard Business Review article on team structures]
+I'm a huge proponent of a new, [research-backed approach](https://www.mckinsey.com/capabilities/people-and-organizational-performance/our-insights/go-teams-when-teams-get-healthier-the-whole-organization-benefits?cid=soc-web) that debunks common myths about how teams operate. Rather than one fixed structure, effective design leaders need to operate across three team archetypes:
 
-Rather than one fixed structure, effective design leaders now need to operate across three team archetypes:
+![Types of team construct](/images/team-types.jpg)
 
 - **Cycling teams**: Flexible structures where members maintain significant individual autonomy while contributing to collective success. Perfect for exploration and innovation where the path forward isn't clear.
 
@@ -137,13 +127,11 @@ Rather than one fixed structure, effective design leaders now need to operate ac
 
 The mark of tomorrow's design leader isn't mastery of a single team model, but the ability to shift between models based on the challenge at hand - sometimes even running different models simultaneously for different workstreams.
 
-This isn't just organizational theory - it's survival strategy. In a world where adaptability trumps efficiency, the pyramid is simply too slow, too rigid, and too disconnected from the front lines of user interaction to compete.
-
 ## Evolution 4: beyond outcomes, to impact
 
-The final evolution involves what we focus on - shifting from metrics and outcomes to genuine impact.
+The final evolution transforms what we focus on - moving beyond measuring outputs and individual performance toward cultivating environments where transformative impact can emerge. It's the shift from 'What did we deliver?' to 'What did we enable?'
 
-[CHART: Side-by-side questions comparison showing the evolution of leadership questions]
+![The questions we ask ourselves must evolve](/images/questions-leaders-ask.jpg)
 
 Yesterday's design leader asked:
 - What legacy will I leave?
@@ -163,7 +151,7 @@ Tomorrow's design leader asks:
 
 The shift is subtle but profound - from individual achievement to collective purpose, from personal vision to shared direction, from fixing what's broken to building what's possible.
 
-## From MPMD to HCVA: the new design leader archetypes
+## The new design leader DNA
 
 These four evolutions together represent a fundamental shift in the archetype of design leadership:
 
@@ -179,28 +167,38 @@ To:
 - Visionary
 - Architect
 
-This isn't just semantic wordplay. It's a recognition that yesterday's design leader - however skilled, however respected - simply won't survive tomorrow's challenges.
+This, simply put, is recognition that yesterday's design leader - however skilled, however respected - simply won't survive tomorrow's challenges.
+
+These four evolutions aren't separate initiatives. They're interconnected facets of a coherent leadership approach. How you create value shapes how you show up, which influences how you organize teams, which determines what you focus on.
+
+The design leader who evolves in all four dimensions creates a virtuous cycle where each dimension reinforces the others. For example, when you shift from competitive differentiation to co-creation (value evolution), you naturally need to embrace psychological safety and openness (showing up evolution), which requires more flexible team structures (organization evolution), and drives you to focus on collective purpose rather than individual legacy (focus evolution).
+
+Conversely, getting stuck in one dimension creates drag on the others. A leader might embrace more collaborative team structures but maintain an outdated approach to value creation, limiting the potential impact of organizational changes.
 
 ## But can this really work?
 
 Let's be honest - this evolution isn't easy. Established organizations have built-in resistance to changing leadership models. Current design leaders may lack some of the skills needed for this new paradigm. And the very real pressures of quarterly results can make long-term transformation feel like a luxury.
 
-But evolution doesn't require revolution. I've xxxdd. with these concrete steps:
+But evolution doesn't require revolution. Through my work leading McKinsey's European design practice and partnering with C-suites across industries, I've collected approaches that work even in highly regulated, hierarchical environments. These aren't theoretical ideals - they're battle-tested tactics that have delivered measurable results in boardrooms where I was often the first design leader ever present:
 
 1. **Implement 30-day design sprints focused on business processes, not just products**
    Create a cross-functional team with explicit permission to redesign one internal process that frustrates customers. Give them resources, authority, and a 30-day deadline.
 
-2. **Establish weekly "creative dialogue" sessions between design and finance/strategy teams**
-   Schedule structured 60-minute sessions where design leaders and business leaders jointly examine metrics, challenge assumptions, and identify opportunities. Document decisions and revisit progress bi-weekly.
+2. **Establish fortnightly dialogue sessions between design and strategy/finance teams**
+   Schedule structured 60-minute sessions where design leaders and business leaders jointly examine metrics, challenge assumptions, and identify opportunities. Document decisions and revisit progress every 2 weeks.
 
 3. **Create a "team structure pilot" for your next major project**
-   Explicitly design one team as a "cycling team," another as a "relay team," and another as a "rowing team." Assign similar projects and compare results on speed, quality, and team satisfaction.
+   Explicitly design one team as a "cycling team," "relay team," or "rowing team" - ensuring they have the necesary support and structures needed for each team construct to thrive. Assign similar projects and compare results on speed, quality, and team satisfaction.
 
-4. **Implement "question swaps" in leadership meetings**
-   Replace "What's broken that needs fixing?" with "What becomes possible if we imagine something better?" in meeting agendas. Document how this shift changes the conversation and decisions.
+4. **Implement the '10X vs. 10%' decision framework**
+   For every major initiative, explicitly evaluate both incremental improvements (10%) and transformative approaches (10X). Create a standard template that requires teams to present both paths and their implications. Google uses this approach to prevent modest thinking from becoming the default position.
 
-5. **Build a "possibility scorecard" alongside your performance metrics**
-   Add 3-5 forward-looking metrics to every reporting cycle that measure potential rather than just performance. Track these over time to show the impact of more evolved leadership approaches.
+5. **Develop an "enablement scorecard" alongside your performance metrics**
+   Build a measurement system focused on the conditions that enable happy, effective, innovative teams. Track metrics like 'creative confidence' (measured through team self-assessments), 'psychological safety' (using validated assessment tools), 'collaboration density' (frequency of cross-functional work), and 'learning investment' (time dedicated to skill development). This system creates visibility and accountability for the organizational characteristics that traditional metrics miss.
+
+Of course, this evolution will look different depending on your context. In-house leaders at product companies might focus first on co-creating business strategy. At an agency, you might prioritize new team structures for client responsiveness. Consultancy leaders might emphasize evolving from director to catalyst. The path varies, but the destination remains the same.
+
+Financial services organizations, for example, might need to emphasize the evolution of focus first - shifting from compliance-driven metrics to possibility-driven questions - while technology companies might need to prioritize the evolution of team structures to unlock existing creative potential.
 
 ## The ultimate question
 
@@ -212,4 +210,4 @@ Because in design leadership, as in design itself, the most powerful question is
 
 ---
 
-_This article is based on talks given at Leading Design in October 2024 and the iF Design Conference in April 2025. If you'd like to discuss these ideas further or explore how they might apply to your organisation, connect with me on [LinkedIn](http://linkedin.com/in/teybannerman)._
+_This article is based on talks I gave at Leading Design in October 2024 and the iF Design Conference in April 2025. If you'd like to discuss these ideas further or explore how they might apply to your organisation, connect with me on [LinkedIn](http://linkedin.com/in/teybannerman)._
