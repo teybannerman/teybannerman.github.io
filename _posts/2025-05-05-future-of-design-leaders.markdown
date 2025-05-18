@@ -2,7 +2,7 @@
 layout: post
 title:  "The one about the future of design leadership"
 date:   2025-05-05 22:11:51 +0000
-categories: design leadership 
+categories: design leadership longform
 ---
 ## The necessary evolution: why yesterday's design leader won't survive tomorrow
 
@@ -92,10 +92,7 @@ Yesterday's design leader defended territory and fought for a seat at the table.
 
 The second evolution involves how we show up as leaders - moving beyond performance expectations to embracing human wholeness.
 
-[CHART: Leadership behaviors diagram highlighting the four behaviors that account for 89% of leadership effectiveness]
-[LINK: McKinsey Organizational Health Index]
-
-Research shows that just four kinds of behavior account for 89% of leadership effectiveness:
+[Research shows](https://www.mckinsey.com/featured-insights/leadership/decoding-leadership-what-really-matters) that just four kinds of behavior account for 89% of leadership effectiveness:
 1. Solving problems effectively
 2. Operating with a strong results orientation
 3. Seeking different perspectives
