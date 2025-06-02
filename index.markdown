@@ -8,7 +8,7 @@ strapline: Design the future deliberately
 
 At 14, I learned to code. Started my first web development company at 15. Then systematically conquered every discipline that touches technology - from pixel-perfect user interfaces to delivering business cases in Fortune 500 boardrooms. Software engineer. Designer. Strategist. Leader.
 
-At McKinsey & Company - the global consultancy that advises 90% of the world's largest companies - I rose to Partner and spent nine years building their digital and design capabilities while leading AI transformations hands-on.
+At McKinsey & Company - the global consultancy that advises 90% of the world's largest companies - I rose to Partner and spent nine years building their digital, design and customer experience capabilities while leading AI transformations hands-on.
 
 Before that, I led product teams at enterprises across three continents, shipping experiences for millions of users.
 

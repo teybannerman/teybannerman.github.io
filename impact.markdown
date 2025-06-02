@@ -5,9 +5,9 @@ strapline: Impact that endures
 permalink: /impact/
 ---
 
-Concept. Launch. Scale. My work - from financial services to retail, from startup environments to global enterprises - covers the full spectrum of product development and transformation.
+Concept. Build. Launch. Scale. From financial services to retail, from startup environments to global enterprises, my hands-on experience covers the full spectrum of product development and transformation.
 
-The impact featured here represents my commitment to leading teams through complex challenges while remaining hands-on with critical aspects of delivery. Each case study reflects my belief that building and growing successful products requires the ability to navigate the messy realities of implementation, scale solutions effectively, and create sustainable results that outlast initial excitement.
+The cases featured here are a small window into the products I've built and teams I've led, and represents my commitment to leading through complex challenges while remaining hands-on with critical aspects of delivery. Each  reflects my belief that building and growing successful products requires the ability to navigate the messy realities of implementation, scale solutions effectively, and create sustainable results that outlast initial excitement.
 
 ## Human + AI: Reimagining financial guidance together
 
@@ -29,7 +29,7 @@ _14-month global implementation, founding Head of Customer Experience_
 
 ## The trust exchange: Turning data privacy into a brand advantage ##
 
-I led a transformative project with a multinational cosmetics conglomerate that redefined how their portfolio of iconic brands approaches consumer data. What began as a data strategy exploration evolved into something far more fundamental: creating a new relationship between brands and consumers based on transparency, control, and mutual value. We designed an innovative experience that made this value exchange transparent and intuitive. The solution allowed consumers to see precisely what data was being collected across all touchpoints, understand how it benefited their experience, and easily control their preferences - all while maintaining a seamless brand experience. The results transformed the conglomerate's approach to consumer relationships, substantially improving consumer trust metrics, and positioning their prestige brands as leaders in consumer-centric data practices before regulatory changes made it mandatory.
+I led a transformative initiative with a multinational cosmetics conglomerate that redefined how their portfolio of iconic brands approaches consumer data. What began as a data strategy exploration evolved into something far more fundamental: creating a new relationship between brands and consumers based on transparency, control, and mutual value. We designed an innovative experience that made this value exchange transparent and intuitive. The solution allowed consumers to see precisely what data was being collected across all touchpoints, understand how it benefited their experience, and easily control their preferences - all while maintaining a seamless brand experience. The results transformed the conglomerate's approach to consumer relationships, substantially improving consumer trust metrics, and positioning their prestige brands as leaders in consumer-centric data practices before regulatory changes made it mandatory.
 
 _3-month global initiative_
 
