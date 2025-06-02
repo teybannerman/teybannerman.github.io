@@ -15,10 +15,11 @@ I was explaining to an audience of designers, researchers and innovators why the
 
 At the time, a lot of my work was helping banks and retailers build and extract meaningful insight from large-scale AI models: automating processes, personalising experiences, predicting customer behaviour. The results were promising, but something was missing: integration with the workflows and expectations of real people. We were seeing technically impressive systems that people either couldn't understand or didn't trust.
 
-Working with the brilliant Allison Row, Suzanne Mouton, and Ellen Sundh, we developed a framework that placed human context at the centre vs as an afterthought. It emphasised:
-• Bringing researchers/designers into technical decisions: what data to use, which biases to avoid, which outcomes to optimise for
-• Starting with human problems, not technical possibilities
-• Creating feedback loops that evolve with user behaviour
+Working with the brilliant Allison Rowe, Suzanne Mouton, and Ellen Sundh, we developed a framework that placed human context at the centre vs as an afterthought. It emphasised:
+
+* Bringing researchers/designers into technical decisions: what data to use, which biases to avoid, which outcomes to optimise for
+* Starting with human problems, not technical possibilities
+* Creating feedback loops that evolve with user behaviour
 
 It wasn't revolutionary. But it bridged an important gap: connecting the people who understand technology with those who understand humans. It challenged the prevailing approach of treating AI as a purely technical exercise. And when we adopted this we saw dramatically higher adoption rates and measurable business impact.
 
@@ -38,3 +39,10 @@ If you're a designer, your expertise has never been more valuable. Don't just de
 If you're a data scientist/engineer, your technical brilliance multiplies in impact when paired with human insight. Invite designers into your process early, and measure success by real-world impact.
 
 If you're an executive leading digital/innovation, your most strategic move isn't accelerating AI adoption, but ensuring it happens at the intersection of technical possibility and human reality. Build teams that bridge these worlds from day one.
+
+-
+
+
+_This post was adapted from my original [LinkedIn post][li-link] published in May 2025._
+
+[li-link]: https://www.linkedin.com/posts/teybannerman_this-is-me-6-years-ago-september-2019-taking-activity-7333035502196977665-FUdn?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAGPfuABFdT2X7kv4xKZw0YytrrL5oqGPWQ
