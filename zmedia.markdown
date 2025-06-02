@@ -5,12 +5,18 @@ strapline: Media
 permalink: /media/
 ---
 
-Not just another talking head. I bring lived experience, hands-on insights, and bombastic style to conversations about AI, design, and human experience.
+I don't just talk about the future of AI and design - I've spent decades building it. My perspective comes from hands-on experience creating systems that millions use, combined with strategic leadership at the highest levels of business. I bring real implementation experience to conversations that are often dominated by theory.
 
-If you're interested in having similar discussions at your event or publication, let's talk.
+Interested in this perspective for your event or publication? Let's talk.
 
 
 ## Press I've been featured in
+
+May 2025: 3daysofdesign - 
+[Interview: Un/Real - how we move beyond binary thinking about AI, into a more nuanced dialogue](https://www.3daysofdesign.dk/post/unreal)
+
+May 2025: Advising the Advisors: AI in Consulting Unlocked
+[Podcast: Why Most AI Projects Fail - Trust, Design & Adoption](https://advisingtheadvisorspod.com/e/2nxzymjn-why-most-ai-projects-fail-mckinsey-s-tey-bannerman-on-trust-design-adoption)
 
 April 2025: FDM UK - 
 [How AI and collaboration are transforming packaging and supply chains][m9]
