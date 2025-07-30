@@ -1,8 +1,8 @@
 ---
 layout: page
-title: Speaking
 strapline: Insights that spark action
 permalink: /speaking/
+
 ---
 
 **I speak at global conferences and events about the practical realities of implementing AI, leadership, and design in today's organisations.** Not abstract theories or distant futures, but what's actually working right now - and what's harder than the headlines suggest.
@@ -56,3 +56,7 @@ permalink: /speaking/
 		The most sophisticated technology means nothing if it doesn't change human behaviour. I dig into the often-overlooked behavioural dimension of technology adoption, exploring how successful organisations account for how people actually make decisions, form habits, and respond to change. Learn practical techniques for designing digital experiences that align with human psychology.
 	</li>
 </ul>
+
+## Action shots
+
+<script>if(!window.picflow){window.picflow=!0;var s=document.createElement("script");s.src="https://picflow.com/embed/main.js";s.type='module';s.defer=true;document.head.appendChild(s);}</script><picflow-gallery id="gal_iGxBfFLRIRdLyym4" tenant="tnt_lBL0ZrCBPCXAcUL0" lightbox="#000000E6" no-padding="true"></picflow-gallery>

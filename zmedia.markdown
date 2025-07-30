@@ -1,13 +1,19 @@
 ---
 layout: page
-title: Media
-strapline: Media
+title: Publications
+strapline: Publications
 permalink: /media/
 ---
 
-I don't just talk about the future of AI and design - I've spent decades building it. My perspective comes from hands-on experience creating systems that millions use, combined with strategic leadership at the highest levels of business. I bring real implementation experience to conversations that are often dominated by theory.
+My perspectives on the future of AI, work, design, and technology come from hands-on experience leading digital product teams and creating systems that millions use, combined with strategic leadership at the highest levels of business. I bring real implementation experience to conversations that are often dominated by theory.
 
 Interested in this perspective for your event or publication? Let's talk.
+
+## Books & publications
+
+**The AI Revolution: Thriving Within Civilization's Next Big Disruption** - my first co-authored book - reached #1 on Amazon AI charts globally in 2025.
+
+In *The AI Revolution*, I examine practical AI implementation across industries, synthesizing patterns from leading AI transformations globally, and offering frameworks for organizations navigating the gap between AI possibility and organizational reality.
 
 
 ## Press I've been featured in
@@ -44,11 +50,6 @@ August 2023: McKinsey.com -
 
 July 2019: McKinsey.com - 
 [How McKinsey Design is helping destigmatize menstruation][m5]
-
-
-## Action shots
-
-<script>if(!window.picflow){window.picflow=!0;var s=document.createElement("script");s.src="https://picflow.com/embed/main.js";s.type='module';s.defer=true;document.head.appendChild(s);}</script><picflow-gallery id="gal_iGxBfFLRIRdLyym4" tenant="tnt_lBL0ZrCBPCXAcUL0" lightbox="#000000E6" no-padding="true"></picflow-gallery>
 
 
 
