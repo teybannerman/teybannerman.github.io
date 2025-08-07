@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Cultural Intellegence in AI"
+title:  "Cultural Intelligence in AI"
 date:   2025-08-06 12:00:00 +0000
 categories: ai
 ---
@@ -45,6 +45,6 @@ The individuals and organisations that develop this conscious awareness will mak
 
 -
 
-_This post was adapted from my original [LinkedIn post][li-link] published in March 2025._
+_This post was adapted from my original [LinkedIn post][li-link] published in August 2025._
 
-[li-link]: https://www.linkedin.com/posts/teybannerman_2023-show-me-your-ai-roadmap-2024-activity-7298693345558577152-B4yg
+[li-link]: https://www.linkedin.com/feed/update/urn:li:activity:7358405153139367937/
