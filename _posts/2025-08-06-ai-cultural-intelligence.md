@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Cultural Intellegence in AI"
-date:   2025-02-14 12:00:00 +0000
+date:   2025-08-06 12:00:00 +0000
 categories: ai
 ---
 
