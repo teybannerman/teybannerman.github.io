@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "The one about my AI framework from 2019"
+title:  "AI development framework, 2019"
 date:   2025-05-27 12:00:00 +0000
 categories: ai design
 ---

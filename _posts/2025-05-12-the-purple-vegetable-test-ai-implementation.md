@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "The one about the purple vegetable test"
+title:  "The purple vegetable test"
 date:   2025-05-12 12:00:00 +0000
 categories: ai implementation
 ---

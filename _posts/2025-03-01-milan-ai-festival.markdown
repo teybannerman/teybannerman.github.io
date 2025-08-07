@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "The one about Milan fashion week"
+title:  "Milan AI Festival"
 date:   2025-03-01 12:00:00 +0000
 categories: ai conferences speaking
 ---

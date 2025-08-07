@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "The one about being an international bestselling author"
+title:  "International bestselling author"
 date:   2025-06-02 12:00:00 +0000
 categories: ai design
 ---

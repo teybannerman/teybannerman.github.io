@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "The one about the future of banking experiences"
+title:  "The banking experiences of the future"
 date:   2025-03-06 22:11:51 +0000
 categories: ai banking ux
 ---

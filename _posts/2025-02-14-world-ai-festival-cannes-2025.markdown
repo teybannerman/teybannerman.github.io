@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "The one about the World AI Festival 2025"
+title:  "World AI Festival 2025"
 date:   2025-02-14 12:00:00 +0000
 categories: ai conferences speaking
 ---

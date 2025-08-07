@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "The one about the future of design leadership"
+title:  "The future of design leadership"
 date:   2025-05-05 22:11:51 +0000
 categories: design leadership longform
 ---
