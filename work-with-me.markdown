@@ -5,8 +5,6 @@ strapline: Strategic partner for tech leaders
 permalink: /work-with-me/
 ---
 
-**I help bridge the gap between AI possibility and business reality**
-
 While most experts go deep in one domain, I connect patterns across three critical areas that determine sustainable competitive advantage: technical possibility, human reality, and business execution.
 
 The result? AI strategies that actually drive real impact. Products and services that customers genuinely love. Digital transformations that people embrace. 

@@ -4,7 +4,7 @@ list_title: Insights
 strapline: Design the future deliberately
 ---
 
-**I help organizations bridge the gap between AI possibility and business reality**
+**I help bridge the gap between AI possibility and business reality**
 
 Having led enterprise AI transformations at McKinsey, I now help leaders navigate enterprise strategy, achieve product-market fit, and shape AI development responsibly. Twenty years in tech - over half designing and building AI systems that drive business and human value - gives me perspective on what separates genuine opportunities from expensive promises.
 
