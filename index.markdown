@@ -1,19 +1,13 @@
 ---
 layout: home
-list_title: Posts
+list_title: Insights
 strapline: Design the future deliberately
 ---
 
-20+ years in tech. Over half of those designing and building AI systems that solve real problems. I've launched digital businesses with millions of customers, built enterprise AI systems at global scale, and led teams that transformed how banks compete, how retailers serve customers, and how multi-national companies make decisions.
+**I help organizations bridge the gap between AI possibility and business reality**
 
-At 14, I learned to code. Started my first web development company at 15. Then systematically conquered every discipline that touches technology - from pixel-perfect user interfaces to delivering business cases in Fortune 500 boardrooms. Software engineer. Designer. Strategist. Leader.
+Having led enterprise AI transformations at McKinsey, I now help leaders navigate enterprise strategy, achieve product-market fit, and shape AI development responsibly. Twenty years in tech - over half designing and building AI systems that drive business and human value - gives me perspective on what separates genuine opportunities from expensive promises.
 
-At McKinsey & Company - the global consultancy that advises 90% of the world's largest companies - I rose to Partner and spent nine years building their digital, design and customer experience capabilities while leading AI transformations hands-on.
+As AI reshapes every industry, I am a strategic partner for AI-enabled businesses - helping companies implement approaches that deliver measurable impact. I combine the precision of an engineer, the creativity of a designer, and the pragmatism of a business leader.
 
-Before that, I led product teams at enterprises across three continents, shipping experiences for millions of users.
-
-Before that, I cut my teeth building software at startups and digital agencies - writing code, designing interfaces, learning what works when real people interact with real systems.
-
-Each role added another layer of understanding about what separates technology that solves real problems from technology that creates new ones. And each transition taught me something the AI conversation desperately needs: an understanding of real-world constraints and human needs.
-
-Today, as AI reshapes every industry, I help companies separate genuine opportunities from empty promises, creating implementation approaches that deliver measurable value. My approach combines the precision of an engineer, the creativity of a designer, and the pragmatism of a business leader.
+<p style="text-align: center;"><a class="button" href="./work-with-me" target="_blank">Work with me</a></p>

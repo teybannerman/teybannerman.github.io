@@ -5,7 +5,8 @@ strapline: Impact that endures
 permalink: /impact/
 ---
 
-Concept. Build. Launch. Scale. From financial services to retail, from startup environments to global enterprises, my hands-on experience covers the full spectrum of product development and transformation.
+Concept. Build. Launch. Scale. 
+I've launched digital businesses with millions of customers, built enterprise AI systems at global scale, and led teams that transformed how banks compete, how retailers serve customers, and how multi-national companies make decisions. From startups to global enterprises, my hands-on experience covers the full spectrum of product development and transformation.
 
 The cases featured here are a small window into the products I've built and teams I've led, and represents my commitment to leading through complex challenges while remaining hands-on with critical aspects of delivery. Each  reflects my belief that building and growing successful products requires the ability to navigate the messy realities of implementation, scale solutions effectively, and create sustainable results that outlast initial excitement.
 

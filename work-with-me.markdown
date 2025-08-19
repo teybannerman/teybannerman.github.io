@@ -1,21 +1,23 @@
 ---
 layout: page
 title: Work with me
-strapline: I see what others miss.
+strapline: Strategic partner for tech leaders
 permalink: /work-with-me/
 ---
 
-My journey from software engineer to designer to strategist to McKinsey Partner has taught me something valuable: problems that span domains require expertise that transcends boundaries.
+**I help bridge the gap between AI possibility and business reality**
 
 While most experts go deep in one domain, I connect patterns across three critical areas that determine sustainable competitive advantage: technical possibility, human reality, and business execution.
 
 The result? AI strategies that actually drive real impact. Products and services that customers genuinely love. Digital transformations that people embrace. 
 
-<p style="text-align: center;"><a class="button" href="https://1-to-100.moxieapp.com/public/strategic-introductory-call" target="_blank">Schedule a strategic conversation</a></p>
+**Let's talk. 30-minute strategic discussion. No agenda, no pitch. Just exploring whether there's alignment between your challenges and my approach.**
+
+<p style="text-align: center;"><a class="button" href="https://1-to-100.moxieapp.com/public/strategic-introductory-call" target="_blank">Book a strategic conversation</a></p>
 
 ## Four ways we work together:
 
-### Strategic advisory
+### 1/ Strategic advisory
 
 Monthly strategic sessions where we tackle your biggest challenges through strategic perspective that spans technical, human, and business realities. I help you make confident decisions about AI and transformation decisions with confidence, regardless of your technical background, while ensuring your organization can actually execute the changes you envision.
 
@@ -24,7 +26,7 @@ Monthly strategic sessions where we tackle your biggest challenges through strat
 **Ideal for**: Leaders navigating complexity, at organizations implementing AI/digital transformation at scale \
 **Results**: Confident decision-making and clear direction for AI and technology initiatives that survive organizational reality
 
-### Transformation projects
+### 2/ Transformation projects
 
 Strategic consulting projects where I personally lead solution development from strategy through implementation. Whether you're an AI startup scaling to enterprise or an enterprise building startup-like innovation capabilities, I work hands-on to bridge the gap between vision and execution.
 
@@ -33,7 +35,7 @@ Strategic consulting projects where I personally lead solution development from 
 **Ideal for**: Innovation and transformation leaders, scale-up founders \
 **Results**: Successful engagements with capabilities that outlast
 
-### Board advisory
+### 3/ Board advisory
 
 Strategic guidance and network access for Series A to C AI companies entering enterprise markets. I help navigate enterprise sales, strategic positioning, and scaling challenges while providing credibility in investor and customer conversations.
 
@@ -43,7 +45,7 @@ Strategic guidance and network access for Series A to C AI companies entering en
 **Results**: Faster path to enterprise revenue and successful funding
 
 
-### Speaking & workshops
+### 4/ Speaking & workshops
 
 Keynotes and workshops that challenge conventional thinking while providing actionable frameworks. Recent stages include World AI Cannes Festival, AI Festival Milan, Design Matters Copenhagen, and Founders Forum Global.
 

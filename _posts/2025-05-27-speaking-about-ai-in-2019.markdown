@@ -34,11 +34,11 @@ Power without purpose.
 
 The stage is bigger now, the stakes are higher, and thankfully, my shirts have improved. But the core insight remains: we need to put decisions about AI in the hands of those who will use it, not just those who build it.
 
-If you're a designer, your expertise has never been more valuable. Don't just design interfaces for AI - shape how AI models are trained and built. How they function within human systems. Your understanding of context and meaning is a game-changer.
+**If you're a designer**, your expertise has never been more valuable. Don't just design interfaces for AI - shape how AI models are trained and built. How they function within human systems. Your understanding of context and meaning is a game-changer.
 
-If you're a data scientist/engineer, your technical brilliance multiplies in impact when paired with human insight. Invite designers into your process early, and measure success by real-world impact.
+**If you're a data scientist/engineer**, your technical brilliance multiplies in impact when paired with human insight. Invite designers into your process early, and measure success by real-world impact.
 
-If you're an executive leading digital/innovation, your most strategic move isn't accelerating AI adoption, but ensuring it happens at the intersection of technical possibility and human reality. Build teams that bridge these worlds from day one.
+**If you're an executive leading digital/innovation**, your most strategic move isn't accelerating AI adoption, but ensuring it happens at the intersection of technical possibility and human reality. Build teams that bridge these worlds from day one.
 
 -
 

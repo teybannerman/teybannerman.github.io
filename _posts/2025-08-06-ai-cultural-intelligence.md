@@ -1,9 +1,11 @@
 ---
 layout: post
-title:  "Cultural Intelligence in AI"
+title:  "Cultural Intelligence and bias in AI models"
 date:   2025-08-06 12:00:00 +0000
 categories: ai
 ---
+
+![Cultural bias in AI models - Tey Bannerman](/images/ai-models-cultural-alignment.jpg)
 
 There's something almost nobody is talking about in AI - but it affects everything from asking ChatGPT for advice to companies deploying AI globally.
 
