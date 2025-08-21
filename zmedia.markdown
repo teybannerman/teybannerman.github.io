@@ -18,6 +18,10 @@ In *The AI Revolution*, I examine practical AI implementation across industries,
 
 ## Press I've been featured in
 
+July 2025: iF Design - [A look into... the iF Design Trend Report 2025](https://ifdesign.com/en/if-magazine/trend-report-2025-tey-bannerman)
+
+June 2025: AI Career Spotlight - [Artificial intelligence is shaping the future, but what do real careers in AI actually look like?](https://catherinebreslin.medium.com/ai-career-spotlight-tey-bannerman-cd75e566aed9)
+
 May 2025: 3daysofdesign - 
 [Interview: Un/Real - how we move beyond binary thinking about AI, into a more nuanced dialogue](https://www.3daysofdesign.dk/post/unreal)
 
