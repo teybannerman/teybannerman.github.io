@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Redefining 'Human in the loop'"
+title:  "Redefining Human in the loop"
 date:   2025-08-26 9:05:00 +0000
 categories: ai
 ---
