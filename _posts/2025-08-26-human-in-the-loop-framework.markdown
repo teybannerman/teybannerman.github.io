@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Redefining Human in the loop"
-date:   2025-08-26 9:05:00 +0000
+title: "Redefining 'human in the loop'"
+date: 2025-08-24 12:05:00 +0000
 categories: ai
 ---
 
@@ -9,7 +9,7 @@ categories: ai
 
 Download the PDF: [human-in-the-loop-framework.pdf](/images/human-in-the-loop-framework-by-tey-bannerman.pdf)
 
-"Human in the loop".
+## "Human in the loop".
 
 I hear and this phrase dozens of times per week. In LinkedIn posts. In board meetings about AI strategy. In product requirements. In compliance documents that tick the "responsible AI" box. It's become the go-to phrase for any situation where humans interact with AI decisions.
 
