@@ -9,9 +9,9 @@ While most experts go deep in one domain, I connect patterns across three critic
 
 The result? AI strategies that actually drive real impact. Products and services that customers genuinely love. Digital transformations that people embrace. 
 
-**Let's talk. 30-minute strategic discussion. No agenda, no pitch. Just exploring whether there's alignment between your challenges and my approach.**
+**Let's talk. 30-minutes. No agenda, no pitch. Just exploring how we could work together.**
 
-<p style="text-align: center;"><a class="button" href="https://1-to-100.moxieapp.com/public/strategic-introductory-call" target="_blank">Book a strategic conversation</a></p>
+<p style="text-align: center;"><a class="button" href="https://1-to-100.moxieapp.com/public/introductory-call" target="_blank">Book a strategic conversation</a></p>
 
 ## Four ways we work together:
 

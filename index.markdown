@@ -10,4 +10,4 @@ Having led enterprise AI transformations at McKinsey, I now help leaders navigat
 
 As AI reshapes every industry, I am a strategic partner for AI-enabled businesses - helping companies implement approaches that deliver measurable impact. I combine the precision of an engineer, the creativity of a designer, and the pragmatism of a business leader.
 
-<p style="text-align: center;"><a class="button" href="./work-with-me" target="_blank">Work with me</a></p>
+<p style="text-align: center;"><a class="button" href="./work-with-me">Work with me</a></p>
