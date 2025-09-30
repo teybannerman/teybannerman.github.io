@@ -2,7 +2,7 @@
 layout: post
 title:  "Working with AI limitations: A pattern recognition guide for everyone"
 date:   2025-09-30 08:11:51 +0000
-categories: design leadership longform
+categories: ai
 ---
 
 ![Guide to AI tool limitations by Tey Bannerman](/images/guide-to-ai-limitations.png)
