@@ -7,9 +7,11 @@ categories: design leadership longform
 
 ![Guide to AI tool limitations by Tey Bannerman](/images/guide-to-ai-limitations.png)
 
-Download the PDF: [human-in-the-loop-framework.pdf](/images/guide-to-ai-limitations.pdf)
+Download the PDF: [guide-to-ai-limitations.pdf](/images/guide-to-ai-limitations.pdf)
 
-LinkedIn just named me one of their [top 12 AI voices to follow in Europe](https://lnkd.in/e2veUGFb).
+---
+
+**LinkedIn just named me one of their [top 12 AI voices to follow in Europe](https://lnkd.in/e2veUGFb).**
 
 I'm genuinely honoured. Also mildly offended they didn't mention my exceptional humility or the fact that I look great in a turtleneck. But I'll let that slide.
 
