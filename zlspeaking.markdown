@@ -29,7 +29,7 @@ permalink: /speaking/
 
 ## Speaking enquiries
 
-For speaking enquiries, please contact john@chartwellspeakers.com
+For speaking enquiries, please contact [john@chartwellspeakers.com](mailto:john@chartwellspeakers.com?subject=Tey+Bannerman+speaking)
 
 ## What people say
 
