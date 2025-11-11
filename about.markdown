@@ -5,9 +5,9 @@ strapline: Experience shapes perspective
 permalink: /about/
 ---
 
-**I help organizations implement AI in ways that create genuine value.** My journey has taken me from writing code as a software engineer to leading design teams, launching digital products, and ultimately rising to Partner at McKinsey & Company, where I led the global consultancy's European design practice and AI implementation work.
+**I help organizations of all shapes and sizes implement AI in ways that create genuine value.** My journey has taken me from writing code as a software engineer to leading design teams, launching digital products, and ultimately rising to Partner at McKinsey & Company, where I led the global consultancy's European design practice and AI implementation work.
 
-**This blend of technical understanding, hands-on product design, and business acumen** gives me a distinct perspective on technology adoption. I've seen firsthand what works and what doesn't across industries and continents - from financial services to retail, from startups to global corporations.
+**This blend of technical understanding, hands-on innovation, and business acumen** gives me a distinct perspective on technology adoption. I've seen firsthand what works and what doesn't across industries and continents - from financial services to retail, from startups to global corporations.
 
 **What sets my approach apart** is a relentless focus on solving real problems rather than chasing technological novelty. I believe the best innovations are those that enhance human capabilities without creating new dependencies, and that's the philosophy I bring to every engagement, whether I'm advising executive teams, running interactive workshops, or speaking at global conferences.
 
