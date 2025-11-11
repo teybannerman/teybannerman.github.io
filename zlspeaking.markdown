@@ -1,5 +1,6 @@
 ---
 layout: page
+title: Speaking
 strapline: Insights that spark action
 permalink: /speaking/
 

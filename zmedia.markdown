@@ -1,7 +1,7 @@
 ---
 layout: page
-title: Publications
-strapline: Publications
+title: Media
+strapline: Media
 permalink: /media/
 ---
 
