@@ -5,7 +5,7 @@ strapline: Experience shapes perspective
 permalink: /about/
 ---
 
-**I help organizations of all shapes and sizes implement AI in ways that create genuine value.** My journey has taken me from writing code as a software engineer to leading design teams, launching digital products, and ultimately rising to Partner at McKinsey & Company, where I led the global consultancy's European design practice and AI implementation work.
+**I help organisations of all shapes and sizes implement AI in ways that create genuine value.** My journey has taken me from writing code as a software engineer to leading design teams, launching digital products, and ultimately rising to Partner at McKinsey & Company, where I led the global consultancy's European design practice and AI implementation work.
 
 **This blend of technical understanding, hands-on innovation, and business acumen** gives me a distinct perspective on technology adoption. I've seen firsthand what works and what doesn't across industries and continents - from financial services to retail, from startups to global corporations.
 
@@ -15,27 +15,27 @@ permalink: /about/
 
 <ul class="post-list">
 	<li>
-		<h4>1 /<br/>Technology should solve real problems.</h4>
-Too many innovations are solutions in search of problems. I'm drawn to technology that addresses genuine human needs and creates tangible value, rather than adding complexity or creating new forms of dependency.
+		<h4>1 /<br/>Technology should amplify human capabilities, not replace them.</h4>
+Too many innovations are solutions in search of problems. I build technology that addresses genuine human needs and creates tangible value, rather than adding complexity or creating new dependencies.
 	</li>
 	<li>
-		<h4>2 /<br/>AI implementation should be grounded in human needs, not technological possibility.</h4>
-Successful AI initiatives start with a nuanced understanding of user needs and organizational realities. Technology is the enabler, not the destination.
+		<h4>2 /<br/>AI implementation begins with humans and workflows.</h4>
+Successful AI initiatives start with deep understanding of how people actually make decisions, form trust, and adapt to change - not with what the technology can theoretically do.
 	</li>
 	<li>
-		<h4>3 /<br/>Creativity thrives within constraints.</h4>
-The most innovative solutions often emerge when resources are limited, not unlimited. AI is no exception. Constraints - whether technical, ethical, or practical - demand ingenuity.
+		<h4>3 /<br/>The best solutions emerge from what you choose not to build.</h4>
+The goal should be clarity of purpose. Sometimes complex problems demand sophisticated solutions - the skill is knowing which complexity adds value and which creates barriers..
 	</li>
 	<li>
-		<h4>4 /<br/>Ethics isn't a checkbox.</h4>
-Ethical considerations should be woven into the fabric of technology development, not treated as an afterthought or compliance exercise.
+		<h4>4 /<br/>Responsible AI requires practical frameworks, not just principles.</h4>
+Ethical AI needs to incorporate building trust calibration systems, testing cultural intelligence, and governance that enables rather than hinders progress.
 	</li>
 	<li>
 		<h4>5 /<br/>Leaders need to understand both the forest and the trees.</h4>
-The most impactful innovations happen when leaders understand both the big picture and enough technical details to ask the right questions.
+The most impactful innovations happen when leaders understand both business imperatives and enough technical detail to ask the right questions and challenge the right assumptions.
 	</li>
 	<li>
-		<h4>6 /<br/>Simple beats complex - every time.</h4>
-Complexity is easy. Simplicity is hard. And worth it.
+		<h4>6 /<br/>Success is measured in adoption, not capability.</h4>
+Technical excellence matters, but adoption determines impact. The best system is the one that fits naturally into human workflows, earns trust through transparency, and delivers value people can feel.
 	</li>
 </ul>
