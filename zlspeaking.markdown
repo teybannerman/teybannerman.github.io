@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Speaking
-strapline: Insights that spark action
+strapline: Speaking & workshops
 permalink: /speaking/
 
 ---
@@ -26,6 +26,10 @@ permalink: /speaking/
 - Miro Canvas Leadership Summit, London (2024)
 - Nedbank Create, Johannesburg (2023)
 - Google Industry Webinar Series (2023)
+
+## Speaking enquiries
+
+For speaking enquiries, please contact john@chartwellspeakers.com
 
 ## What people say
 
