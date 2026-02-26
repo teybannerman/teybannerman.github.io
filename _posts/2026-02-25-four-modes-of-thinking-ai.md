@@ -8,6 +8,7 @@ categories: ai framework
 ![Four Modes of Thinking Framework by Tey Bannerman](/images/four-modes-of-working-with-ai.png)
 
 Download the PDF: [four-modes-of-working-with-ai.pdf](/images/four-modes-of-working-with-ai.pdf)
+Explore the scenarios: [https://fourmodes.teybannerman.com](https://fourmodes.teybannerman.com)
 
 Over the last year, I've kept a running note on my phone. Every time someone asked me about using AI tools for a task, I wrote it down.
 
