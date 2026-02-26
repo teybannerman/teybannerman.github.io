@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "The four modes: a framework for working with AI tools"
-date:   2026-02-26 02:00:00 +0000
+date:   2026-02-25 02:00:00 +0000
 categories: ai framework
 ---
 
