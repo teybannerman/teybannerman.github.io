@@ -8,6 +8,7 @@ categories: ai framework
 ![Four Modes of Thinking Framework by Tey Bannerman](/images/four-modes-of-working-with-ai.png)
 
 Download the PDF: [four-modes-of-working-with-ai.pdf](/images/four-modes-of-working-with-ai.pdf)
+
 Explore the scenarios: [https://fourmodes.teybannerman.com](https://fourmodes.teybannerman.com)
 
 Over the last year, I've kept a running note on my phone. Every time someone asked me about using AI tools for a task, I wrote it down.
@@ -36,7 +37,7 @@ I've spent the last couple of months battle-testing this framework with teams ac
 
 And now I've taken that running note - over 100 real scenarios - and built it into a handy tool, free for anyone and everyone to use. I genuinely believe this type of info should be freely available - not behind paywalls and email capture forms.
 
-Here's the link: https://fourmodes.teybannerman.com
+Here's the link: [https://fourmodes.teybannerman.com](https://fourmodes.teybannerman.com)
 
 Find your task. See which mode it falls into. Get prompts, principles, and examples that actually work.
 
