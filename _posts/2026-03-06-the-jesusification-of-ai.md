@@ -20,10 +20,10 @@ The golden calf wasn't a god, though. It was a projection surface. A place to pu
 
 I think we're doing it again.
 
-"AI will take your job".
-"That looks like it was written by AI".
-"I used AI to plan my holiday".
-"AI is going to destroy creativity".
+"AI will take your job".  
+"That looks like it was written by AI".  
+"I used AI to plan my holiday".  
+"AI is going to destroy creativity".  
 
 !['Google search suggestions for "will ai", March 2026'](/images/will-ai-google-search-2026-03.jpg)
 *Google search suggestions for "will ai", March 2026*
@@ -34,9 +34,9 @@ It isn't.
 
 What we call "AI" is dozens of distinct technologies that work in fundamentally different ways.
 
-When your phone predicts the next word you're about to type. 
-When Spotify auto-plays a song that becomes the soundtrack to your year.
-When your Apple Watch shows you your health metrics.
+When your phone predicts the next word you're about to type.  
+When Spotify auto-plays a song that becomes the soundtrack to your year.  
+When your Apple Watch shows you your health metrics.  
 When a doctor catches a tumour early because a diagnostic model flagged an anomaly smaller than a grain of rice.
 
 All of these are "AI". But they're all built differently, they work differently, and they have completely different implications for your life.
