@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Your AI Agents Are Hiding Their Uncertainty From You"
-date:   2026-03-12 12:00:00 +0000
+date:   2026-12-12 12:00:00 +0000
 categories: ai longform
 ---
 
