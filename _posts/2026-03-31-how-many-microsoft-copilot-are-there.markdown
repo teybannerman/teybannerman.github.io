@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "How many products does Microsoft have named Copilot? I mapped every one"
+title:  "How many products does Microsoft have named 'Copilot'? I mapped every one"
 date:   2026-03-31 02:00:00 +0000
 categories: strategy
 ---
