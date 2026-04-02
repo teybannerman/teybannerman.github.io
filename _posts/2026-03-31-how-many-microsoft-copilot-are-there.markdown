@@ -13,6 +13,7 @@ I went looking for the full list. No single source had all of them. Not even Mic
 
 The visualisation below maps every one, grouped by category, with lines showing how they connect. It's interactive - click around. Try to find a pattern. I couldn't.
 
+
 -
 
 <div class="visualization" style="height: 980px; border: 0; padding: 0;">
@@ -21,5 +22,5 @@ The visualisation below maps every one, grouped by category, with lines showing 
 
 -
 
-Visualisation created with [Flourish](https://flourish.studio/).
+Visualisation created with [Flourish](https://flourish.studio/) | [Image download](/images/microsoft-copilot-chart-infographic-by-teybannerman.png)
 
