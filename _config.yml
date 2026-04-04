@@ -6,8 +6,8 @@
 
 title: Tey Bannerman
 email: tey.bannerman@gmail.com
-description: >- 
-  AI x Design, Strategy & implementation, Human-centered AI expert
+description: >-
+  Practical intelligence for the AI era
 baseurl: /
 url: https://teybannerman.github.io
 twitter_username: tey
@@ -22,9 +22,9 @@ minima:
     - title: LinkedIn @teybannerman
       icon: linkedin
       url: "https://linkedin.com/in/teybannerman"
-    - title: Twitter @tey
-      icon: twitter
-      url: "https://x.com/tey"
+    - title: Substack
+      icon: rss
+      url: "https://teybannerman.substack.com"
 
 # Build settings
 #theme: minima
@@ -41,14 +41,5 @@ plugins:
 # Excluded items can be processed by explicitly listing the directories or
 # their entries' file path in the `include:` list.
 #
-# exclude:
-#   - .sass-cache/
-#   - .jekyll-cache/
-#   - gemfiles/
-#   - Gemfile
-#   - Gemfile.lock
-#   - node_modules/
-#   - vendor/bundle/
-#   - vendor/cache/
-#   - vendor/gems/
-#   - vendor/ruby/
+exclude:
+  - temp/
