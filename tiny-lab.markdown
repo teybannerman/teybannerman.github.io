@@ -10,7 +10,7 @@ Small creations, experiments, and tools. Built from curiosity, not commercial am
 
 Before I was a strategist, before I was a consultant, I was an engineer who loved building things. That instinct never left.
 
-Tiny Lab of Wonders is where I make things — tools that help people with something specific, experiments that explore an idea, creations that exist because they bring a little joy. None of this is monetised. It's the part of my work that keeps me honest about what technology actually feels like when you're building it, not just advising on it.
+Tiny Lab of Wonders is where I make things - tools that help people with something specific, experiments that explore an idea, creations that exist because they bring a little joy. None of this is monetised. It's the part of my work that keeps me honest about what technology actually feels like when you're building it, not just advising on it.
 
 Occasionally, for the right partner and the right purpose, I take on builds. But the lab exists first and foremost as a place to stay curious.
 

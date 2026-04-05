@@ -1,7 +1,7 @@
 ---
 layout: posts
 title: Insights
-strapline: Ideas & frameworks
+strapline: Notes from the front lines
 permalink: /insights/
 ---
 
