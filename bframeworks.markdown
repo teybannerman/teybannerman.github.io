@@ -34,7 +34,7 @@ The tool includes 100+ real scenarios mapped to modes, with principles, prompts,
 > "I am looking through your Four Modes content and it's so good. I'm currently doing a bunch of generative research around how our employees are using AI and I WISH I had come up with this."
 > — Haley Kirk, Product Designer
 
-**For teams and organisations:** I'm developing an enterprise version that helps teams map their work collectively, identify where AI partnerships have the most potential, and build shared fluency across the organisation. If your organisation is exploring structured AI adoption, [get in touch](/contact/).
+**For teams and organisations:** I'm developing an enterprise version that helps teams map their work collectively, identify where AI partnerships have the most potential, and build shared fluency across the organisation. If your organisation is exploring structured AI adoption, [get in touch](/work-with-me/).
 
 ---
 

@@ -49,3 +49,45 @@ The most impactful work I've done has always involved making something simpler, 
 Technology is the enabler, not the destination. The organisations that understand this will build AI systems people trust. The rest will build expensive tools that sit unused.
 	</li>
 </ul>
+
+---
+
+## Selected work
+
+### Human + AI: reimagining financial guidance together
+
+Led the creation of a hybrid advisory platform that enhanced human financial advisors with AI-powered insights. By developing both customer-facing AI guidance and advisor tools, we created a seamless ecosystem where technology amplified human expertise rather than replacing it. Advisors gained deeper customer understanding while clients received personalised guidance that evolved with their life needs.
+
+*Result: 40% uplift in sales across multiple product lines. 6-month intensive build, interim Chief Product Officer.*
+
+---
+
+### Banking on the unbanked: creating 100,000 first-time investors
+
+Spearheaded an "attacker" wealth management platform that disrupted Central Europe's savings-dominated market. By transforming complex investing into an intuitive, gamified experience, we turned financial novices into confident investors — in a market where fewer than 5% of adults had ever invested.
+
+*Result: Outperformed year-one targets by 2.5x. Founding Head of Design, 14 months.*
+
+---
+
+### Feeding 10 million: the digital delivery revolution
+
+Led a comprehensive digital experience transformation for a global food chain, scaling across 16 countries. Established design systems, data-driven decision frameworks, and cross-regional coordination that defended market share while opening new revenue streams.
+
+*Result: Best-in-class platform serving 10+ million customers. Founding Head of Customer Experience, 14 months.*
+
+---
+
+### The trust exchange: turning data privacy into brand advantage
+
+Led a transformative initiative with a multinational cosmetics conglomerate that redefined how their portfolio of iconic brands approaches consumer data. Designed an experience that made the data value exchange transparent and intuitive — allowing consumers to see precisely what was collected, understand how it benefited them, and control preferences seamlessly.
+
+*Result: Substantially improved consumer trust metrics and positioned prestige brands as leaders in consumer-centric data practices before regulatory changes made it mandatory. 3-month global initiative.*
+
+---
+
+### Pioneering generative AI for global brands
+
+Core to building and scaling McKinsey's groundbreaking generative AI client work, creating solutions that transformed how global clients approach personalisation. From developing Formula E's revolutionary fan experiences to establishing new frameworks for AI-driven customer engagement.
+
+*Result: 18 months of ongoing innovation redefining what's possible at the intersection of data science and human behaviour.*

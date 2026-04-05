@@ -27,4 +27,4 @@ This isn't a ranking or an award. It's a growing, curated collection of evidence
 
 ---
 
-**Know an AI project creating meaningful change?** I'm always looking for nominations. [Get in touch](/contact/).
+**Know an AI project creating meaningful change?** I'm always looking for nominations. [Get in touch](/work-with-me/).

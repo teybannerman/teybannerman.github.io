@@ -115,14 +115,48 @@ Whether you're exploring AI fluency for your leadership team, navigating a strat
 
 <p style="text-align: center;"><a class="button" href="https://1-to-100.moxieapp.com/public/introductory-call" target="_blank">Book a conversation &rarr;</a></p>
 
-#### Let's talk
+---
+
+## Other enquiries
+
+<div class="contact-section">
+<h4>Speaking enquiries</h4>
+
+[john@chartwellspeakers.com](mailto:john@chartwellspeakers.com)
+</div>
+
+<div class="contact-section">
+<h4>Media enquiries</h4>
+
+[tey@teybannerman.com](mailto:tey@teybannerman.com)
+</div>
+
+<div class="contact-section">
+<h4>The Purposeful AI Project</h4>
+
+Nominate an AI initiative creating meaningful change: [tey@teybannerman.com](mailto:tey@teybannerman.com)
+</div>
+
+<div class="contact-section">
+<h4>Everything else</h4>
+
+[tey@teybannerman.com](mailto:tey@teybannerman.com)
+</div>
+
+[<i class="fab fa-linkedin"></i> LinkedIn](https://linkedin.com/in/teybannerman){:target="_blank"} &middot; [<i class="fas fa-rss"></i> Substack](https://teybannerman.substack.com){:target="_blank"}
+
+---
+
+#### Book a conversation
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.10/iframeResizer.min.js"></script>
 <div style="width:100%; min-height:500px">
-  <iframe src="https://hello.withmoxie.com/01/1-to-100/strategic-introductory-call?inFrame=true" id="moxie-strategic-introductory-call" style="padding: 0px; margin: 0px; border: 0; max-width: 100%; min-width: 100%"></iframe>
+  <iframe id="moxie-strategic-introductory" allowtransparency="true" style="padding: 0px; margin: 0px; border: 0; max-width: 100%; min-width: 100%"></iframe>
 </div>
 <script type="text/javascript">
-  setTimeout(() => iFrameResize({heightCalculationMethod: 'min', sizeWidth: true, sizeHeight: true, log: false, checkOrigin: false}, '#moxie-strategic-introductory-call'),100);
+  let moxieFrame = document.getElementById("moxie-strategic-introductory");
+  moxieFrame.src = 'https://hello.withmoxie.com/01/1-to-100/strategic-introductory?inFrame=true&sourceUrl=' + encodeURIComponent(window.location.href)
+  setTimeout(() => iFrameResize({heightCalculationMethod: 'min', sizeWidth: true, sizeHeight: true, log: false, checkOrigin: false}, '#moxie-strategic-introductory'),100);
 
   window.addEventListener("message", (event) => {
     if(event.origin === 'https://hello.withmoxie.com' && event.data && event.data.startsWith('[Redirect]')){
