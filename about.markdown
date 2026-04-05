@@ -1,13 +1,13 @@
 ---
 layout: page
 title: About
-strapline: The unusual path that shapes the perspective
+strapline: The about page
 permalink: /about/
 ---
 
-Most people in AI come from one world. Engineers who think in systems. Designers who think in experiences. Business leaders who think in outcomes. I've spent serious time in all three, and that's shaped how I see problems - and how I help others see them differently.
+My career has taken me from writing code to designing products to leading strategy at the highest levels of business. Each shift changed how I think - and the combination is what I bring to every conversation about AI.
 
-I started my career as a software developer after graduating with a Computer Science degree. Then made the unusual decision to walk away from engineering and pursue product design - a transition that confused almost everyone in the 2000s. Spent a decade building digital products, leading teams, and learning that the gap between technology that works and technology people actually want to use is almost always a human problem, not a technical one.
+I started my professional life as a software developer after graduating with a Computer Science degree. Then made the unusual decision to walk away from engineering and pursue product design - a transition that confused almost everyone in the 2000s. Spent a decade building digital products, leading teams, and learning that the gap between technology that works and technology people actually want to use is almost always a human problem, not a technical one.
 
 That conviction led me to McKinsey & Company, where I led the European design practice and pioneered some of the firm's earliest generative AI work with clients. Over eight years, I rose to Partner.
 

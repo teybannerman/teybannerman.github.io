@@ -5,7 +5,7 @@ strapline: A thinking partner for leaders navigating AI
 permalink: /work-with-me/
 ---
 
-Most advisors study complex change from the outside. I've led teams through it, built the systems that power it, taught hundreds of leaders how to navigate it, and solved the human challenges that make or break it. If you're navigating AI adoption and want a partner who's seen what works across industries, let's have a conversation.
+I've led teams through complex AI adoption, built the systems that power it, taught hundreds of leaders how to navigate it, and solved the human challenges that make or break it. If you're looking for a partner who's seen what works across industries, let's have a conversation.
 
 ---
 
@@ -13,9 +13,9 @@ Most advisors study complex change from the outside. I've led teams through it, 
 
 ### 1 / AI leadership programmes
 
-My programmes teach leadership teams how to think - building genuine AI fluency that transforms how they approach decisions, strategy, and daily work.
+Programmes that teach leadership teams how to think - building genuine AI fluency that transforms how they approach decisions, strategy, and daily work.
 
-These are structured experiences that blend live workshops, practical application, and team coaching - designed so teams leave with a shared language for AI collaboration and the confidence to apply it independently. The same methodology underpins my courses at iF Academy, D&AD, and the Marketing Academy, where they're rated as some of the most practical and impactful by participants.
+These are structured experiences that blend live workshops, practical application, and team coaching. I bring in specialist collaborators where the work demands it - people with deep expertise in areas like behavioural design, data strategy, and organisational change. Teams leave with a shared language for AI collaboration and the confidence to apply it independently. The same methodology underpins my courses at iF Academy, D&AD, and the Marketing Academy, where they're rated as some of the most practical and impactful by participants.
 
 - **Format:** 4-8 week structured programmes with live workshops, async application, and team coaching
 - **For:** Leadership teams at organisations embedding AI into their operations
@@ -64,37 +64,11 @@ Talks and workshops that challenge conventional thinking while equipping audienc
     <p>"Tey cuts through the usual tech hyperbole with refreshing clarity and unexpected humour. He speaks about complex technical concepts with the rare combination of depth and accessibility that comes from having both built the systems and led the teams."</p>
     <cite>- Attendee, WebSummit</cite>
   </blockquote>
-  <blockquote>
-    <p>"Real signal through the LinkedIn noise."</p>
-    <cite>- Darren Homer, Partner, PwC</cite>
-  </blockquote>
-  <blockquote>
-    <p>"I love your human-focused projects, Tey!"</p>
-    <cite>- Shamsi Brinn, Design and Brand Leadership</cite>
-  </blockquote>
 </div>
 
 ---
 
-## Recent impact
-
-- Helped a financial services company achieve 40% uplift in AI-powered advisory sales through a hybrid human-AI platform
-- Guided a retail transformation defending market share against digital challengers across 16 countries
-- Supported an AI startup's strategic pivot that led to successful Series A funding three months ahead of schedule
-- Developed practical tools adopted by thousands of practitioners globally
-- Designed the most popular course at the Marketing Academy in 2025
-
----
-
-## The best conversations start with understanding what success looks like for you.
-
-Whether you're exploring AI fluency for your leadership team, navigating a strategic pivot, or looking for a thinking partner who understands both the technology and the human reality - let's talk.
-
-<p style="text-align: center;"><a class="button" href="https://1-to-100.moxieapp.com/public/introductory-call" target="_blank">Book a conversation &rarr;</a></p>
-
----
-
-## Other enquiries
+## Get in touch
 
 <div class="contact-section">
 <h4>Speaking enquiries</h4>
@@ -102,13 +76,8 @@ Whether you're exploring AI fluency for your leadership team, navigating a strat
 </div>
 
 <div class="contact-section">
-<h4>Media enquiries</h4>
-<p><a href="mailto:tey@teybannerman.com">tey@teybannerman.com</a></p>
-</div>
-
-<div class="contact-section">
 <h4>Everything else</h4>
-<p><a href="mailto:tey@teybannerman.com">tey@teybannerman.com</a></p>
+<p><a href="mailto:tb@teybannerman.com">tb@teybannerman.com</a></p>
 </div>
 
 [<i class="fab fa-linkedin"></i> LinkedIn](https://linkedin.com/in/teybannerman){:target="_blank"} &middot; [<i class="fas fa-rss"></i> Substack](https://teybannerman.substack.com){:target="_blank"}
