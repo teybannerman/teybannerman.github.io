@@ -11,7 +11,7 @@ I started my professional life as a software developer after graduating with a C
 
 That conviction led me to McKinsey & Company, where I led the European design practice. Over eight years, I rose to Partner.
 
-My work with AI started well before ChatGPT made it a dinner table conversation. From 2018, I was part of teams of data scientists, engineers, and designers building machine learning models for customer behaviour prediction, and went on to lead a series of AI implementation projects for large companies - spanning financial services, consumer brands, and some of McKinsey's earliest generative AI client work. That hands-on experience building AI systems that had to actually work in the real world is what shaped everything I do now.
+My work with AI started at McKinsey in 2018. I was part of teams of data scientists, engineers, and designers building machine learning models for customer behaviour prediction, and went on to lead a series of AI implementation projects for large companies - spanning financial services, consumer brands, and some of McKinsey's earliest generative AI client work. That hands-on experience building AI systems that had to actually work in the real world is what shaped everything I do now.
 
 Along the way, I kept coming back to the same lesson: the organisations that succeed with AI are the ones that start with how people actually make decisions, not with what the technology can theoretically do.
 
