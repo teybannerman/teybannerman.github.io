@@ -9,9 +9,11 @@ My career has taken me from writing code to designing products to leading strate
 
 I started my professional life as a software developer after graduating with a Computer Science degree. Then made the unusual decision to walk away from engineering and pursue product design - a transition that confused almost everyone in the 2000s. Spent a decade building digital products, leading teams, and learning that the gap between technology that works and technology people actually want to use is almost always a human problem, not a technical one.
 
-That conviction led me to McKinsey & Company, where I led the European design practice and pioneered some of the firm's earliest generative AI work with clients. Over eight years, I rose to Partner.
+That conviction led me to McKinsey & Company, where I led the European design practice. Over eight years, I rose to Partner.
 
-Along the way, I built AI-powered advisory platforms for banks, led digital transformations spanning 16 countries, created personalisation engines for global brands, and kept coming back to the same lesson: the organisations that succeed with AI are the ones that start with how people actually make decisions, not with what the technology can theoretically do.
+My work with AI started well before ChatGPT made it a dinner table conversation. From 2018, I was part of teams of data scientists, engineers, and designers building machine learning models for customer behaviour prediction, and went on to lead a series of AI implementation projects for large companies - spanning financial services, consumer brands, and some of McKinsey's earliest generative AI client work. That hands-on experience building AI systems that had to actually work in the real world is what shaped everything I do now.
+
+Along the way, I kept coming back to the same lesson: the organisations that succeed with AI are the ones that start with how people actually make decisions, not with what the technology can theoretically do.
 
 Today, I work independently - advising, building, teaching, and writing about the practical realities of making AI work within human systems. I advise companies and leaders on AI strategy and human-centred AI implementation. I'm lead lecturer and course creator for iF Academy's AI strategy programme for design leaders, a lecturer on D&AD's AI course, and faculty at the Marketing Academy. I co-authored *The AI Revolution*, a book that reached #1 on Amazon's global AI charts. And I've developed practical tools - like [the Four Modes and the practical Human in the Loop framework](/frameworks-and-tools/) - now used by thousands of practitioners worldwide.
 
