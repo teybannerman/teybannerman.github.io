@@ -10,12 +10,12 @@ strapline: Practical intelligence for the AI era
 
 <div class="hero-ctas">
   <a class="button" href="/work-with-me/">Work with me</a>
-  <a class="button-secondary" href="/insights/">Explore my thinking</a>
+  <a class="button-secondary" href="/insights/">Explore the blog</a>
 </div>
 
 ---
 
-<h2 class="post-list-heading">Tools for thinking</h2>
+<h2 class="post-list-heading">Published frameworks</h2>
 
 <div class="ideas-grid">
   <div class="idea-card">

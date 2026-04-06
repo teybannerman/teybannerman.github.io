@@ -68,22 +68,6 @@ Talks and workshops that challenge conventional thinking while equipping audienc
 
 ---
 
-## Get in touch
-
-<div class="contact-section">
-<h4>Speaking enquiries</h4>
-<p><a href="mailto:john@chartwellspeakers.com">john@chartwellspeakers.com</a></p>
-</div>
-
-<div class="contact-section">
-<h4>Everything else</h4>
-<p><a href="mailto:tb@teybannerman.com">tb@teybannerman.com</a></p>
-</div>
-
-[<i class="fab fa-linkedin"></i> LinkedIn](https://linkedin.com/in/teybannerman){:target="_blank"} &middot; [<i class="fas fa-rss"></i> Substack](https://teybannerman.substack.com){:target="_blank"}
-
----
-
 #### Book a conversation
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.10/iframeResizer.min.js"></script>

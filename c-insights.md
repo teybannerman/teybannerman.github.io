@@ -1,6 +1,6 @@
 ---
 layout: posts
-title: Insights
+title: Blog
 strapline: Notes from the front lines
 permalink: /insights/
 ---
