@@ -20,7 +20,7 @@ strapline: Practical intelligence for the AI era
 <div class="ideas-grid">
   <div class="idea-card">
     <img src="/images/four-modes-of-working-with-ai.png" alt="The Four Modes">
-    <h4>The Four Modes</h4>
+    <h4>The Four Modes of Thinking with AI</h4>
     <p>A practical operating system for working with AI tools. Used by thousands of practitioners - helping teams across industries unlock genuine AI fluency.</p>
     <a class="card-link" href="/ai/framework/2026/02/25/four-modes-of-thinking-ai.html">Explore the framework &rarr;</a>
   </div>
