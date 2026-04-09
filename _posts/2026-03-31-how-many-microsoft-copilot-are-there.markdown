@@ -5,6 +5,10 @@ date:   2026-03-31 02:00:00 +0000
 categories: strategy
 ---
 
+<div style="background: #f2f2f0; border-radius: 5px; padding: 18px 20px; margin-bottom: 12px; font-size: 0.88rem;">
+<strong>Update (9 Apr):</strong> Another one. A helpful person sent in <a href="https://adoption.microsoft.com/en-us/copilot/us-government/">Microsoft 365 Copilot for US Government</a>. That's 81. Chart updated.
+</div>
+
 <div style="background: #f2f2f0; border-radius: 5px; padding: 18px 20px; margin-bottom: 28px; font-size: 0.88rem;">
 <strong>Update:</strong> Since this was published, the lovely internet community has let me know we were missing two Copilots: <a href="https://news.xbox.com/en-us/2025/09/18/gaming-copilot-xbox-pc-mobile/">Gaming Copilot</a> and <a href="https://www.microsoft.com/en-us/health-solutions/clinical-workflow/dragon-copilot">Microsoft Dragon Copilot</a> (🤦‍♀️). This brings the total to 80. The chart has been updated and I'll continue to update it as Microsoft continues to Copilot.
 </div>
