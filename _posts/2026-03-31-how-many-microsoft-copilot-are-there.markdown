@@ -10,7 +10,7 @@ categories: strategy
 </div>
 
 <div style="background: #f2f2f0; border-radius: 5px; padding: 18px 20px; margin-bottom: 28px; font-size: 0.88rem;">
-<strong>Update (6 Apr 2026):</strong> Since this was published, the lovely internet community has let me know we were missing two Copilots: <a href="https://news.xbox.com/en-us/2025/09/18/gaming-copilot-xbox-pc-mobile/">Gaming Copilot</a> and <a href="https://www.microsoft.com/en-us/health-solutions/clinical-workflow/dragon-copilot">Microsoft Dragon Copilot</a> (🤦‍♀️). This brings the total to 80. The chart has been updated and I'll continue to update it as Microsoft continues to Copilot.
+<strong>Update (5 Apr 2026):</strong> Since this was published, the lovely internet community has let me know we were missing two Copilots: <a href="https://news.xbox.com/en-us/2025/09/18/gaming-copilot-xbox-pc-mobile/">Gaming Copilot</a> and <a href="https://www.microsoft.com/en-us/health-solutions/clinical-workflow/dragon-copilot">Microsoft Dragon Copilot</a> (🤦‍♀️). This brings the total to 80. The chart has been updated and I'll continue to update it as Microsoft continues to Copilot.
 </div>
 
 A few weeks ago, I tried to explain to someone what Microsoft Copilot is. I couldn't... because the name 'Copilot' now refers to at least 75 different things.
