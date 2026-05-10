@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Work with me
-strapline: A thinking partner for leaders navigating AI
+strapline: A partner for leaders navigating AI
 permalink: /work-with-me/
 ---
 

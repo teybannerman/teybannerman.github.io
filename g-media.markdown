@@ -22,6 +22,7 @@ Co-authored book, #1 on Amazon AI charts globally in 2025. A practical examinati
 ## Press & features
 
 **2025-2026**
+- dualoop - [Building AI-native products Q&A](https://www.linkedin.com/posts/tey-bannerman-ai-products-users-adopt-ugcPost-7429446492865601536-5Iqb/)
 - Cool Hunting - [The Business Literacy Gap in Design Leadership](https://coolhunting.com/design/the-business-literacy-gap-in-design-leadership/)
 - Datacamp - [Putting an End to Data and AI Disasters](https://www.datacamp.com/webinars/putting-an-end-to-data-and-ai-disasters)
 - iF Design - [A look into the iF Design Trend Report 2025](https://ifdesign.com/en/if-magazine/trend-report-2025-tey-bannerman)
