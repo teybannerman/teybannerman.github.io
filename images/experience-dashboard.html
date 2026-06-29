@@ -1,0 +1,2014 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NectGen | Experience Intelligence</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap');
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #F3F4F6;
+    color: #0F172A;
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+  button { font-family: inherit; }
+  .flow-node { transition: box-shadow .16s ease, border-color .16s ease; }
+  .flow-node:hover { box-shadow: 0 8px 22px rgba(0,0,0,0.12); }
+</style>
+
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.3.1",
+    "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
+    "react-dom": "https://esm.sh/react-dom@18.3.1",
+    "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+    "recharts": "https://esm.sh/recharts@2.15.0?external=react,react-dom",
+    "lucide-react": "https://esm.sh/lucide-react@0.469.0?external=react"
+  }
+}
+</script>
+<script src="https://unpkg.com/@babel/standalone@7.26.4/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-type="module" data-presets="react">
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { createRoot } from "react-dom/client";
+import {
+  AreaChart, Area, LineChart, Line, BarChart, Bar, Cell,
+  XAxis, YAxis, CartesianGrid, ReferenceLine, ResponsiveContainer,
+} from "recharts";
+import {
+  Eye, Brain, Loader, LayoutDashboard, Lightbulb, ArrowLeft,
+  ArrowUpRight, ArrowDownRight, Minus, AlertCircle, Clock, AlertTriangle,
+  Zap, Shield, CheckCircle2, Target, MessageSquare, Sparkles,
+  LayoutGrid, Network, Orbit, Waypoints, RotateCcw,
+  ChevronRight, Info, X, Database, Server, BarChart3,
+} from "lucide-react";
+
+/* ============================================================================
+   DESIGN TOKENS  (section 10)
+   ========================================================================== */
+const FONT_DISPLAY = "'Space Grotesk', system-ui, sans-serif";
+const FONT_BODY = "system-ui, -apple-system, 'Segoe UI', sans-serif";
+
+const C = {
+  page: "#F3F4F6",
+  white: "#FFFFFF",
+  dark: "#0F172A",
+  border: "#E2E8F0",
+  sep: "#F1F5F9",
+  inset: "#F8FAFC",
+  // text on white
+  primary: "#0F172A",
+  secondary: "#475569",
+  muted: "#94A3B8",
+  // status (badges on white)
+  green: "#059669", greenBg: "#F0FDF4",
+  amber: "#E8A23C", amberBg: "#FFFBEB",
+  red: "#DC2626", redBg: "#FEF2F2",
+  // accents
+  indigo: "#4F46E5", indigoBg: "#EEF2FF",
+  violet: "#7C3AED", violetBg: "#F5F3FF",
+  // chart / hypothesis
+  hypFix: "#94A3B8", hypOptimise: "#4F46E5", hypDifferentiate: "#7C3AED",
+  // on-dark
+  darkPrimary: "#FFFFFF",
+  darkSecondary: "rgba(255,255,255,0.70)",
+  darkMuted: "rgba(255,255,255,0.45)",
+  darkAccent: "#818CF8",
+};
+
+const RAG_GRAD = {
+  green: ["#047857", "#10B981"],
+  amber: ["#B45309", "#F59E0B"],
+  red: ["#B91C1C", "#F87171"],
+};
+// solid RAG colours for dots & chart strokes on white surfaces
+const RAG_SOLID = { green: "#059669", amber: "#E8A23C", red: "#DC2626" };
+
+// muted light tints for journey tiles (light bg + dark text, gentle RAG accent)
+const RAG_TINT = {
+  green: { bg: "#F0FDF4", border: "#BBF7D0", accent: "#059669" },
+  amber: { bg: "#FFFBEB", border: "#FDE68A", accent: "#E8A23C" },
+  red:   { bg: "#FEF2F2", border: "#FECACA", accent: "#DC2626" },
+};
+
+const SH = {
+  white: "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03)",
+  whiteHover: "0 4px 12px rgba(0,0,0,0.06), 0 12px 28px rgba(0,0,0,0.06)",
+  grad: "0 2px 8px rgba(0,0,0,0.10), 0 8px 24px rgba(0,0,0,0.08)",
+  gradHover: "0 8px 20px rgba(0,0,0,0.12), 0 16px 40px rgba(0,0,0,0.10)",
+  dark: "0 4px 16px rgba(0,0,0,0.20)",
+};
+
+const DARK_BG =
+  "radial-gradient(ellipse at 70% 20%, rgba(99,102,241,0.12), transparent 60%), #0F172A";
+
+const ICONS = {
+  ArrowUpRight, ArrowDownRight, Minus, AlertCircle, Clock,
+  AlertTriangle, Zap, Shield, CheckCircle2, Target,
+};
+
+/* ============================================================================
+   DATA  (section 3)
+   ========================================================================== */
+const SQUADS = [
+  { id: "acq", name: "Acquisition & Onboarding", lead: "Emma" },
+  { id: "everyday", name: "Everyday Banking", lead: "Owen" },
+  { id: "lending", name: "Lending & Liquidity+", lead: "Owen D." },
+];
+
+const JOURNEYS = [
+  {
+    id: "onboarding", name: "Onboarding", squadId: "acq",
+    metric: { name: "Time to First Transaction", target: 12, actual: 18, unit: " min", lower: true },
+    trend: [24, 22, 21, 20, 19, 18], rag: "amber", advocacy: 3.2, processHealth: 68,
+    testing: { target: 4, actual: 3 }, hypotheses: { fix: 4, optimise: 2, differentiate: 1 },
+    insights: { new: 1, actioned: 5, deferred: 2, oldestNewDays: 8, oldestDeferredDays: 21 },
+    tech: { latency: 340, errorRate: 1.2, uptime: 99.7 }, benchmark: 8,
+    testingTrend: [4, 4, 3, 4, 3, 3], advocacyTrend: [2.6, 2.8, 2.9, 3.0, 3.1, 3.2],
+    boldnessTrend: [0, 8, 10, 12, 14, 14], processHealthTrend: [52, 58, 62, 65, 67, 68],
+  },
+  {
+    id: "subscription", name: "Subscription", squadId: "acq",
+    metric: { name: "Conversion Rate", target: 85, actual: 78, unit: "%", lower: false },
+    trend: [74, 76, 77, 78, 78, 78], rag: "amber", advocacy: 2.8, processHealth: 55,
+    testing: { target: 4, actual: 4 }, hypotheses: { fix: 5, optimise: 2, differentiate: 0 },
+    insights: { new: 0, actioned: 3, deferred: 3, oldestNewDays: 0, oldestDeferredDays: 42 },
+    tech: { latency: 180, errorRate: 0.4, uptime: 99.9 }, benchmark: 82,
+    testingTrend: [3, 3, 4, 4, 4, 4], advocacyTrend: [2.4, 2.5, 2.6, 2.7, 2.8, 2.8],
+    boldnessTrend: [10, 8, 5, 0, 0, 0], processHealthTrend: [48, 50, 52, 54, 55, 55],
+  },
+  {
+    id: "account-mgmt", name: "Account Management", squadId: "acq",
+    metric: { name: "Task Completion Rate", target: 90, actual: 93, unit: "%", lower: false },
+    trend: [86, 88, 90, 91, 92, 93], rag: "green", advocacy: 4.1, processHealth: 88,
+    testing: { target: 4, actual: 5 }, hypotheses: { fix: 1, optimise: 2, differentiate: 3 },
+    insights: { new: 0, actioned: 7, deferred: 1, oldestNewDays: 0, oldestDeferredDays: 5 },
+    tech: { latency: 120, errorRate: 0.2, uptime: 99.95 }, benchmark: 88,
+    testingTrend: [3, 4, 4, 5, 5, 5], advocacyTrend: [3.2, 3.5, 3.7, 3.9, 4.0, 4.1],
+    boldnessTrend: [15, 20, 30, 35, 45, 50], processHealthTrend: [60, 68, 74, 80, 85, 88],
+  },
+  {
+    id: "payments", name: "Payments", squadId: "everyday",
+    metric: { name: "End-to-End Time", target: 3.0, actual: 2.1, unit: "s", lower: true },
+    trend: [3.8, 3.2, 2.8, 2.5, 2.3, 2.1], rag: "green", advocacy: 4.3, processHealth: 82,
+    testing: { target: 4, actual: 4 }, hypotheses: { fix: 1, optimise: 3, differentiate: 2 },
+    insights: { new: 0, actioned: 6, deferred: 0, oldestNewDays: 0, oldestDeferredDays: 0 },
+    tech: { latency: 95, errorRate: 0.1, uptime: 99.99 }, benchmark: 4.0,
+    testingTrend: [3, 4, 4, 4, 4, 4], advocacyTrend: [3.5, 3.7, 3.9, 4.1, 4.2, 4.3],
+    boldnessTrend: [20, 25, 28, 30, 33, 33], processHealthTrend: [65, 70, 74, 78, 80, 82],
+  },
+  {
+    id: "casa", name: "CASA", squadId: "everyday",
+    metric: { name: "Feature Adoption", target: 88, actual: 71, unit: "%", lower: false },
+    trend: [68, 69, 70, 70, 71, 71], rag: "red", advocacy: 2.4, processHealth: 35,
+    testing: { target: 4, actual: 1 }, hypotheses: { fix: 1, optimise: 0, differentiate: 0 },
+    insights: { new: 3, actioned: 1, deferred: 1, oldestNewDays: 31, oldestDeferredDays: 38 },
+    tech: { latency: 420, errorRate: 2.8, uptime: 99.2 }, benchmark: 80,
+    testingTrend: [3, 3, 2, 2, 1, 1], advocacyTrend: [3.0, 2.8, 2.7, 2.6, 2.5, 2.4],
+    boldnessTrend: [15, 10, 5, 0, 0, 0], processHealthTrend: [58, 52, 48, 42, 38, 35],
+  },
+  {
+    id: "cards", name: "Cards", squadId: "everyday",
+    metric: { name: "Digital Activation Rate", target: 80, actual: 76, unit: "%", lower: false },
+    trend: [70, 72, 73, 74, 75, 76], rag: "amber", advocacy: 3.5, processHealth: 65,
+    testing: { target: 4, actual: 3 }, hypotheses: { fix: 2, optimise: 2, differentiate: 1 },
+    insights: { new: 1, actioned: 4, deferred: 1, oldestNewDays: 14, oldestDeferredDays: 10 },
+    tech: { latency: 200, errorRate: 0.6, uptime: 99.8 }, benchmark: 75,
+    testingTrend: [3, 3, 3, 3, 3, 3], advocacyTrend: [3.0, 3.1, 3.2, 3.3, 3.4, 3.5],
+    boldnessTrend: [10, 12, 15, 18, 20, 20], processHealthTrend: [55, 58, 60, 62, 64, 65],
+  },
+  {
+    id: "lending", name: "Lending", squadId: "lending",
+    metric: { name: "Application Time", target: 5, actual: 11, unit: " min", lower: true },
+    trend: [14, 13, 12.5, 12, 11.5, 11], rag: "red", advocacy: 2.1, processHealth: 42,
+    testing: { target: 4, actual: 4 }, hypotheses: { fix: 6, optimise: 1, differentiate: 0 },
+    insights: { new: 2, actioned: 2, deferred: 4, oldestNewDays: 28, oldestDeferredDays: 56 },
+    tech: { latency: 580, errorRate: 3.1, uptime: 98.9 }, benchmark: 7,
+    testingTrend: [4, 4, 4, 4, 4, 4], advocacyTrend: [2.5, 2.4, 2.3, 2.2, 2.1, 2.1],
+    boldnessTrend: [10, 8, 5, 2, 0, 0], processHealthTrend: [55, 52, 48, 45, 43, 42],
+  },
+  {
+    id: "liquidity", name: "Liquidity+", squadId: "lending",
+    metric: { name: "Adoption Rate", target: 70, actual: 68, unit: "%", lower: false },
+    trend: [55, 58, 62, 64, 66, 68], rag: "amber", advocacy: 3.8, processHealth: 75,
+    testing: { target: 4, actual: 3 }, hypotheses: { fix: 1, optimise: 2, differentiate: 2 },
+    insights: { new: 0, actioned: 4, deferred: 1, oldestNewDays: 0, oldestDeferredDays: 12 },
+    tech: { latency: 250, errorRate: 0.8, uptime: 99.6 }, benchmark: 65,
+    testingTrend: [2, 2, 3, 3, 3, 3], advocacyTrend: [3.0, 3.2, 3.4, 3.5, 3.7, 3.8],
+    boldnessTrend: [20, 25, 30, 35, 38, 40], processHealthTrend: [50, 55, 62, 68, 72, 75],
+  },
+];
+
+const ALL_INSIGHTS = [
+  { id: 1, journeyId: "casa", title: "Dormant account reactivation flow confuses users", status: "new", daysOld: 31, severity: "high", type: "fix" },
+  { id: 2, journeyId: "casa", title: "No contextual prompts for feature discovery", status: "new", daysOld: 22, severity: "high", type: "differentiate" },
+  { id: 3, journeyId: "casa", title: "Standing order setup abandonment at confirmation step", status: "new", daysOld: 18, severity: "medium", type: "fix" },
+  { id: 4, journeyId: "lending", title: "Mobile document upload fails for files over 5MB", status: "new", daysOld: 28, severity: "high", type: "fix" },
+  { id: 5, journeyId: "lending", title: "Variable rate explanation unclear to most users", status: "new", daysOld: 15, severity: "medium", type: "optimise" },
+  { id: 6, journeyId: "lending", title: "Income verification step adds 4 min avg delay", status: "deferred", daysOld: 56, severity: "high", type: "fix", reason: "Dependent on 3rd party API changes" },
+  { id: 7, journeyId: "lending", title: "No progress indicator during application", status: "deferred", daysOld: 42, severity: "medium", type: "optimise", reason: "Scheduled for Sprint 18" },
+  { id: 8, journeyId: "subscription", title: "Pricing comparison table not mobile-responsive", status: "deferred", daysOld: 42, severity: "medium", type: "fix", reason: "Design resource constraint" },
+  { id: 9, journeyId: "subscription", title: "Trial-to-paid nudge timing suboptimal", status: "deferred", daysOld: 35, severity: "medium", type: "optimise", reason: "Awaiting A/B test framework" },
+  { id: 10, journeyId: "onboarding", title: "ID verification fallback path too many steps", status: "new", daysOld: 8, severity: "medium", type: "fix" },
+  { id: 11, journeyId: "cards", title: "Activation confirmation lacks next-step guidance", status: "new", daysOld: 14, severity: "low", type: "differentiate" },
+  { id: 12, journeyId: "onboarding", title: "Business type selection could be predictive", status: "deferred", daysOld: 21, severity: "low", type: "differentiate", reason: "Deprioritised for core flow fixes" },
+  { id: 13, journeyId: "cards", title: "Virtual card preview felt generic", status: "deferred", daysOld: 10, severity: "low", type: "differentiate", reason: "Brand assets not yet finalised" },
+];
+
+/* ============================================================================
+   "AI" NARRATIVES  (canned, data-grounded — stands in for claude-sonnet-4-6)
+   Two variants per surface so Regenerate produces a different read.
+   ========================================================================== */
+const NARRATIVES = {
+  headline: [
+    "CASA and Lending are your two red journeys and both are stalling — CASA has cut testing to 1-of-4 and Lending is sitting on 56-day-old deferred friction; intervene on both this sprint.",
+    "Don't let attention drift to the greens: CASA (testing cut to 1-of-4) and Lending (56-day-old deferred fixes) are your only reds and both are deteriorating — act on both this sprint.",
+  ],
+  onboarding: [
+    "Time to first transaction has fallen from 24 to 18 minutes over six sprints, but it's still 6 minutes off the 12-minute target and more than double the 8-minute benchmark. Testing has slipped to 3 of 4 per cycle and a 340ms p95 with a 1.2% error rate is quietly adding friction to verification. Advocacy is climbing to 3.2, but the target gap is closing too slowly to reach amber-to-green on the current cadence.",
+    "The six-sprint decline from 24 to 18 minutes is real progress, yet at 18 minutes the journey runs 50% over its 12-minute target and twice the 8-minute benchmark. Testing dropping to 3-of-4 and a 1.2% error rate on a 340ms path are capping the gains rather than the design. Rising advocacy (3.2) buys goodwill, but only restoring test cadence will close the remaining gap.",
+  ],
+  subscription: [
+    "Conversion has stalled at 78% for two sprints — 7 points below the 85% target and 4 below the 82% benchmark — despite testing holding at the full 4 per cycle. The backlog is entirely corrective: 5 of 7 hypotheses are fixes and differentiation has fallen to zero, so the team is patching the funnel rather than reimagining it. With advocacy at just 2.8 and three insights deferred past 40 days, the plateau is likely to persist.",
+    "Four-per-cycle testing is being spent almost entirely on fixes — 5 of 7 hypotheses — so conversion has flatlined at 78%, 7 points under target. Differentiation has collapsed to zero and three insights sit deferred beyond 40 days, leaving nothing in the pipeline to move the funnel. At 2.8 advocacy, incremental patching won't reach the 85% goal.",
+  ],
+  "account-mgmt": [
+    "Task completion has climbed to 93%, clearing the 90% target and the 88% benchmark, and the leading indicators explain why: testing runs ahead of target at 5 per cycle and half of all hypotheses are now differentiation bets. Seven insights actioned against a single deferral shows a team that closes the loop quickly, and advocacy of 4.1 reflects it. This is the portfolio's healthiest operating model.",
+    "Everything compounds in the right direction here: 5-of-4 testing, a 50% boldness ratio, and seven actioned insights have carried task completion to 93%, three points clear of target and five above benchmark. Advocacy at 4.1 confirms users feel it. This squad has turned disciplined process into outcome — the template for the rest of the portfolio.",
+  ],
+  payments: [
+    "End-to-end payment time has nearly halved from 3.8s to 2.1s, beating the 3.0s target and the 4.0s benchmark by a wide margin. A rock-solid foundation — 95ms p95, 0.1% errors, 99.99% uptime — gives the team room to optimise rather than firefight, and with zero deferred insights and steady 4-per-cycle testing the loop stays clean. Advocacy of 4.3 is the highest in the portfolio.",
+    "With a near-flawless foundation (95ms p95, 0.1% errors, 99.99% uptime) the team has been free to optimise, halving end-to-end time to 2.1s against a 3.0s target. Zero deferred insights and consistent testing keep the loop tight, and advocacy of 4.3 leads the portfolio. The challenge now is sustaining boldness, not fixing problems.",
+  ],
+  casa: [
+    "Feature adoption is stuck at 71% — 17 points below target and 9 below benchmark — and the leading indicators show why it won't recover on its own: testing has collapsed from 3 to 1 per cycle and three insights have sat unactioned for up to 31 days. Degraded tech (420ms p95, 2.8% errors) is actively suppressing discovery, while advocacy has slid to 2.4. With a single fix hypothesis and no differentiation, the team has effectively stopped iterating here.",
+    "This is a journey in retreat: testing has fallen from 3 to 1 per cycle, three insights sit unactioned up to 31 days, and adoption is frozen at 71%, 17 points under target. A 2.8% error rate and 420ms latency are suppressing feature discovery while advocacy slides to 2.4. Without restored cadence and a tech fix, the gap will widen, not close.",
+  ],
+  cards: [
+    "Digital activation has improved steadily to 76%, edging past the 75% benchmark but still 4 points short of the 80% target. Testing has been flat at 3 of 4 for the entire window, which is throttling the rate of gain, and a single insight has now gone unactioned for 14 days. Advocacy at 3.5 and a balanced hypothesis mix suggest a healthy but under-resourced journey — lifting test cadence would likely close the remaining gap.",
+    "Activation has ground up to 76% on flat 3-of-4 testing — the cadence ceiling is the story, since the journey is otherwise healthy with balanced hypotheses and rising advocacy (3.5). It's now past benchmark but 4 points short of target, with one insight aging to 14 days. A modest lift in testing investment should finish the job.",
+  ],
+  lending: [
+    "Application time has come down from 14 to 11 minutes but remains more than double the 5-minute target and well above the 7-minute benchmark. The team tests at full cadence, yet all seven hypotheses are corrective and four insights — including 56-day-old income-verification friction — sit deferred, while the portfolio's worst tech profile (580ms p95, 3.1% errors, 98.9% uptime) compounds every delay. Advocacy of 2.1, the lowest anywhere, is the result: high effort, aimed at the wrong blockers.",
+    "Eleven minutes is half what it was, but still 6 minutes over target and the portfolio's worst tech profile — 580ms p95, 3.1% errors, 98.9% uptime — taxes every step. Full-cadence testing is wasted on six fix hypotheses while the real blockers, including 56-day-deferred income verification, sit untouched. Advocacy of 2.1, the lowest anywhere, is the predictable outcome.",
+  ],
+  liquidity: [
+    "Adoption has risen sharply from 55% to 68%, already past the 65% benchmark and within 2 points of target. Boldness is healthy at 40% and advocacy has climbed to 3.8, so the trajectory is strong despite testing sitting just below target at 3 of 4. With no unactioned insights and only one recent deferral, this journey is a sprint or two from green.",
+    "A 13-point climb to 68% adoption puts this journey within 2 of target and well past the 65% benchmark, powered by a healthy 40% boldness ratio and advocacy rising to 3.8. Testing just under target at 3-of-4 is the only soft spot, and with a clean insight ledger the path to green is short.",
+  ],
+};
+
+// Stand-in for the spec's callLLM(): no network, realistic latency, canned text.
+function mockLLM(id, variant) {
+  const delay = 650 + Math.random() * 1300;
+  const variants = NARRATIVES[id] || ["Analysis unavailable."];
+  return new Promise((resolve) =>
+    setTimeout(() => resolve(variants[variant % variants.length]), delay)
+  );
+}
+
+/* ============================================================================
+   BUSINESS LOGIC  (section 6)
+   ========================================================================== */
+function getDelta(journey) {
+  const { metric } = journey;
+  const gap = metric.lower ? metric.target - metric.actual : metric.actual - metric.target;
+  const abs = parseFloat(Math.abs(gap).toFixed(2)); // guard float artifacts (e.g. 3.0 - 2.1)
+  if (gap > 0) return { text: `${abs}${metric.unit} ahead`, positive: true, icon: metric.lower ? "ArrowDownRight" : "ArrowUpRight" };
+  if (gap < 0) return { text: `${abs}${metric.unit} behind`, positive: false, icon: metric.lower ? "ArrowUpRight" : "ArrowDownRight" };
+  return { text: "On target", positive: true, icon: "Minus" };
+}
+
+function getBoldnessRatio(h) {
+  const total = h.fix + h.optimise + h.differentiate;
+  return total ? Math.round((h.differentiate / total) * 100) : 0;
+}
+
+function getFlag(j) {
+  if (j.insights.new > 0 && j.insights.oldestNewDays >= 14)
+    return { text: `${j.insights.new} insight${j.insights.new > 1 ? "s" : ""} unactioned (${j.insights.oldestNewDays}d)`, severity: "red", icon: "AlertCircle" };
+  if (j.insights.deferred > 2 && j.insights.oldestDeferredDays > 30)
+    return { text: `${j.insights.deferred} deferred (oldest ${j.insights.oldestDeferredDays}d)`, severity: "amber", icon: "Clock" };
+  if (j.testing.actual < j.testing.target)
+    return { text: `Testing ${j.testing.actual}/${j.testing.target} target`, severity: "amber", icon: "AlertTriangle" };
+  if (getBoldnessRatio(j.hypotheses) === 0 && (j.hypotheses.fix + j.hypotheses.optimise) > 0)
+    return { text: "No differentiation hypotheses", severity: "amber", icon: "Zap" };
+  if (j.tech.latency > 400 || j.tech.errorRate > 2)
+    return { text: "Tech health degraded", severity: "red", icon: "Shield" };
+  if (getDelta(j).positive)
+    return { text: getDelta(j).text, severity: "green", icon: "CheckCircle2" };
+  return { text: "Tracking", severity: "neutral", icon: "Target" };
+}
+
+function getSquadAgg(squadId) {
+  const js = JOURNEYS.filter((j) => j.squadId === squadId);
+  return {
+    avgProcess: Math.round(js.reduce((s, j) => s + j.processHealth, 0) / js.length),
+    totalUnactioned: js.reduce((s, j) => s + j.insights.new, 0),
+    avgBoldness: Math.round(js.reduce((s, j) => s + getBoldnessRatio(j.hypotheses), 0) / js.length),
+    worstRag: js.some((j) => j.rag === "red") ? "red" : js.some((j) => j.rag === "amber") ? "amber" : "green",
+  };
+}
+
+function computePatterns() {
+  const patterns = [];
+  const countByJourney = {};
+  ALL_INSIGHTS.forEach((i) => { countByJourney[i.journeyId] = (countByJourney[i.journeyId] || 0) + 1; });
+  const sorted = Object.entries(countByJourney).sort((a, b) => b[1] - a[1]);
+  const topTwo = sorted.slice(0, 2);
+  const topCount = topTwo.reduce((s, [, c]) => s + c, 0);
+  const topPct = Math.round((topCount / ALL_INSIGHTS.length) * 100);
+  const topNames = topTwo.map(([id]) => JOURNEYS.find((j) => j.id === id)?.name).join(" and ");
+  patterns.push(`${topNames} account for ${topPct}% of all experience insights - friction is concentrated, not distributed.`);
+
+  const staleHigh = ALL_INSIGHTS.filter((i) => i.status === "deferred" && i.daysOld > 30 && i.severity === "high");
+  if (staleHigh.length > 0)
+    patterns.push(`${staleHigh.length} high-severity insight${staleHigh.length > 1 ? "s have" : " has"} been deferred for over 30 days. Known significant friction is not being addressed.`);
+
+  const diffTotal = ALL_INSIGHTS.filter((i) => i.type === "differentiate").length;
+  const diffDeferred = ALL_INSIGHTS.filter((i) => i.type === "differentiate" && i.status === "deferred").length;
+  if (diffTotal > 0 && diffDeferred / diffTotal >= 0.5)
+    patterns.push(`${Math.round((diffDeferred / diffTotal) * 100)}% of differentiation insights are deferred. The ideas that would make this product distinctive are the ones being deprioritised.`);
+
+  return patterns;
+}
+
+/* ----------------------------------------------------------------------------
+   PORTFOLIO OVERVIEW METRICS  (section 6.6)
+   Some are computed from journey data; retention & product depth are launch
+   assumptions (no per-customer data in this prototype).
+   -------------------------------------------------------------------------- */
+const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+
+// relative share of customer traffic per journey (assumption, sums to 100)
+const TRAFFIC = {
+  onboarding: 12, subscription: 8, "account-mgmt": 14, payments: 22,
+  casa: 14, cards: 16, lending: 6, liquidity: 8,
+};
+
+// assumed launch trends (6 sprints) — current = last value
+const RETENTION_TREND = [81, 83, 84.5, 85.5, 86.4, 87.4];   // % active at 90 days
+const DEPTH_TREND = [1.8, 1.9, 2.05, 2.2, 2.3, 2.4];        // products in active use / customer
+
+function computeAdvocacy() {
+  const value = +(JOURNEYS.reduce((s, j) => s + j.advocacy, 0) / JOURNEYS.length).toFixed(1);
+  const trend = [0, 1, 2, 3, 4, 5].map((k) =>
+    +(JOURNEYS.reduce((s, j) => s + j.advocacyTrend[k], 0) / JOURNEYS.length).toFixed(3)
+  );
+  return { value, trend };
+}
+
+// fraction of the original target-gap a journey has closed by sprint k (overshoot = fully closed)
+function closureToDate(j, k) {
+  const t = j.metric.target;
+  const gapStart = j.metric.lower ? j.trend[0] - t : t - j.trend[0];
+  if (gapStart <= 0) return 1;
+  const gapNow = j.metric.lower ? j.trend[k] - t : t - j.trend[k];
+  return clamp((gapStart - Math.max(gapNow, 0)) / gapStart, 0, 1);
+}
+function computeVelocity() {
+  const trend = [0, 1, 2, 3, 4, 5].map((k) =>
+    +(JOURNEYS.reduce((s, j) => s + closureToDate(j, k), 0) / JOURNEYS.length * 100).toFixed(1)
+  );
+  return { value: Math.round(trend[5]), trend };
+}
+
+function techScoreFor(j) {
+  const lat = clamp(100 - (j.tech.latency - 100) * 0.18, 0, 100);
+  const err = clamp(100 - j.tech.errorRate * 25, 0, 100);
+  const up = clamp((j.tech.uptime - 98) * 50, 0, 100);
+  return 0.4 * lat + 0.3 * err + 0.3 * up;
+}
+function computeTechScore() {
+  const tw = JOURNEYS.reduce((s, j) => s + (TRAFFIC[j.id] || 0), 0);
+  return Math.round(JOURNEYS.reduce((s, j) => s + techScoreFor(j) * (TRAFFIC[j.id] || 0), 0) / tw);
+}
+
+function computeThroughput() {
+  let actioned = 0, total = 0;
+  JOURNEYS.forEach((j) => { actioned += j.insights.actioned; total += j.insights.new + j.insights.actioned + j.insights.deferred; });
+  const ratio = Math.round((actioned / total) * 100);
+  const avgAge = Math.round(ALL_INSIGHTS.reduce((s, i) => s + i.daysOld, 0) / ALL_INSIGHTS.length);
+  return { ratio, avgAge };
+}
+
+function buildPortfolioMetrics() {
+  const adv = computeAdvocacy();
+  const vel = computeVelocity();
+  const tech = computeTechScore();
+  const thr = computeThroughput();
+  const techTrend = [73, 74, 75, 76, 77, tech];
+  const thrTrend = [54, 56, 58, 60, 61, thr.ratio];
+
+  // delta across the 6-sprint window (matches each sparkline's span)
+  const win = (arr, dp, suffix = "") => {
+    const raw = arr[arr.length - 1] - arr[0];
+    const v = dp === 0 ? Math.round(raw) : +raw.toFixed(dp);
+    return { delta: (v >= 0 ? "+" : "") + v + suffix, positive: v >= 0 };
+  };
+  // velocity is a cumulative-from-zero rate, so report the latest sprint's increment instead
+  const step = (arr, suffix = "") => {
+    const v = Math.round(arr[arr.length - 1] - arr[arr.length - 2]);
+    return { delta: (v >= 0 ? "+" : "") + v + suffix, positive: v >= 0 };
+  };
+  // RAG status colour for the big value (higher = better for all six).
+  // Amber tier renders as primary black — only green & red get a colour.
+  const band = (v, g, a) => (v >= g ? C.green : v >= a ? C.primary : C.red);
+
+  return [
+    { label: "Retention", value: RETENTION_TREND[5], unit: "%", sub: "90-day active",
+      ...win(RETENTION_TREND, 1), trend: RETENTION_TREND, accent: C.green, valueColor: band(RETENTION_TREND[5], 85, 70) },
+    { label: "Product Depth", value: DEPTH_TREND[5], unit: "", sub: "products / customer",
+      ...win(DEPTH_TREND, 1), trend: DEPTH_TREND, accent: C.indigo, valueColor: band(DEPTH_TREND[5], 3, 2) },
+    { label: "Advocacy", value: adv.value, unit: "/5", sub: "north star · all journeys",
+      ...win(adv.trend, 1), trend: adv.trend, accent: C.violet, valueColor: band(adv.value, 3.5, 2.5) },
+    { label: "Experience Velocity", value: vel.value, unit: "%", sub: "of target gap closed",
+      ...step(vel.trend, " pts"), trend: vel.trend, accent: C.green, valueColor: band(vel.value, 50, 25) },
+    { label: "Technical Experience", value: tech, unit: "/100", sub: "traffic-weighted floor",
+      ...win(techTrend, 0), trend: techTrend, accent: C.amber, valueColor: band(tech, 85, 70) },
+    { label: "Insight Throughput", value: thr.ratio, unit: "%", sub: `actioned · avg ${thr.avgAge}d to refine`,
+      ...win(thrTrend, 0), trend: thrTrend, accent: C.indigo, valueColor: band(thr.ratio, 70, 50) },
+  ];
+}
+
+/* small colour helpers */
+const processColour = (n) => (n >= 70 ? C.green : n >= 50 ? C.amber : C.red);
+const advocacyColour = (n) => (n >= 3.5 ? C.green : n >= 2.5 ? C.amber : C.red);
+const ageColour = (d) => (d > 30 ? C.red : d > 14 ? C.amber : C.muted);
+const STATUS_COLOUR = { new: C.red, actioned: C.green, deferred: C.amber };
+const STATUS_BG = { new: C.redBg, actioned: C.greenBg, deferred: C.amberBg };
+const SEV = { red: C.red, amber: C.amber, green: C.green, neutral: C.muted };
+const SEV_BG = { red: C.redBg, amber: C.amberBg, green: C.greenBg, neutral: C.inset };
+const TYPE_STYLE = {
+  differentiate: { bg: C.violetBg, fg: C.violet },
+  optimise: { bg: C.indigoBg, fg: C.indigo },
+  fix: { bg: C.inset, fg: C.muted },
+};
+
+/* ============================================================================
+   PRIMITIVES
+   ========================================================================== */
+function Spin({ size = 14, color = "#fff" }) {
+  return <Loader size={size} color={color} style={{ animation: "spin 0.9s linear infinite" }} />;
+}
+
+function toSeries(arr) {
+  return arr.map((v, i) => ({ x: `S${i + 1}`, v }));
+}
+
+function Sparkline({ data, color = "#94A3B8" }) {
+  return (
+    <AreaChart width={76} height={32} data={toSeries(data)} margin={{ top: 2, right: 2, bottom: 2, left: 2 }}>
+      <Area type="monotone" dataKey="v" stroke={color} strokeWidth={1.75} strokeOpacity={0.75}
+        fill={color} fillOpacity={0.12} dot={false} isAnimationActive={false} />
+    </AreaChart>
+  );
+}
+
+// Readable mini trend: fixed comparable Y-scale, axis ticks, a dashed threshold
+// reference line, sprint labels and point markers.
+function MiniTrend({ data, color, domain, ticks, refY, height = 58 }) {
+  return (
+    <div style={{ height }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart data={toSeries(data)} margin={{ top: 6, right: 10, bottom: 0, left: 0 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
+          <XAxis dataKey="x" tick={{ fontSize: 9, fill: C.muted }} axisLine={false} tickLine={false} interval={0} height={14} />
+          <YAxis domain={domain} ticks={ticks} width={24} tick={{ fontSize: 9, fill: C.muted }} axisLine={false} tickLine={false} />
+          {refY != null && <ReferenceLine y={refY} stroke={C.muted} strokeDasharray="4 3" strokeOpacity={0.7} />}
+          <Area type="monotone" dataKey="v" stroke={color} strokeWidth={2} fill={color} fillOpacity={0.1}
+            dot={{ r: 2.2, fill: color, strokeWidth: 0 }} activeDot={{ r: 3.5 }} isAnimationActive={false} />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+// Discrete cadence reads far better as bars: green when meeting target, with a target line.
+function MiniBars({ data, target, height = 58 }) {
+  const series = data.map((v, i) => ({ x: `S${i + 1}`, v }));
+  const top = Math.max(target, ...data) + 1;
+  return (
+    <div style={{ height }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={series} margin={{ top: 6, right: 10, bottom: 0, left: 0 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
+          <XAxis dataKey="x" tick={{ fontSize: 9, fill: C.muted }} axisLine={false} tickLine={false} interval={0} height={14} />
+          <YAxis domain={[0, top]} allowDecimals={false} width={24} tick={{ fontSize: 9, fill: C.muted }} axisLine={false} tickLine={false} />
+          <ReferenceLine y={target} stroke={C.amber} strokeDasharray="4 3" />
+          <Bar dataKey="v" radius={[2, 2, 0, 0]} isAnimationActive={false}>
+            {series.map((d, i) => <Cell key={i} fill={d.v >= target ? C.green : "#FCA5A5"} />)}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+// label (left) + current value (right) above a mini chart
+function DriverBlock({ label, value, valueColor, children }) {
+  return (
+    <div style={{ marginBottom: 12 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 2 }}>
+        <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.secondary }}>{label}</span>
+        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 13, color: valueColor }}>{value}</span>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+/* ============================================================================
+   TOPBAR  (8.2)
+   ========================================================================== */
+function NavButton({ icon: Icon, label, active, onClick }) {
+  return (
+    <button onClick={onClick} style={{
+      display: "flex", alignItems: "center", gap: 7, border: "none", background: "transparent",
+      cursor: "pointer", padding: "6px 10px", borderRadius: 8,
+      color: active ? C.indigo : C.secondary,
+      fontFamily: FONT_BODY, fontSize: 13, fontWeight: active ? 600 : 400,
+    }}>
+      <Icon size={15} />
+      {label}
+    </button>
+  );
+}
+
+function TopBar({ currentView, onNavigate, onInfo }) {
+  const isCommand = currentView === "command" || currentView === "detail";
+  return (
+    <div style={{
+      position: "sticky", top: 0, zIndex: 50, height: 52, background: C.white,
+      borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center",
+      justifyContent: "space-between", padding: "0 36px",
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{
+            width: 28, height: 28, borderRadius: 8,
+            background: "#FFFFFF", border: "1px solid #E2E8F0",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
+          }}>
+            <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 800, fontSize: 21, lineHeight: 1, color: "#E4002B", marginTop: -1 }}>M</span>
+          </div>
+          <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 15, letterSpacing: "-0.3px" }}>
+            NextGen: Experience Intelligence
+          </span>
+        </div>
+        <div style={{ width: 1, height: 22, background: C.border }} />
+        <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <NavButton icon={LayoutDashboard} label="Command Centre" active={isCommand} onClick={() => onNavigate("command")} />
+          <NavButton icon={Target} label="OKRs" active={currentView === "okrs"} onClick={() => onNavigate("okrs")} />
+          <NavButton icon={Lightbulb} label="Insights Tracker" active={currentView === "insights"} onClick={() => onNavigate("insights")} />
+        </div>
+      </div>
+      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <button onClick={onInfo} title="How this works · data sources" style={{
+          display: "flex", alignItems: "center", gap: 6, border: "none", background: "transparent",
+          cursor: "pointer", color: C.secondary, fontFamily: FONT_BODY, fontSize: 12, padding: "5px 8px", borderRadius: 8,
+        }}>
+          <Info size={15} /> How this works
+        </button>
+        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 400, fontSize: 11, color: C.muted }}>
+          Sprint 6 W2 &nbsp;|&nbsp; 26 Jun 2026
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================================
+   DARK CARD shell (reused by headline / causal analysis / patterns)
+   ========================================================================== */
+function DarkCard({ children, style }) {
+  return (
+    <div style={{
+      background: DARK_BG, borderRadius: 16, boxShadow: SH.dark, padding: 20,
+      position: "relative", overflow: "hidden", ...style,
+    }}>
+      {children}
+    </div>
+  );
+}
+
+function DarkLabel({ icon: Icon, text }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12 }}>
+      <Icon size={14} color={C.darkAccent} />
+      <span style={{
+        fontFamily: FONT_BODY, fontSize: 10, fontWeight: 600, textTransform: "uppercase",
+        letterSpacing: "0.8px", color: "rgba(255,255,255,0.45)",
+      }}>
+        {text}
+      </span>
+    </div>
+  );
+}
+
+/* ============================================================================
+   PORTFOLIO HEADLINE  (8.3)
+   ========================================================================== */
+function PortfolioHeadline({ headline, loading }) {
+  return (
+    <DarkCard style={{ marginTop: 4, padding: 22 }}>
+      <DarkLabel icon={Brain} text="Portfolio Intelligence" />
+      {loading ? (
+        <div style={{ display: "flex", alignItems: "center", gap: 10, color: "rgba(255,255,255,0.70)" }}>
+          <Spin size={15} color="rgba(255,255,255,0.7)" />
+          <span style={{ fontFamily: FONT_BODY, fontSize: 14 }}>Reading the portfolio…</span>
+        </div>
+      ) : (
+        <p style={{
+          margin: 0, fontFamily: FONT_DISPLAY, fontWeight: 500, fontSize: 16,
+          lineHeight: 1.5, color: "#fff", maxWidth: 880,
+          animation: "fadeUp 0.4s ease both",
+        }}>
+          {headline}
+        </p>
+      )}
+    </DarkCard>
+  );
+}
+
+/* ============================================================================
+   SQUAD SUMMARY ROW  (8.4)
+   ========================================================================== */
+function StatSpan({ label, value, color }) {
+  return (
+    <span style={{ fontFamily: FONT_BODY, fontSize: 13, color: C.muted }}>
+      {label}{" "}
+      <span style={{ fontWeight: 700, color }}>{value}</span>
+    </span>
+  );
+}
+
+function SquadSummaryRow({ squad }) {
+  const agg = getSquadAgg(squad.id);
+  return (
+    <div style={{
+      height: 48, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "space-between",
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 11 }}>
+        <span style={{ width: 10, height: 10, borderRadius: "50%", background: RAG_SOLID[agg.worstRag] }} />
+        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 22, letterSpacing: "-0.4px" }}>{squad.name}</span>
+      </div>
+      <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+        <StatSpan label="Process" value={`${agg.avgProcess}%`} color={processColour(agg.avgProcess)} />
+        <StatSpan label="Boldness" value={`${agg.avgBoldness}%`} color={agg.avgBoldness >= 20 ? C.violet : C.muted} />
+        {agg.totalUnactioned > 0 && (
+          <StatSpan label="Unactioned" value={agg.totalUnactioned} color={C.red} />
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================================
+   JOURNEY CARD  (8.5) — gradient-filled
+   ========================================================================== */
+function JourneyCard({ journey, onClick }) {
+  const [hover, setHover] = useState(false);
+  const tint = RAG_TINT[journey.rag];
+  const delta = getDelta(journey);
+  const flag = getFlag(journey);
+  const DeltaIcon = ICONS[delta.icon] || Minus;
+  const FlagIcon = ICONS[flag.icon] || Target;
+  const m = journey.metric;
+  const deltaColour = delta.positive ? C.green : C.red;
+
+  return (
+    <div
+      onClick={() => onClick(journey.id)}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        background: tint.bg,
+        border: `1px solid ${tint.border}`,
+        borderRadius: 16, padding: 22, cursor: "pointer",
+        boxShadow: hover ? SH.whiteHover : SH.white,
+        transform: hover ? "translateY(-2px)" : "translateY(0)",
+        transition: "transform 0.18s ease, box-shadow 0.18s ease",
+        color: C.primary,
+      }}
+    >
+      {/* top row */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ width: 8, height: 8, borderRadius: "50%", background: tint.accent }} />
+          <span style={{ fontFamily: FONT_BODY, fontWeight: 600, fontSize: 14, color: C.primary }}>{journey.name}</span>
+        </div>
+        <Sparkline data={journey.trend} color={tint.accent} />
+      </div>
+
+      {/* metric block */}
+      <div style={{ marginTop: 16, display: "flex", alignItems: "baseline", gap: 3 }}>
+        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 800, fontSize: 46, lineHeight: 1, color: C.primary, letterSpacing: "-1px" }}>
+          {m.actual}
+        </span>
+        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 400, fontSize: 16, color: C.secondary }}>
+          {m.unit}
+        </span>
+      </div>
+      <div style={{ marginTop: 6, fontFamily: FONT_BODY, fontSize: 11, color: C.muted }}>
+        target {m.target}{m.unit}
+      </div>
+
+      {/* delta */}
+      <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 5 }}>
+        <DeltaIcon size={13} color={deltaColour} />
+        <span style={{ fontFamily: FONT_BODY, fontWeight: 600, fontSize: 12, color: deltaColour }}>{delta.text}</span>
+      </div>
+
+      {/* flag pill */}
+      <div style={{
+        marginTop: 14, display: "flex", alignItems: "center", gap: 6,
+        background: SEV_BG[flag.severity], border: `1px solid ${C.border}`,
+        borderRadius: 6, padding: "7px 10px",
+      }}>
+        <FlagIcon size={11} color={SEV[flag.severity]} />
+        <span style={{ fontFamily: FONT_BODY, fontWeight: 500, fontSize: 11, color: SEV[flag.severity] }}>{flag.text}</span>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================================
+   PORTFOLIO STATS BAND  (8.8) — overarching metrics in the negative space
+   ========================================================================== */
+function MetricSparkline({ data, color }) {
+  return (
+    <div style={{ height: 26, marginTop: 10 }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart data={toSeries(data)} margin={{ top: 2, right: 0, bottom: 0, left: 0 }}>
+          <Area type="monotone" dataKey="v" stroke={color} strokeWidth={1.75} strokeOpacity={0.85}
+            fill={color} fillOpacity={0.1} dot={false} isAnimationActive={false} />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+function MetricStat({ m, first, vertical }) {
+  const Arrow = m.positive ? ArrowUpRight : ArrowDownRight;
+  const dc = m.positive ? C.green : C.red;
+  const wrap = vertical
+    ? { padding: first ? "0 0 16px" : "16px 0", borderTop: first ? "none" : `1px solid ${C.border}` }
+    : { flex: 1, padding: first ? "0 24px 0 0" : "0 24px", borderLeft: first ? "none" : `1px solid ${C.border}` };
+  return (
+    <div style={wrap}>
+      <div style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.6px", color: C.muted }}>
+        {m.label}
+      </div>
+      <div style={{ marginTop: 9, display: "flex", alignItems: "baseline", gap: 3 }}>
+        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 800, fontSize: 34, lineHeight: 1, color: m.valueColor || C.primary, letterSpacing: "-0.6px" }}>
+          {m.value}
+        </span>
+        {m.unit && <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 400, fontSize: 14, color: C.secondary }}>{m.unit}</span>}
+      </div>
+      <div style={{ marginTop: 7, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 7 }}>
+        <span style={{ display: "flex", alignItems: "center", gap: 2, color: dc, fontFamily: FONT_BODY, fontSize: 11, fontWeight: 600 }}>
+          <Arrow size={12} />{m.delta}
+        </span>
+        <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.muted }}>{m.sub}</span>
+      </div>
+      <MetricSparkline data={m.trend} color={m.accent} />
+    </div>
+  );
+}
+
+const FLOW_HIDDEN_METRICS = ["Experience Velocity", "Insight Throughput"];
+
+function PortfolioStats({ vertical }) {
+  const metrics = buildPortfolioMetrics();
+  if (vertical) {
+    const shown = metrics.filter((m) => !FLOW_HIDDEN_METRICS.includes(m.label));
+    return (
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        {shown.map((m, i) => <MetricStat key={m.label} m={m} first={i === 0} vertical />)}
+      </div>
+    );
+  }
+  return (
+    <div style={{ display: "flex", alignItems: "stretch", padding: "2px 0 22px", marginBottom: 22, borderBottom: `1px solid ${C.border}` }}>
+      {metrics.map((m, i) => <MetricStat key={m.label} m={m} first={i === 0} />)}
+    </div>
+  );
+}
+
+/* ============================================================================
+   VIEW TOGGLE (segmented control)
+   ========================================================================== */
+function Segmented({ value, onChange, options }) {
+  return (
+    <div style={{ display: "inline-flex", background: C.inset, border: `1px solid ${C.border}`, borderRadius: 9, padding: 3, gap: 2 }}>
+      {options.map((o) => {
+        const active = value === o.id;
+        const Icon = o.icon;
+        return (
+          <button key={o.id} onClick={() => onChange(o.id)} style={{
+            display: "flex", alignItems: "center", gap: 6, border: "none", cursor: "pointer", borderRadius: 6,
+            padding: "5px 12px", background: active ? C.white : "transparent",
+            boxShadow: active ? "0 1px 2px rgba(0,0,0,0.08)" : "none",
+            color: active ? C.primary : C.muted, fontFamily: FONT_BODY, fontSize: 12, fontWeight: active ? 600 : 500,
+          }}>
+            <Icon size={14} />{o.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ============================================================================
+   LIFECYCLE FLOW MAP  — the 8 journeys as the customer's financial-life flow.
+   Nodes coloured by RAG, sized by customer reach; links = progression.
+   ========================================================================== */
+const FLOW_LAYER_X = [20, 255, 490, 730, 970];
+const FLOW_NODE_W = 200;
+const FLOW_POS = {
+  onboarding:    { layer: 0, cy: 262 },
+  subscription:  { layer: 1, cy: 262 },
+  "account-mgmt":{ layer: 2, cy: 262 },
+  payments:      { layer: 3, cy: 92 },
+  cards:         { layer: 3, cy: 262 },
+  casa:          { layer: 3, cy: 432 },
+  lending:       { layer: 4, cy: 168 },
+  liquidity:     { layer: 4, cy: 356 },
+};
+const FLOW_EDGES = [
+  ["onboarding", "subscription"], ["subscription", "account-mgmt"],
+  ["account-mgmt", "payments"], ["account-mgmt", "cards"], ["account-mgmt", "casa"],
+  ["payments", "liquidity"], ["casa", "liquidity"], ["cards", "lending"],
+];
+const flowNodeH = (id) => 84 + (TRAFFIC[id] || 10) * 2;
+
+function LegendDot({ color, label }) {
+  return (
+    <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+      <span style={{ width: 8, height: 8, borderRadius: "50%", background: color }} />
+      <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.secondary }}>{label}</span>
+    </span>
+  );
+}
+
+function FlowMap({ onSelect }) {
+  const byId = {};
+  JOURNEYS.forEach((j) => {
+    const p = FLOW_POS[j.id]; const h = flowNodeH(j.id);
+    byId[j.id] = { j, x: FLOW_LAYER_X[p.layer], cy: p.cy, h, top: p.cy - h / 2 };
+  });
+
+  return (
+    <WhiteCard style={{ padding: 22 }}>
+      <svg width="100%" viewBox="0 0 1200 540" style={{ display: "block" }}>
+        {/* stage separators */}
+        <line x1={710} y1={30} x2={710} y2={500} stroke="#E2E8F0" strokeDasharray="4 5" />
+        <line x1={950} y1={30} x2={950} y2={500} stroke="#E2E8F0" strokeDasharray="4 5" />
+        {/* stage labels */}
+        <text x={20} y={18} fontFamily={FONT_BODY} fontSize={11} fontWeight={600} fill={C.muted} letterSpacing="0.6">ACQUIRE &amp; ONBOARD</text>
+        <text x={730} y={18} fontFamily={FONT_BODY} fontSize={11} fontWeight={600} fill={C.muted} letterSpacing="0.6">EVERYDAY BANKING</text>
+        <text x={970} y={18} fontFamily={FONT_BODY} fontSize={11} fontWeight={600} fill={C.muted} letterSpacing="0.6">LENDING &amp; LIQUIDITY+</text>
+
+        {/* edges (customer progression) */}
+        {FLOW_EDGES.map(([s, t], i) => {
+          const a = byId[s], b = byId[t];
+          const sx = a.x + FLOW_NODE_W, sy = a.cy, tx = b.x, ty = b.cy, dx = (tx - sx) * 0.5;
+          const accent = RAG_TINT[a.j.rag].accent;
+          const sw = 1.8 + (TRAFFIC[s] || 10) * 0.13;
+          return (
+            <path key={i} d={`M ${sx} ${sy} C ${sx + dx} ${sy} ${tx - dx} ${ty} ${tx} ${ty}`}
+              fill="none" stroke={accent} strokeOpacity={0.4} strokeWidth={sw} strokeLinecap="round" />
+          );
+        })}
+
+        {/* nodes (size = reach, colour = RAG) */}
+        {JOURNEYS.map((j) => {
+          const n = byId[j.id], tint = RAG_TINT[j.rag];
+          const gap = Math.round(closureToDate(j, 5) * 100), reach = TRAFFIC[j.id];
+          return (
+            <foreignObject key={j.id} x={n.x} y={n.top} width={FLOW_NODE_W} height={n.h} overflow="visible">
+              <div className="flow-node" onClick={() => onSelect(j.id)} style={{
+                height: "100%", boxSizing: "border-box", background: tint.bg, border: `1px solid ${tint.border}`,
+                borderRadius: 12, padding: "10px 12px", cursor: "pointer", display: "flex",
+                flexDirection: "column", justifyContent: "space-between", boxShadow: SH.white,
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: tint.accent, flexShrink: 0 }} />
+                  <span style={{ fontFamily: FONT_BODY, fontWeight: 600, fontSize: 12, color: C.primary }}>{j.name}</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 2 }}>
+                  <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 800, fontSize: 23, lineHeight: 1, color: C.primary, letterSpacing: "-0.5px" }}>{j.metric.actual}</span>
+                  <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 400, fontSize: 11, color: C.secondary }}>{j.metric.unit}</span>
+                </div>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 10, color: C.muted }}>↗ {gap}% gap · {reach}% reach</div>
+              </div>
+            </foreignObject>
+          );
+        })}
+      </svg>
+    </WhiteCard>
+  );
+}
+
+/* ============================================================================
+   TRAJECTORY  — Performance × Momentum bubble matrix (framing B):
+   Y = outcome attainment vs target, X = improvement engine (process health).
+   Rosling sprint slider + comet trails + fly-in animation. Bubble = journey.
+   ========================================================================== */
+const TRAJ = {
+  vbW: 1200, vbH: 660,
+  L: 88, R: 1104, T: 50, B: 540,        // plot rect
+  xDom: [25, 100], yDom: [30, 150],     // engine 0-100, attainment %
+  xSplit: 60, ySplit: 100,              // healthy engine / on-target
+};
+// quadrant corner labels: bold name + plain-English condition gloss
+const Q_LABELS = [
+  { x: TRAJ.L + 12, y: TRAJ.T + 18, anchor: "start", name: "COASTING", gloss: "on target · engine fading" },
+  { x: TRAJ.R - 12, y: TRAJ.T + 18, anchor: "end", name: "THRIVING", gloss: "on target · engine strong" },
+  { x: TRAJ.L + 12, y: TRAJ.B - 30, anchor: "start", name: "STUCK", gloss: "behind target · engine weak" },
+  { x: TRAJ.R - 12, y: TRAJ.B - 30, anchor: "end", name: "CLIMBING", gloss: "behind target · engine strong" },
+];
+const trajAtt = (j, k) => (j.metric.lower ? j.metric.target / j.trend[k] : j.trend[k] / j.metric.target) * 100;
+const trajEng = (j, k) => j.processHealthTrend[k];
+const trajR = (j) => 7 + Math.sqrt(TRAFFIC[j.id] || 8) * 4.4;
+const trajQuad = (ex, ay) =>
+  ay >= TRAJ.ySplit ? (ex >= TRAJ.xSplit ? "Thriving" : "Coasting")
+                    : (ex >= TRAJ.xSplit ? "Climbing" : "Stuck");
+
+function Trajectory({ t, trails, onSelect }) {
+  const [hover, setHover] = useState(null);
+
+  const sx = (x) => TRAJ.L + (x - TRAJ.xDom[0]) / (TRAJ.xDom[1] - TRAJ.xDom[0]) * (TRAJ.R - TRAJ.L);
+  const sy = (y) => TRAJ.B - (y - TRAJ.yDom[0]) / (TRAJ.yDom[1] - TRAJ.yDom[0]) * (TRAJ.B - TRAJ.T);
+
+  const headPos = (j) => {
+    const tc = Math.min(t, 5), k0 = Math.floor(tc), k1 = Math.min(k0 + 1, 5), f = tc - k0;
+    const ex = trajEng(j, k0) + (trajEng(j, k1) - trajEng(j, k0)) * f;
+    const ay = trajAtt(j, k0) + (trajAtt(j, k1) - trajAtt(j, k0)) * f;
+    return { px: sx(ex), py: sy(ay), ex, ay };
+  };
+
+  const K = Math.floor(Math.min(t, 5));
+  const hoveredJ = hover ? JOURNEYS.find((j) => j.id === hover) : null;
+  const hoveredHead = hoveredJ ? headPos(hoveredJ) : null;
+  const STATUS = { green: "On track", amber: "At risk", red: "Off track" };
+
+  return (
+    <WhiteCard style={{ padding: 22 }}>
+      {/* plain-English intro so the chart explains itself */}
+      <div style={{ fontFamily: FONT_BODY, fontSize: 12.5, color: C.secondary, marginBottom: 14, lineHeight: 1.5, maxWidth: 820 }}>
+        <b style={{ color: C.primary }}>Bubble</b> = journey. <b style={{ color: C.primary }}>Bubble size</b> = customers impacted. <b style={{ color: C.primary }}>Higher</b> = closer to its target;{" "}
+        <b style={{ color: C.primary }}>further right</b> = the team is working harder to improve it (testing, bold bets, acting on insights).
+        <b style={{ color: C.primary }}>Trail line</b> = trajectory over last 6 sprints.
+      </div>
+
+      <svg width="100%" viewBox={`0 0 ${TRAJ.vbW} ${TRAJ.vbH}`} style={{ display: "block" }}>
+          {/* quadrant shading — TR green (thriving), BR yellow (climbing), BL red (stuck), TL white (coasting) */}
+          <rect x={sx(TRAJ.xSplit)} y={TRAJ.T} width={TRAJ.R - sx(TRAJ.xSplit)} height={sy(TRAJ.ySplit) - TRAJ.T} fill="#DCFCE7" opacity={0.6} />
+          <rect x={TRAJ.L} y={sy(TRAJ.ySplit)} width={sx(TRAJ.xSplit) - TRAJ.L} height={TRAJ.B - sy(TRAJ.ySplit)} fill="#FEE2E2" opacity={0.55} />
+          <rect x={sx(TRAJ.xSplit)} y={sy(TRAJ.ySplit)} width={TRAJ.R - sx(TRAJ.xSplit)} height={TRAJ.B - sy(TRAJ.ySplit)} fill="#FEF9C3" opacity={0.55} />
+
+          {/* gridlines + ticks */}
+          {[50, 75, 100, 125, 150].map((v) => (
+            <g key={"y" + v}>
+              <line x1={TRAJ.L} y1={sy(v)} x2={TRAJ.R} y2={sy(v)} stroke="#F1F5F9" />
+              <text x={TRAJ.L - 9} y={sy(v) + 3} textAnchor="end" fontSize={9} fill={C.muted} fontFamily={FONT_BODY}>{v}</text>
+            </g>
+          ))}
+          {[40, 60, 80, 100].map((v) => (
+            <g key={"x" + v}>
+              <line x1={sx(v)} y1={TRAJ.T} x2={sx(v)} y2={TRAJ.B} stroke="#F8FAFC" />
+              <text x={sx(v)} y={TRAJ.B + 16} textAnchor="middle" fontSize={9} fill={C.muted} fontFamily={FONT_BODY}>{v}</text>
+            </g>
+          ))}
+
+          {/* quadrant split lines */}
+          <line x1={TRAJ.L} y1={sy(TRAJ.ySplit)} x2={TRAJ.R} y2={sy(TRAJ.ySplit)} stroke={C.muted} strokeDasharray="5 4" strokeOpacity={0.45} />
+          <line x1={sx(TRAJ.xSplit)} y1={TRAJ.T} x2={sx(TRAJ.xSplit)} y2={TRAJ.B} stroke={C.muted} strokeDasharray="5 4" strokeOpacity={0.45} />
+          <text x={TRAJ.R - 6} y={sy(TRAJ.ySplit) - 6} textAnchor="end" fontSize={9} fill={C.green} fontFamily={FONT_BODY}>100% = on target</text>
+
+          {/* quadrant labels: bold name + plain condition */}
+          {Q_LABELS.map((q) => (
+            <g key={q.name}>
+              <text x={q.x} y={q.y} textAnchor={q.anchor} fontSize={11} fontWeight={700} fill={C.secondary} opacity={0.75} letterSpacing="0.5" fontFamily={FONT_BODY}>{q.name}</text>
+              <text x={q.x} y={q.y + 13} textAnchor={q.anchor} fontSize={9} fill={C.muted} fontFamily={FONT_BODY}>{q.gloss}</text>
+            </g>
+          ))}
+
+          {/* axis titles (plain English) */}
+          <text x={(TRAJ.L + TRAJ.R) / 2} y={TRAJ.B + 38} textAnchor="middle" fontSize={11} fontWeight={700}
+            fill={C.secondary} letterSpacing="0.5" fontFamily={FONT_BODY}>IMPROVEMENT ENGINE →</text>
+          <text x={(TRAJ.L + TRAJ.R) / 2} y={TRAJ.B + 53} textAnchor="middle" fontSize={9.5}
+            fill={C.muted} fontFamily={FONT_BODY}>how hard the team is working to improve it — testing, bold bets, acting on insights</text>
+          <text transform={`translate(${TRAJ.L - 54}, ${(TRAJ.T + TRAJ.B) / 2}) rotate(-90)`} textAnchor="middle"
+            fontSize={11} fontWeight={700} fill={C.secondary} letterSpacing="0.5" fontFamily={FONT_BODY}>% OF TARGET REACHED ↑</text>
+
+          {/* comet trails + bubbles */}
+          {JOURNEYS.map((j) => {
+            const solid = RAG_SOLID[j.rag];
+            const head = headPos(j);
+            const isHover = hover === j.id;
+            const r = trajR(j) * (isHover ? 1.14 : 1);
+            let trail = null;
+            if (trails && K >= 1) {
+              const pts = [];
+              for (let k = 0; k <= K; k++) pts.push([sx(trajEng(j, k)), sy(trajAtt(j, k))]);
+              pts.push([head.px, head.py]);
+              const d = pts.map((p, i) => (i === 0 ? "M" : "L") + p[0] + " " + p[1]).join(" ");
+              trail = (
+                <g>
+                  <path d={d} fill="none" stroke={solid} strokeOpacity={0.28} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                  {pts.slice(0, -1).map((p, k) => (
+                    <circle key={k} cx={p[0]} cy={p[1]} r={3} fill={solid} opacity={0.1 + 0.34 * (k / Math.max(K, 1))} />
+                  ))}
+                </g>
+              );
+            }
+            return (
+              <g key={j.id} style={{ cursor: "pointer" }} onClick={() => onSelect(j.id)}
+                onMouseEnter={() => setHover(j.id)} onMouseLeave={() => setHover(null)}>
+                {trail}
+                <circle cx={head.px} cy={head.py} r={r} fill={solid} fillOpacity={0.7} stroke={solid} strokeWidth={1.5} />
+                <text x={head.px} y={head.py + r + 13} textAnchor="middle" fontSize={11} fontWeight={600} fill={C.primary} fontFamily={FONT_BODY}>{j.name}</text>
+              </g>
+            );
+          })}
+
+          {/* hover tooltip */}
+          {hoveredJ && (
+            <foreignObject
+              x={clamp(hoveredHead.px + trajR(hoveredJ) + 10, TRAJ.L, TRAJ.R - 172)}
+              y={clamp(hoveredHead.py - 46, TRAJ.T, TRAJ.B - 102)}
+              width={172} height={102} overflow="visible">
+              <div style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 10, boxShadow: SH.white, padding: "9px 11px" }}>
+                <div style={{ fontFamily: FONT_BODY, fontWeight: 600, fontSize: 12, color: C.primary, marginBottom: 4 }}>{hoveredJ.name}</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 3 }}>
+                  <span style={{ width: 7, height: 7, borderRadius: "50%", background: RAG_SOLID[hoveredJ.rag] }} />
+                  <span style={{ fontFamily: FONT_BODY, fontSize: 11, fontWeight: 600, color: RAG_SOLID[hoveredJ.rag] }}>{STATUS[hoveredJ.rag]}</span>
+                </div>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.secondary }}>{Math.round(hoveredHead.ay)}% of target · engine {Math.round(hoveredHead.ex)}/100</div>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.muted, marginTop: 2 }}>{TRAFFIC[hoveredJ.id]}% of customers · {trajQuad(hoveredHead.ex, hoveredHead.ay)}</div>
+              </div>
+            </foreignObject>
+          )}
+        </svg>
+      </WhiteCard>
+  );
+}
+
+// Trajectory's Rosling controls — rendered in the shared toggle row (top-right)
+function TrajectoryControls({ t, trails, onScrub, onToggleTrails, onReplay }) {
+  const sprintNo = Math.min(6, Math.floor(t) + 1);
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <span style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 600, color: C.muted, textTransform: "uppercase", letterSpacing: "0.6px" }}>Sprint</span>
+        <input type="range" min={0} max={5} step={0.01} value={t} onChange={(e) => onScrub(parseFloat(e.target.value))} style={{ width: 150, accentColor: C.indigo }} />
+        <span style={{ fontFamily: FONT_DISPLAY, fontSize: 13, fontWeight: 700, color: C.primary, width: 26 }}>S{sprintNo}</span>
+      </div>
+      <button onClick={onToggleTrails} style={{
+        display: "flex", alignItems: "center", gap: 6, border: `1px solid ${trails ? C.indigo : C.border}`,
+        background: trails ? C.indigoBg : C.white, color: trails ? C.indigo : C.muted, cursor: "pointer",
+        borderRadius: 8, padding: "6px 12px", fontFamily: FONT_BODY, fontSize: 12, fontWeight: trails ? 600 : 500,
+      }}>
+        <Waypoints size={14} /> Comet trails
+      </button>
+      <button onClick={onReplay} style={{
+        display: "flex", alignItems: "center", gap: 6, border: `1px solid ${C.border}`, background: C.white,
+        color: C.secondary, cursor: "pointer", borderRadius: 8, padding: "6px 12px", fontFamily: FONT_BODY, fontSize: 12, fontWeight: 500,
+      }}>
+        <RotateCcw size={13} /> Replay
+      </button>
+    </div>
+  );
+}
+
+// Flow's RAG legend — rendered in the shared toggle row (top-right)
+function FlowLegend() {
+  return (
+    <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+      <LegendDot color={RAG_SOLID.green} label="On track" />
+      <LegendDot color={RAG_SOLID.amber} label="At risk" />
+      <LegendDot color={RAG_SOLID.red} label="Off track" />
+    </div>
+  );
+}
+
+/* ============================================================================
+   COMMAND CENTRE
+   ========================================================================== */
+function CommandCentre({ headline, headlineLoading, onSelect, board, onBoard }) {
+  // Trajectory's Rosling state lives here so its controls can sit in the shared toggle row
+  const [t, setT] = useState(5);
+  const [trails, setTrails] = useState(true);
+  const [replayKey, setReplayKey] = useState(0);
+  const rafRef = useRef(null);
+
+  // fly-in: auto-play t from 0 → 5 whenever the Trajectory board is (re)entered or replayed
+  useEffect(() => {
+    cancelAnimationFrame(rafRef.current);
+    if (board !== "trajectory") return;
+    setT(0);
+    let start = null;
+    const dur = 1500;
+    const tick = (ts) => {
+      if (start == null) start = ts;
+      const p = Math.min(1, (ts - start) / dur);
+      setT((1 - Math.pow(1 - p, 3)) * 5);
+      if (p < 1) rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [board, replayKey]);
+
+  const scrub = (v) => { cancelAnimationFrame(rafRef.current); setT(v); };
+
+  const headerRight =
+    board === "trajectory"
+      ? <TrajectoryControls t={t} trails={trails} onScrub={scrub} onToggleTrails={() => setTrails((v) => !v)} onReplay={() => setReplayKey((k) => k + 1)} />
+      : board === "flow"
+      ? <FlowLegend />
+      : null;
+
+  return (
+    <div>
+      {/* toggle on the LEFT; board-specific controls on the RIGHT */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18, minHeight: 34 }}>
+        <Segmented value={board} onChange={onBoard} options={[
+          { id: "grid", label: "Grid", icon: LayoutGrid },
+          { id: "flow", label: "Lifecycle Flow", icon: Network },
+          { id: "trajectory", label: "Trajectory", icon: Orbit },
+        ]} />
+        {headerRight}
+      </div>
+
+      {board === "flow" || board === "trajectory" ? (
+        // topline metrics run down the LEFT in negative space, beside the board card
+        <div style={{ display: "grid", gridTemplateColumns: "192px 1fr", gap: 28, alignItems: "start", marginBottom: 24 }}>
+          <PortfolioStats vertical />
+          {board === "trajectory" ? <Trajectory t={t} trails={trails} onSelect={onSelect} /> : <FlowMap onSelect={onSelect} />}
+        </div>
+      ) : (
+        <>
+          <PortfolioStats />
+          {SQUADS.map((squad) => {
+            const js = JOURNEYS.filter((j) => j.squadId === squad.id);
+            return (
+              <div key={squad.id} style={{ marginBottom: 24 }}>
+                <SquadSummaryRow squad={squad} />
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+                  {js.map((j) => <JourneyCard key={j.id} journey={j} onClick={onSelect} />)}
+                </div>
+              </div>
+            );
+          })}
+        </>
+      )}
+
+      {/* AI banner sits at the bottom — the closing read on everything above */}
+      <PortfolioHeadline headline={headline} loading={headlineLoading} />
+    </div>
+  );
+}
+
+/* ============================================================================
+   WHITE CARD shell + helpers
+   ========================================================================== */
+function WhiteCard({ children, style }) {
+  return (
+    <div style={{
+      background: C.white, border: `1px solid ${C.border}`, borderRadius: 16,
+      padding: 20, boxShadow: SH.white, ...style,
+    }}>
+      {children}
+    </div>
+  );
+}
+
+function Label({ text, style }) {
+  return (
+    <div style={{
+      fontFamily: FONT_BODY, fontSize: 10, fontWeight: 500, textTransform: "uppercase",
+      letterSpacing: "0.5px", color: C.muted, ...style,
+    }}>
+      {text}
+    </div>
+  );
+}
+
+/* ============================================================================
+   JOURNEY DETAIL  (8.6)
+   ========================================================================== */
+function CausalAnalysisCard({ journey, narrative, loading, onRegenerate }) {
+  return (
+    <DarkCard style={{ marginTop: 16 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        <DarkLabel icon={Brain} text="AI Causal Analysis" />
+        {narrative && !loading && (
+          <button onClick={() => onRegenerate(journey)} style={{
+            display: "flex", alignItems: "center", gap: 6, border: "1px solid rgba(255,255,255,0.18)",
+            background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.70)", cursor: "pointer",
+            borderRadius: 8, padding: "5px 10px", fontFamily: FONT_BODY, fontSize: 11, fontWeight: 500,
+          }}>
+            <Sparkles size={12} color={C.darkAccent} /> Regenerate
+          </button>
+        )}
+      </div>
+
+      {loading ? (
+        <div style={{ display: "flex", alignItems: "center", gap: 10, color: C.darkAccent }}>
+          <Spin size={15} color={C.darkAccent} />
+          <span style={{ fontFamily: FONT_BODY, fontSize: 14 }}>Analysing…</span>
+        </div>
+      ) : narrative ? (
+        <p style={{
+          margin: 0, fontFamily: FONT_BODY, fontSize: 13, lineHeight: 1.6, color: "#fff",
+          animation: "fadeUp 0.4s ease both",
+        }}>
+          {narrative}
+        </p>
+      ) : (
+        <button onClick={() => onRegenerate(journey)} style={{
+          display: "flex", alignItems: "center", gap: 8, border: "none", background: "transparent",
+          color: C.darkAccent, cursor: "pointer", padding: 0, fontFamily: FONT_BODY, fontSize: 14, fontWeight: 500,
+        }}>
+          <Sparkles size={15} /> Generate causal analysis
+        </button>
+      )}
+    </DarkCard>
+  );
+}
+
+function TrendChart({ journey }) {
+  const stroke = RAG_SOLID[journey.rag];
+  const vals = [...journey.trend, journey.metric.target, journey.benchmark].filter((v) => v != null);
+  const lo = Math.min(...vals), hi = Math.max(...vals);
+  const pad = (hi - lo) * 0.15 || 1;
+  return (
+    <div style={{ height: 110, marginTop: 12 }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart data={toSeries(journey.trend)} margin={{ top: 6, right: 8, bottom: 0, left: 0 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
+          <XAxis dataKey="x" tick={{ fontSize: 10, fill: C.muted }} axisLine={false} tickLine={false} />
+          <YAxis domain={[lo - pad, hi + pad]} width={30} tick={{ fontSize: 10, fill: C.muted }} axisLine={false} tickLine={false} />
+          <ReferenceLine y={journey.metric.target} stroke={C.green} strokeDasharray="4 4"
+            label={{ value: "Target", position: "insideTopRight", fontSize: 9, fill: C.green }} />
+          {journey.benchmark != null && (
+            <ReferenceLine y={journey.benchmark} stroke={C.muted} strokeDasharray="2 2"
+              label={{ value: "Benchmark", position: "insideBottomRight", fontSize: 9, fill: C.muted }} />
+          )}
+          <Area type="monotone" dataKey="v" stroke={stroke} strokeWidth={2}
+            fill={stroke} fillOpacity={0.06} dot={{ r: 3, fill: stroke, strokeWidth: 0 }} />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+function OutcomeColumn({ journey }) {
+  const m = journey.metric;
+  const delta = getDelta(journey);
+  const DeltaIcon = ICONS[delta.icon] || Minus;
+  const deltaColour = delta.positive ? C.green : C.red;
+  return (
+    <WhiteCard>
+      <Label text="Outcome" />
+      <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: C.secondary, marginTop: 8 }}>{m.name}</div>
+      <div style={{ marginTop: 6, display: "flex", alignItems: "baseline", gap: 3 }}>
+        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 800, fontSize: 50, lineHeight: 1, color: C.primary, letterSpacing: "-1px" }}>{m.actual}</span>
+        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 400, fontSize: 16, color: C.secondary }}>{m.unit}</span>
+      </div>
+      <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 5 }}>
+        <DeltaIcon size={13} color={deltaColour} />
+        <span style={{ fontFamily: FONT_BODY, fontWeight: 600, fontSize: 12, color: deltaColour }}>{delta.text}</span>
+      </div>
+      <div style={{ marginTop: 4, fontFamily: FONT_BODY, fontSize: 11, color: C.muted }}>
+        target {m.target}{m.unit}
+      </div>
+
+      <TrendChart journey={journey} />
+
+      <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid ${C.sep}`, display: "flex", alignItems: "center", gap: 7 }}>
+        <MessageSquare size={14} color={advocacyColour(journey.advocacy)} />
+        <span style={{ fontFamily: FONT_BODY, fontSize: 12, color: C.secondary }}>Advocacy</span>
+        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 14, color: advocacyColour(journey.advocacy), marginLeft: "auto" }}>
+          {journey.advocacy}/5
+        </span>
+      </div>
+    </WhiteCard>
+  );
+}
+
+function HypothesisMix({ h }) {
+  const total = h.fix + h.optimise + h.differentiate || 1;
+  const segs = [
+    { key: "fix", label: "Fix", n: h.fix, c: C.hypFix },
+    { key: "optimise", label: "Optimise", n: h.optimise, c: C.hypOptimise },
+    { key: "differentiate", label: "Differentiate", n: h.differentiate, c: C.hypDifferentiate },
+  ];
+  return (
+    <div style={{ marginTop: 4, marginBottom: 14 }}>
+      <Label text="Hypothesis mix" style={{ marginBottom: 6 }} />
+      <div style={{ display: "flex", height: 6, borderRadius: 3, overflow: "hidden", background: C.sep }}>
+        {segs.map((s) => s.n > 0 && (
+          <div key={s.key} style={{ width: `${(s.n / total) * 100}%`, background: s.c }} />
+        ))}
+      </div>
+      <div style={{ display: "flex", gap: 12, marginTop: 7 }}>
+        {segs.map((s) => (
+          <div key={s.key} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <span style={{ width: 7, height: 7, borderRadius: 2, background: s.c }} />
+            <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.secondary }}>{s.label} {s.n}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function LifecycleNum({ value, label, color }) {
+  return (
+    <div style={{ textAlign: "center", flex: 1 }}>
+      <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 18, color }}>{value}</div>
+      <div style={{ fontFamily: FONT_BODY, fontSize: 9, color: C.muted, textTransform: "uppercase", letterSpacing: "0.4px", marginTop: 2 }}>{label}</div>
+    </div>
+  );
+}
+
+function WarnPill({ text, bg, fg }) {
+  return (
+    <span style={{
+      fontFamily: FONT_BODY, fontSize: 10, fontWeight: 500, color: fg, background: bg,
+      borderRadius: 6, padding: "3px 8px", whiteSpace: "nowrap",
+    }}>{text}</span>
+  );
+}
+
+function ProcessColumn({ journey }) {
+  const t = journey.testing;
+  const testingColour = t.actual >= t.target ? C.green : C.red;
+  const boldness = getBoldnessRatio(journey.hypotheses);
+  const adv = journey.advocacy;
+  const ins = journey.insights;
+  return (
+    <WhiteCard>
+      <Label text="Process Drivers" style={{ marginBottom: 12 }} />
+      <DriverBlock label="Testing cadence / cycle" value={`${t.actual}/${t.target}`} valueColor={testingColour}>
+        <MiniBars data={journey.testingTrend} target={t.target} />
+      </DriverBlock>
+      <DriverBlock label="Boldness ratio" value={`${boldness}%`} valueColor={boldness >= 20 ? C.violet : C.muted}>
+        <MiniTrend data={journey.boldnessTrend} color={C.violet} domain={[0, 60]} ticks={[0, 30, 60]} refY={20} />
+      </DriverBlock>
+      <DriverBlock label="Advocacy" value={`${adv}/5`} valueColor={advocacyColour(adv)}>
+        <MiniTrend data={journey.advocacyTrend} color={advocacyColour(adv)} domain={[1, 5]} ticks={[1, 3, 5]} refY={3.5} />
+      </DriverBlock>
+
+      <HypothesisMix h={journey.hypotheses} />
+
+      <Label text="Insight lifecycle" style={{ marginBottom: 8 }} />
+      <div style={{ display: "flex", gap: 4 }}>
+        <LifecycleNum value={ins.new} label="Unactioned" color={C.red} />
+        <LifecycleNum value={ins.actioned} label="Actioned" color={C.green} />
+        <LifecycleNum value={ins.deferred} label="Deferred" color={C.amber} />
+      </div>
+      {(ins.oldestNewDays > 7 || ins.oldestDeferredDays > 30) && (
+        <div style={{ display: "flex", gap: 6, marginTop: 10, flexWrap: "wrap" }}>
+          {ins.oldestNewDays > 7 && <WarnPill text={`Oldest unactioned ${ins.oldestNewDays}d`} bg={C.redBg} fg={C.red} />}
+          {ins.oldestDeferredDays > 30 && <WarnPill text={`Oldest deferred ${ins.oldestDeferredDays}d`} bg={C.amberBg} fg={C.amber} />}
+        </div>
+      )}
+    </WhiteCard>
+  );
+}
+
+function TechRow({ label, value, ok }) {
+  return (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0" }}>
+      <span style={{ fontFamily: FONT_BODY, fontSize: 12, color: C.secondary }}>{label}</span>
+      <span style={{ fontFamily: FONT_DISPLAY, fontSize: 13, fontWeight: 600, color: ok ? C.green : C.red }}>{value}</span>
+    </div>
+  );
+}
+
+function FoundationColumn({ journey }) {
+  const tech = journey.tech;
+  return (
+    <WhiteCard>
+      <Label text="Foundation" style={{ marginBottom: 10 }} />
+      <TechRow label="p95 latency" value={`${tech.latency}ms`} ok={tech.latency < 300} />
+      <TechRow label="Error rate" value={`${tech.errorRate}%`} ok={tech.errorRate < 1} />
+      <TechRow label="Uptime" value={`${tech.uptime}%`} ok={tech.uptime >= 99.5} />
+
+      <div style={{ marginTop: 16 }}>
+        <DriverBlock label="Process health" value={`${journey.processHealth}`} valueColor={processColour(journey.processHealth)}>
+          <MiniTrend data={journey.processHealthTrend} color={C.indigo} domain={[0, 100]} ticks={[0, 50, 100]} refY={70} height={52} />
+        </DriverBlock>
+        <DriverBlock label="Advocacy" value={`${journey.advocacy}/5`} valueColor={advocacyColour(journey.advocacy)}>
+          <MiniTrend data={journey.advocacyTrend} color={advocacyColour(journey.advocacy)} domain={[1, 5]} ticks={[1, 3, 5]} refY={3.5} height={52} />
+        </DriverBlock>
+      </div>
+    </WhiteCard>
+  );
+}
+
+function StatusBadge({ status }) {
+  return (
+    <span style={{
+      fontFamily: FONT_BODY, fontSize: 10, fontWeight: 500, borderRadius: 3, padding: "2px 7px",
+      color: STATUS_COLOUR[status], background: STATUS_BG[status], textTransform: "capitalize",
+    }}>{status}</span>
+  );
+}
+
+function DetailInsights({ journey }) {
+  const items = ALL_INSIGHTS.filter((i) => i.journeyId === journey.id).sort((a, b) => b.daysOld - a.daysOld);
+  if (items.length === 0) return null;
+  return (
+    <WhiteCard style={{ marginTop: 14, padding: 0, overflow: "hidden" }}>
+      <div style={{ padding: "14px 20px", borderBottom: `1px solid ${C.sep}` }}>
+        <Label text={`Experience insights (${items.length})`} style={{ color: C.secondary }} />
+      </div>
+      {items.map((i, idx) => (
+        <div key={i.id} style={{
+          display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12,
+          padding: "12px 20px", borderTop: idx === 0 ? "none" : `1px solid ${C.sep}`,
+        }}>
+          <div>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 500, color: C.primary }}>{i.title}</div>
+            {i.reason && <div style={{ fontFamily: FONT_BODY, fontSize: 10, color: C.muted, marginTop: 2 }}>{i.reason}</div>}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+            <StatusBadge status={i.status} />
+            <span style={{ fontFamily: FONT_BODY, fontSize: 11, fontWeight: 600, color: ageColour(i.daysOld) }}>{i.daysOld}d</span>
+          </div>
+        </div>
+      ))}
+    </WhiteCard>
+  );
+}
+
+function JourneyDetail({ journey, onBack, narrative, loading, onRegenerate }) {
+  const squad = SQUADS.find((s) => s.id === journey.squadId);
+  return (
+    <div>
+      <button onClick={onBack} style={{
+        display: "flex", alignItems: "center", gap: 6, border: "none", background: "transparent",
+        cursor: "pointer", color: C.indigo, fontFamily: FONT_BODY, fontSize: 13, fontWeight: 500,
+        padding: 0, marginBottom: 14,
+      }}>
+        <ArrowLeft size={15} /> Command Centre
+      </button>
+
+      <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 16 }}>
+        <span style={{ width: 12, height: 12, borderRadius: "50%", background: RAG_SOLID[journey.rag] }} />
+        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 26, letterSpacing: "-0.4px" }}>{journey.name}</span>
+        <span style={{ fontFamily: FONT_BODY, fontSize: 13, color: C.muted }}>{squad.name}</span>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "38% 37% 25%", gap: 14, alignItems: "start" }}>
+        <OutcomeColumn journey={journey} />
+        <ProcessColumn journey={journey} />
+        <FoundationColumn journey={journey} />
+      </div>
+
+      <DetailInsights journey={journey} />
+
+      {/* AI causal analysis now sits at the bottom of the drilldown */}
+      <CausalAnalysisCard journey={journey} narrative={narrative} loading={loading} onRegenerate={onRegenerate} />
+    </div>
+  );
+}
+
+/* ============================================================================
+   INSIGHTS TRACKER  (8.7)
+   ========================================================================== */
+function PatternCards() {
+  const patterns = computePatterns();
+  return (
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+        <Sparkles size={16} color={C.violet} />
+        <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 14 }}>Pattern Intelligence</span>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+        {patterns.map((p, i) => (
+          <DarkCard key={i} style={{ padding: 16 }}>
+            <p style={{ margin: 0, fontFamily: FONT_BODY, fontSize: 13, lineHeight: 1.6, color: "#fff" }}>{p}</p>
+          </DarkCard>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function AgeDistribution() {
+  const buckets = [
+    { label: "0-7d", lo: 0, hi: 7, c: C.green },
+    { label: "8-14d", lo: 8, hi: 14, c: C.amber },
+    { label: "15-30d", lo: 15, hi: 30, c: C.amber },
+    { label: "31-60d", lo: 31, hi: 60, c: C.red },
+  ];
+  const data = buckets.map((b) => ({
+    label: b.label, c: b.c,
+    count: ALL_INSIGHTS.filter((i) => i.daysOld >= b.lo && i.daysOld <= b.hi).length,
+  }));
+  return (
+    <WhiteCard style={{ marginBottom: 16 }}>
+      <Label text="Time to Refinement" style={{ marginBottom: 10 }} />
+      <div style={{ height: 80 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data} margin={{ top: 4, right: 8, bottom: 0, left: -20 }}>
+            <XAxis dataKey="label" tick={{ fontSize: 10, fill: C.muted }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fontSize: 10, fill: C.muted }} axisLine={false} tickLine={false} allowDecimals={false} />
+            <Bar dataKey="count" radius={[4, 4, 0, 0]} isAnimationActive={false}>
+              {data.map((d, i) => <Cell key={i} fill={d.c} />)}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </WhiteCard>
+  );
+}
+
+function FilterButtons({ filter, setFilter }) {
+  const counts = {
+    all: ALL_INSIGHTS.length,
+    new: ALL_INSIGHTS.filter((i) => i.status === "new").length,
+    actioned: ALL_INSIGHTS.filter((i) => i.status === "actioned").length,
+    deferred: ALL_INSIGHTS.filter((i) => i.status === "deferred").length,
+  };
+  const opts = ["all", "new", "actioned", "deferred"];
+  return (
+    <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
+      {opts.map((o) => {
+        const active = filter === o;
+        return (
+          <button key={o} onClick={() => setFilter(o)} style={{
+            fontFamily: FONT_BODY, fontSize: 12, fontWeight: active ? 600 : 400, textTransform: "capitalize",
+            color: active ? C.indigo : C.muted, background: active ? C.indigoBg : C.white,
+            border: `1px solid ${active ? C.indigo : C.border}`, borderRadius: 6, padding: "5px 12px", cursor: "pointer",
+          }}>
+            {o} ({counts[o]})
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function TypeBadge({ type }) {
+  const st = TYPE_STYLE[type];
+  return (
+    <span style={{
+      fontFamily: FONT_BODY, fontSize: 10, fontWeight: 500, borderRadius: 3, padding: "2px 7px",
+      color: st.fg, background: st.bg, textTransform: "capitalize",
+    }}>{type}</span>
+  );
+}
+
+const TABLE_COLS = "2.5fr 1fr 70px 56px 70px";
+
+function InsightsTable({ filter }) {
+  const rows = ALL_INSIGHTS
+    .filter((i) => filter === "all" || i.status === filter)
+    .sort((a, b) => b.daysOld - a.daysOld);
+
+  return (
+    <WhiteCard style={{ padding: 0, overflow: "hidden" }}>
+      {/* header */}
+      <div style={{
+        display: "grid", gridTemplateColumns: TABLE_COLS, gap: 12, background: C.inset,
+        padding: "10px 16px", borderBottom: `1px solid ${C.sep}`,
+      }}>
+        {["Insight", "Journey", "Status", "Age", "Type"].map((h) => (
+          <span key={h} style={{
+            fontFamily: FONT_BODY, fontSize: 9, fontWeight: 600, textTransform: "uppercase",
+            letterSpacing: "0.5px", color: C.muted,
+          }}>{h}</span>
+        ))}
+      </div>
+
+      {rows.length === 0 ? (
+        <div style={{ padding: "28px 16px", textAlign: "center", fontFamily: FONT_BODY, fontSize: 12, color: C.muted }}>
+          No insights in this view.
+        </div>
+      ) : rows.map((i, idx) => {
+        const journey = JOURNEYS.find((j) => j.id === i.journeyId);
+        return (
+          <div key={i.id} style={{
+            display: "grid", gridTemplateColumns: TABLE_COLS, gap: 12, alignItems: "center",
+            padding: "12px 16px", borderTop: idx === 0 ? "none" : `1px solid ${C.sep}`,
+          }}>
+            <div>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 500, color: C.primary }}>{i.title}</div>
+              {i.reason && <div style={{ fontFamily: FONT_BODY, fontSize: 10, color: C.muted, marginTop: 2 }}>{i.reason}</div>}
+            </div>
+            <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.secondary }}>{journey?.name}</span>
+            <span><StatusBadge status={i.status} /></span>
+            <span style={{ fontFamily: FONT_BODY, fontSize: 11, fontWeight: 600, color: ageColour(i.daysOld) }}>{i.daysOld}d</span>
+            <span><TypeBadge type={i.type} /></span>
+          </div>
+        );
+      })}
+    </WhiteCard>
+  );
+}
+
+function InsightsTracker() {
+  const [filter, setFilter] = useState("all");
+  return (
+    <div>
+      <PatternCards />
+      <AgeDistribution />
+      <FilterButtons filter={filter} setFilter={setFilter} />
+      <InsightsTable filter={filter} />
+    </div>
+  );
+}
+
+/* ============================================================================
+   OKRs  — strategic objectives; KRs map to real metrics, progress computed
+   from baseline (sprint 1) → target (gap closure). End-of-quarter scorecard.
+   ========================================================================== */
+const OKRS = [
+  {
+    id: "acq", name: "Win acquisition", theme: "Get businesses banking with us, fast",
+    journeys: ["onboarding", "subscription"],
+    krs: [
+      { label: "Time to first transaction", journeyId: "onboarding" },
+      { label: "Activation conversion", journeyId: "subscription" },
+      { label: "90-day retention", portfolio: { baseline: 81, target: 90, current: 87.4, unit: "%", lower: false, squad: "Acquisition" } },
+    ],
+  },
+  {
+    id: "control", name: "Become the financial control centre for business customers", theme: "Orchestrate the customer's whole financial life",
+    journeys: ["payments", "casa", "cards"],
+    krs: [
+      { label: "Products per customer", portfolio: { baseline: 1.8, target: 3.0, current: 2.4, unit: "", lower: false, squad: "Everyday" } },
+      { label: "Feature adoption", journeyId: "casa" },
+      { label: "Card activation", journeyId: "cards" },
+      { label: "Payment speed", journeyId: "payments" },
+    ],
+  },
+  {
+    id: "lending", name: "Lead on lending & liquidity", theme: "Make borrowing and cash management effortless",
+    journeys: ["lending", "liquidity"],
+    krs: [
+      { label: "Application time", journeyId: "lending" },
+      { label: "Liquidity+ adoption", journeyId: "liquidity" },
+    ],
+  },
+  {
+    id: "loyalty", name: "Earn loyalty through experience quality", theme: "Be the bank businesses recommend",
+    journeys: ["onboarding", "subscription", "account-mgmt", "payments", "casa", "cards", "lending", "liquidity"],
+    krs: [
+      { label: "Advocacy", portfolio: { baseline: 2.9, target: 4.0, current: 3.3, unit: "/5", lower: false } },
+      { label: "Technical experience", portfolio: { baseline: 73, target: 90, current: 78, unit: "/100", lower: false } },
+      { label: "Insight throughput", portfolio: { baseline: 54, target: 75, current: 62, unit: "%", lower: false } },
+    ],
+  },
+];
+
+const OKR_SUMMARY =
+  "Q2 closes with a single Key Result cleared — Payments beat its speed target — while CASA adoption (15% of the way) and technical experience (29%) are the deepest misses. All four objectives sit at-risk, and the pattern is structural: the journeys furthest from goal, CASA and Lending, also run the weakest improvement engines. Refund testing on both before Q3, or these gaps compound.";
+
+const OKR_STATUS = {
+  achieved: { label: "Achieved", color: C.green, bg: C.greenBg },
+  ontrack: { label: "On track", color: C.green, bg: C.greenBg },
+  atrisk: { label: "At risk", color: C.amber, bg: C.amberBg },
+  offtrack: { label: "Off track", color: C.red, bg: C.redBg },
+};
+
+const SQUAD_SHORT = { acq: "Acquisition", everyday: "Everyday", lending: "Lending" };
+
+function resolveKR(kr) {
+  let baseline, target, current, unit, lower, journeyId = null, squad;
+  if (kr.journeyId) {
+    const j = JOURNEYS.find((x) => x.id === kr.journeyId);
+    baseline = j.trend[0]; target = j.metric.target; current = j.metric.actual;
+    unit = j.metric.unit; lower = j.metric.lower; journeyId = j.id;
+    squad = SQUAD_SHORT[j.squadId];
+  } else {
+    ({ baseline, target, current, unit, lower } = kr.portfolio);
+    squad = kr.portfolio.squad || "All squads";
+  }
+  const need = lower ? baseline - target : target - baseline;
+  const done = lower ? baseline - current : current - baseline;
+  const progress = need !== 0 ? clamp(done / need, 0, 1.5) : 1;
+  const met = lower ? current <= target : current >= target;
+  const status = met ? "achieved" : progress >= 0.67 ? "ontrack" : progress >= 0.33 ? "atrisk" : "offtrack";
+  return { name: kr.label, baseline, target, current, unit, lower, journeyId, squad, progress, status, met };
+}
+
+function objRollup(obj) {
+  const krs = obj.krs.map(resolveKR);
+  const progress = krs.reduce((s, k) => s + Math.min(k.progress, 1), 0) / krs.length;
+  const status = krs.every((k) => k.met) ? "achieved" : progress >= 0.67 ? "ontrack" : progress >= 0.33 ? "atrisk" : "offtrack";
+  return { krs, progress, status };
+}
+
+function objEngine(journeyIds) {
+  const js = journeyIds.map((id) => JOURNEYS.find((j) => j.id === id));
+  const testActual = Math.round((js.reduce((s, j) => s + j.testing.actual, 0) / js.length) * 10) / 10;
+  const testTarget = js[0].testing.target;
+  const boldness = Math.round(js.reduce((s, j) => s + getBoldnessRatio(j.hypotheses), 0) / js.length);
+  let act = 0, tot = 0;
+  js.forEach((j) => { act += j.insights.actioned; tot += j.insights.new + j.insights.actioned + j.insights.deferred; });
+  return { testActual, testTarget, boldness, insightPct: Math.round((act / tot) * 100) };
+}
+
+function ProgressBar({ progress, color, height = 8 }) {
+  return (
+    <div style={{ height, background: C.sep, borderRadius: height / 2, overflow: "hidden" }}>
+      <div style={{ width: `${Math.min(progress, 1) * 100}%`, height: "100%", background: color, borderRadius: height / 2 }} />
+    </div>
+  );
+}
+
+function KRRow({ kr, onSelect }) {
+  const st = OKR_STATUS[kr.status];
+  const drill = kr.journeyId;
+  const fmt = (v) => `${v}${kr.unit}`;
+  return (
+    <div onClick={drill ? () => onSelect(kr.journeyId) : undefined}
+      style={{ display: "grid", gridTemplateColumns: "1.7fr 2fr 1.1fr auto", gap: 18, alignItems: "center", padding: "12px 0", borderTop: `1px solid ${C.sep}`, cursor: drill ? "pointer" : "default" }}>
+      <div>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 500, color: C.primary }}>{kr.name}</div>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.muted, marginTop: 2 }}>{fmt(kr.baseline)} → {fmt(kr.target)} target</div>
+      </div>
+      <div>
+        <ProgressBar progress={kr.progress} color={st.color} />
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 5 }}>
+          <span style={{ fontFamily: FONT_DISPLAY, fontSize: 12, fontWeight: 700, color: C.primary }}>{fmt(kr.current)} now</span>
+          <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.muted }}>{Math.round(Math.min(kr.progress, 1) * 100)}% to goal</span>
+        </div>
+      </div>
+      <div>
+        <span style={{ fontFamily: FONT_BODY, fontSize: 11, fontWeight: 500, color: C.secondary, background: C.inset, border: `1px solid ${C.border}`, borderRadius: 6, padding: "4px 9px", whiteSpace: "nowrap" }}>{kr.squad}</span>
+      </div>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: "flex-end" }}>
+        <span style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 600, color: st.color, background: st.bg, borderRadius: 6, padding: "3px 9px", whiteSpace: "nowrap" }}>{st.label}</span>
+        {drill ? <ChevronRight size={15} color={C.muted} /> : <span style={{ width: 15 }} />}
+      </div>
+    </div>
+  );
+}
+
+function EngineChip({ label, value, color }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+      <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.muted }}>{label}</span>
+      <span style={{ fontFamily: FONT_DISPLAY, fontSize: 12, fontWeight: 700, color }}>{value}</span>
+    </div>
+  );
+}
+
+function ObjectiveCard({ obj, index, onSelect }) {
+  const { krs, progress, status } = objRollup(obj);
+  const st = OKR_STATUS[status];
+  const eng = objEngine(obj.journeys);
+  return (
+    <WhiteCard style={{ marginBottom: 14 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+        <div>
+          <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+            <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 11, color: C.muted }}>O{index + 1}</span>
+            <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 17 }}>{obj.name}</span>
+          </div>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: C.secondary, marginTop: 3 }}>{obj.theme}</div>
+        </div>
+        <div style={{ textAlign: "right", flexShrink: 0 }}>
+          <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 800, fontSize: 24, lineHeight: 1, color: st.color }}>{Math.round(progress * 100)}%</div>
+          <span style={{ display: "inline-block", marginTop: 6, fontFamily: FONT_BODY, fontSize: 10, fontWeight: 600, color: st.color, background: st.bg, borderRadius: 6, padding: "3px 9px" }}>{st.label}</span>
+        </div>
+      </div>
+      <div style={{ marginTop: 2 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1.7fr 2fr 1.1fr auto", gap: 18, paddingBottom: 2 }}>
+          {["Key result", "Progress", "Squad", "Status"].map((h, i) => (
+            <span key={h} style={{ fontFamily: FONT_BODY, fontSize: 9, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", color: C.muted, textAlign: i === 3 ? "right" : "left" }}>{h}</span>
+          ))}
+        </div>
+        {krs.map((kr, i) => <KRRow key={i} kr={kr} onSelect={onSelect} />)}
+      </div>
+      <div style={{ display: "flex", alignItems: "center", gap: 20, marginTop: 14, paddingTop: 12, borderTop: `1px solid ${C.sep}`, flexWrap: "wrap" }}>
+        <span style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", color: C.muted }}>Engine</span>
+        <EngineChip label="Testing" value={`${eng.testActual}/${eng.testTarget}`} color={eng.testActual >= eng.testTarget ? C.green : eng.testActual >= eng.testTarget * 0.75 ? C.amber : C.red} />
+        <EngineChip label="Boldness" value={`${eng.boldness}%`} color={eng.boldness >= 20 ? C.violet : C.muted} />
+        <EngineChip label="Insights actioned" value={`${eng.insightPct}%`} color={eng.insightPct >= 67 ? C.green : eng.insightPct >= 40 ? C.amber : C.red} />
+      </div>
+    </WhiteCard>
+  );
+}
+
+function OKRTally() {
+  const counts = { achieved: 0, ontrack: 0, atrisk: 0, offtrack: 0 };
+  OKRS.forEach((o) => o.krs.forEach((kr) => { counts[resolveKR(kr).status]++; }));
+  const order = ["achieved", "ontrack", "atrisk", "offtrack"];
+  return (
+    <div style={{ display: "flex", gap: 10 }}>
+      {order.map((s) => {
+        const st = OKR_STATUS[s];
+        return (
+          <span key={s} style={{ display: "flex", alignItems: "center", gap: 6, fontFamily: FONT_BODY, fontSize: 11, color: C.secondary }}>
+            <span style={{ width: 8, height: 8, borderRadius: "50%", background: st.color }} />
+            <b style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, color: C.primary }}>{counts[s]}</b> {st.label}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
+function OKRView({ onSelect }) {
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 16 }}>
+        <div>
+          <span style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 22 }}>Objectives & Key Results</span>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: C.muted, marginTop: 3 }}>Q2 2026 · end-of-quarter scorecard</div>
+        </div>
+        <OKRTally />
+      </div>
+
+      {OKRS.map((obj, i) => <ObjectiveCard key={obj.id} obj={obj} index={i} onSelect={onSelect} />)}
+    </div>
+  );
+}
+
+/* ============================================================================
+   DATA FLOW MODAL  — "how this works / where the data comes from" (overlay)
+   Illustrative best-practice stack; figures on the dashboard are seeded.
+   ========================================================================== */
+const DATA_SOURCES = [
+  { src: "Product analytics", tool: "Amplitude / Snowplow", feeds: "Conversion, adoption, activation, task completion, time-to-transaction", refresh: "Hourly", owner: "Product Analytics" },
+  { src: "Core-banking events", tool: "Event stream", feeds: "Payment speed, transaction events", refresh: "Real-time", owner: "Platform" },
+  { src: "In-app NPS & surveys", tool: "Delighted", feeds: "Advocacy", refresh: "Daily", owner: "Research / CX" },
+  { src: "Askable", tool: "Research & usability testing", feeds: "Testing cadence, hypotheses, experience insights", refresh: "Per sprint", owner: "Squads / Research" },
+  { src: "Observability / APM", tool: "Datadog, Grafana", feeds: "Latency, error rate, uptime", refresh: "Real-time", owner: "SRE" },
+  { src: "Data warehouse", tool: "Snowflake + dbt", feeds: "Retention, product depth, process-health composites", refresh: "Daily", owner: "Data" },
+  { src: "Anthropic Claude", tool: "Messages API", feeds: "Causal narratives & summaries", refresh: "On demand", owner: "This dashboard" },
+  { src: "External benchmarks", tool: "Industry data", feeds: "Benchmark values", refresh: "Quarterly", owner: "Strategy" },
+];
+
+function FlowStage({ icon: Icon, title, sub, last }) {
+  return (
+    <>
+      <div style={{ flex: 1, textAlign: "center", minWidth: 90 }}>
+        <div style={{ width: 42, height: 42, borderRadius: 11, background: C.indigoBg, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 8px" }}>
+          <Icon size={20} color={C.indigo} />
+        </div>
+        <div style={{ fontFamily: FONT_BODY, fontWeight: 600, fontSize: 12, color: C.primary }}>{title}</div>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 10, color: C.muted, marginTop: 2, lineHeight: 1.3 }}>{sub}</div>
+      </div>
+      {!last && <div style={{ color: C.muted, fontSize: 18, paddingTop: 11 }}>→</div>}
+    </>
+  );
+}
+
+const DF_COLS = "1.3fr 2.2fr 0.85fr 1fr";
+
+function DataFlowModal({ open, onClose }) {
+  if (!open) return null;
+  return (
+    <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(15,23,42,0.55)", display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "48px 24px", overflowY: "auto" }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ background: C.page, borderRadius: 16, maxWidth: 920, width: "100%", boxShadow: "0 24px 64px rgba(0,0,0,0.32)", overflow: "hidden" }}>
+        <div style={{ background: C.white, borderBottom: `1px solid ${C.border}`, padding: "18px 24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
+            <div style={{ fontFamily: FONT_DISPLAY, fontWeight: 700, fontSize: 18 }}>How this works · where the data comes from</div>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: C.secondary, marginTop: 2 }}>The pipeline behind every number on this dashboard.</div>
+          </div>
+          <button onClick={onClose} style={{ border: `1px solid ${C.border}`, background: C.white, borderRadius: 8, width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0 }}>
+            <X size={16} color={C.secondary} />
+          </button>
+        </div>
+
+        <div style={{ padding: 24 }}>
+
+          <Label text="Data flow" style={{ marginBottom: 14 }} />
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 26 }}>
+            <FlowStage icon={Server} title="Sources" sub="8 systems incl. Askable" />
+            <FlowStage icon={Database} title="Warehouse" sub="Snowflake + dbt" />
+            <FlowStage icon={BarChart3} title="Metrics API" sub="KPIs & composites" />
+            <FlowStage icon={LayoutDashboard} title="Dashboard" sub="this app" />
+            <FlowStage icon={Sparkles} title="AI layer" sub="Claude narratives" last />
+          </div>
+
+          <Label text="Source lineage" style={{ marginBottom: 10 }} />
+          <div style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 12, overflow: "hidden" }}>
+            <div style={{ display: "grid", gridTemplateColumns: DF_COLS, gap: 12, background: C.inset, padding: "10px 16px", borderBottom: `1px solid ${C.sep}` }}>
+              {["Source", "Feeds", "Refresh", "Owner"].map((h) => (
+                <span key={h} style={{ fontFamily: FONT_BODY, fontSize: 9, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", color: C.muted }}>{h}</span>
+              ))}
+            </div>
+            {DATA_SOURCES.map((r, i) => (
+              <div key={r.src} style={{ display: "grid", gridTemplateColumns: DF_COLS, gap: 12, alignItems: "center", padding: "11px 16px", borderTop: i === 0 ? "none" : `1px solid ${C.sep}` }}>
+                <div>
+                  <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 600, color: C.primary }}>{r.src}</div>
+                  <div style={{ fontFamily: FONT_BODY, fontSize: 10, color: C.muted, marginTop: 1 }}>{r.tool}</div>
+                </div>
+                <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.secondary, lineHeight: 1.4 }}>{r.feeds}</span>
+                <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.secondary }}>{r.refresh}</span>
+                <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: C.secondary }}>{r.owner}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================================
+   DASHBOARD (root)  (section 4 + 5)
+   ========================================================================== */
+function Dashboard() {
+  const [view, setView] = useState("command");
+  const [selectedId, setSelectedId] = useState(null);
+  const [board, setBoard] = useState("trajectory"); // "grid" | "flow" | "trajectory"
+  const [infoOpen, setInfoOpen] = useState(false);
+
+  const [narratives, setNarratives] = useState({});
+  const [generating, setGenerating] = useState({});
+  const [headline, setHeadline] = useState("");
+  const [headlineLoading, setHeadlineLoading] = useState(false);
+
+  const variantRef = useRef({});
+  const selected = JOURNEYS.find((j) => j.id === selectedId);
+
+  // mount: fire "headline" + all 8 narratives in parallel (mock LLM)
+  useEffect(() => {
+    setHeadlineLoading(true);
+    mockLLM("headline", 0).then((text) => {
+      setHeadline(text);
+      setHeadlineLoading(false);
+    });
+
+    JOURNEYS.forEach((j) => {
+      setGenerating((g) => ({ ...g, [j.id]: true }));
+      mockLLM(j.id, 0).then((text) => {
+        setNarratives((n) => ({ ...n, [j.id]: text }));
+        setGenerating((g) => ({ ...g, [j.id]: false }));
+      });
+    });
+  }, []);
+
+  const regenerate = useCallback((j) => {
+    setGenerating((g) => ({ ...g, [j.id]: true }));
+    const v = (variantRef.current[j.id] || 0) + 1;
+    variantRef.current[j.id] = v;
+    mockLLM(j.id, v).then((text) => {
+      setNarratives((n) => ({ ...n, [j.id]: text }));
+      setGenerating((g) => ({ ...g, [j.id]: false }));
+    });
+  }, []);
+
+  // any navigation (new view or drilling into a journey) returns to the top
+  useEffect(() => { window.scrollTo(0, 0); }, [view, selectedId]);
+
+  const navigate = (v) => { setView(v); setSelectedId(null); };
+  const select = (id) => { setSelectedId(id); setView("detail"); };
+  const back = () => { setView("command"); setSelectedId(null); };
+
+  return (
+    <div style={{ minHeight: "100vh", background: C.page }}>
+      <TopBar currentView={view} onNavigate={navigate} onInfo={() => setInfoOpen(true)} />
+      <div style={{ width: "100%", padding: "24px 36px 56px" }}>
+        {view === "command" && (
+          <CommandCentre headline={headline} headlineLoading={headlineLoading} onSelect={select} board={board} onBoard={setBoard} />
+        )}
+        {view === "detail" && selected && (
+          <JourneyDetail
+            journey={selected}
+            onBack={back}
+            narrative={narratives[selected.id]}
+            loading={!!generating[selected.id]}
+            onRegenerate={regenerate}
+          />
+        )}
+        {view === "okrs" && <OKRView onSelect={select} />}
+        {view === "insights" && <InsightsTracker />}
+      </div>
+      <DataFlowModal open={infoOpen} onClose={() => setInfoOpen(false)} />
+    </div>
+  );
+}
+
+createRoot(document.getElementById("root")).render(<Dashboard />);
+</script>
+</body>
+</html>
