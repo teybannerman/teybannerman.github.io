@@ -59,16 +59,19 @@ My co-authored book *The AI Revolution* reached #1 on Amazon AI charts globally,
 
 ## Recent & upcoming stages
 
+- Canva Create, Los Angeles (2026)
+- East Meets West, Hawaii (2026)
+- Design Matters, Tokyo (2026, 2025)
 - World AI Cannes Festival, Cannes (2025, 2024, 2023)
+- 3daysofdesign, Copenhagen (2026, 2025, 2024)
+- AI Hot 100 Summit, New York (2025, 2024)
 - Design Matters, Copenhagen (2025, 2024, 2022, 2018)
 - iF Design Trend Conference, Berlin (2025)
-- 3daysofdesign, Copenhagen (2025, 2024)
 - Founders Forum Global, Oxford (2024)
 - AI Festival, Milan (2025)
 - Packaging Innovations, Birmingham (2025)
 - Bucharest Tech Week, Bucharest (2024)
 - Leading Design, London (2024)
-- AI Hot 100 Conference, New York (2024)
 - Miro Canvas Leadership Summit, London (2024)
 - Nedbank Create, Johannesburg (2023)
 - Google Industry Webinar Series (2023)
