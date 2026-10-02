@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Cheap talk</title>
+<title>Who decided this?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -126,77 +126,6 @@ body.fs #bar, body.fs #help, body.nohud #bar, body.nohud #help { display: none; 
 
      The balls are called "dots" in the settings and options below, which
      is the word the engine uses. Same thing.
-   ====================================================================== */
-
-/* ---------- 1. YOUR TALK ---------------------------------------------- */
-
-/*  ======================================================================
-    CHEAP TALK
-    Tey Bannerman · ~24 minutes · 46 scenes · 5888 × 1280 LED wall
-
-    THE ARGUMENT
-      Polish was a costly signal: it took time, skill and money, so a polished
-      piece of work told people someone had cared and knew what they were
-      doing. Generative tools made polish free. Economists have now watched,
-      in real data, what happens when a costly signal becomes free: it stops
-      carrying information, the market moves to signals that are still
-      expensive, and the people who were best at the old signal lose the most.
-      Design is in the middle of that shift. The signal that survives is the
-      edit — the distance between what the tool would have made and what you
-      shipped, and the evidence behind each step. So show the diff.
-
-    THE SHAPE OF IT
-      ACT 0   1–10   Sixty applications in a few minutes. A job post, 29
-                     proposals, the ones worth reading; then 63 snap in, all
-                     equally polished, and the light goes out of all of them.
-                     The two charts from the paper draw themselves across the
-                     wall: the proposals get better, and the payoff for a
-                     better proposal collapses. Then: a third of them, India.
-                     Then the world in dots, and the 200 cities we are in.
-      ACT 1  11–13   What a signal is. Spence, in dots. Then the paper's own
-                     heatmap: the best workers lose the most, cell by cell.
-      ACT 2  14–18   Our costly signal was polish. The flood. The D&AD line.
-                     Six screens with the logos off — and then the screens
-                     fall, because they stopped being proof.
-      ACT 3  19–23   Polish counts against you. Eight documents, one word in
-                     red, and every document read differently. The bank's
-                     question. The workslop number.
-      ACT 4  24–28   What the market did next. The same chart comes back and
-                     completes itself: what employers paid for moved to the
-                     signal that was still expensive. The cover-letter study.
-                     The D&AD juries.
-      ACT 5  29–35   The diff. Finished screens tell you nothing; the diff
-                     builds across 76 feet in red and green; one changed line
-                     with its reason attached; chosen against inherited.
-      ACT 6  36–37   The counterfeit. Fake edits arrive cheaply, then every
-                     edit without a reason turns the colour of a default.
-      ACT 7  38–43   Monday. Six lines, and on the fourth the wall vanishes.
-      CLOSE  44–46   The applications come back, read the new way. Then three
-                     words.
-
-    THE COLOURS, AND WHAT EACH ONE MEANS — once, always
-      white    a signal, or ink: something that carries information
-      ash      present and unlit; context; what stopped carrying information
-      red      what was lost, removed, or wrong (the word "you"; the top row
-               of the heatmap; a deleted line)
-      green    what was added, chosen, or gained: the edit
-      indigo   the default. Tailwind's own bg-indigo-500. The flood, and an
-               edit with no reason behind it.
-      blue     where we are: the cities on the map, once (10), and nothing else.
-
-    THE MOVES THIS FILE SPENDS ONCE EACH
-      The Flood (15): the field goes indigo left to right, no dot moves.
-      The Fall (18): six screens drop, once, for "stopped being proof".
-      The Pins (10): the world holds still and 200 cities light up, bigger
-      and blue — the same map in a second state.
-      The Held Frame, three times, each on real data: the signal line holds
-      while its payoff draws in beneath (7–8); the "before" bars hold while
-      the "after" bars arrive (24–25, 26–27); the documents hold while the
-      rest fill in around them (2–4). Every chart is a picture that changes
-      by one thing per click.
-      The Vanishing (41): on "No link, no edit", every dot leaves.
-      Words in dots reach the stage twice: Spence at 11, and the last three
-      words at 45. Everything else is data, documents, or your voice.
 
     DRIVING IT
       Scene titles below are cues; the rehearsal bar shows them. H hides the
@@ -214,8 +143,8 @@ const SETTINGS = {
   // a pair. A word is drawn by covering its letterforms at the dots' own fixed
   // spacing, which means its density is decided by its AREA, not by how many
   // dots exist — so more dots alone will not thicken a thin word; finer dots
-  // will. 1250 at this radius is 63 documents of 16 dots with room for the job
-  // post, a 25-cell heatmap of 48 dots a cell, and two chart lines at once.
+  // will. 1250 at this radius is four career circles of 890 dots, a three-line
+  // LED statement, a 25-cell heatmap, and two chart lines at once.
   dots: 1250,
   radius: 0.0105,            // ~13px radius, 27px across
 
@@ -236,43 +165,53 @@ const SETTINGS = {
 };
 
 const COLORS = {
-  white:  '#ffffff',         // a signal
+  white:  '#ffffff',         // the crowd; a signal
   ash:    '#565656',         // present, unlit
   ghost:  '#242424',         // spare dots that should sink into the wall
-  red:    '#ff4d4d',         // lost, removed, wrong
-  green:  '#3ddc84',         // added, chosen, gained: the edit
-  indigo: '#6366f1',         // the default. Tailwind's bg-indigo-500, exactly
-  blue:   '#2f9bff',         // where we are: the cities on the map
+  grey:   '#b0aca6',         // secondary lines of text
+  orange: '#ff7a1a',         // THE accent: the part of the job that is actually deciding. Nothing else.
+  green:  '#3ddc84',         // a place (the cities, India); a mark that came true; a gain in the data
+  red:    '#ff4d4d',         // a loss in the data; a mark that didn't come true
 };
 
 /* ----------------------------------------------------------------------
-   THE DATA. Every series below is transcribed from the papers' own figures
-   and tables; the source block further down says which. Change a number
-   here and the chart re-draws.
+   THE DATA. Galdin & Silbert, "Making Talk Cheap: Generative AI and Labor
+   Market Signaling", arXiv 2511.08785, November 2025 (a working paper — say
+   so). Freelancer.com coding jobs, January 2021 to July 2024; the platform's
+   AI proposal-writing tool launched 18 April 2023. Every series is
+   transcribed from the paper's own figures and tables; change a number here
+   and the chart re-draws.
+     Table 1    applications per job 28.9 → 62.7 (median 19 → 46); each
+                application's chance of winning fell to 0.45 of its old level;
+                36.5% of the workers in the data listed India as home.
+     Table 2    what employers would pay, in dollars off the bid, for one
+                standard deviation more tailoring ($25.67 → $10.82) and more
+                reputation ($27.96 → $47.22); considered applications.
+     Figures 8, 9   the two lines below, read point by point from the
+                printed charts: treat each value as ±1 on its axis.
+     Figure 13  the heatmap, every cell as printed; the abstract's headline
+                is top ability fifth hired 19% less, bottom fifth 14% more,
+                average wages −5%.
    ---------------------------------------------------------------------- */
 
-// Galdin & Silbert, Figure 8: how tailored the average proposal was, month by
-// month, months from the ChatGPT launch (odd months, −23 to +19). Residualised
-// signal score. The AI tool arrives at month +5 (April 2023).
+// Figure 8: how tailored the average proposal was, month by month, months from
+// the ChatGPT launch (odd months, −23 to +19). The AI tool arrives at +5.
 const SIGNAL = [5.5, 5.55, 5.45, 5.4, 5.35, 5.3, 5.25, 5.3, 5.3, 5.25, 5.35, 5.2,
                 5.4, 5.9, 6.4, 6.6, 6.6, 6.85, 6.75, 7.05, 7.15, 7.5];
 
-// Galdin & Silbert, Figure 9: the payoff. Predicted % increase in hiring
-// probability from a one-standard-deviation more tailored proposal, two-month
-// rolling windows, same months. 30–40% before; about 10% after the tool.
+// Figure 9: the payoff. Predicted % increase in hiring probability from a
+// one-standard-deviation more tailored proposal, two-month rolling windows,
+// same months. 30–40% before; about 10% after the tool.
 const PAYOFF = [30, 26.5, 26, 33, 27, 28.5, 30, 39, 29, 37.5, 42, 36,
                 31, 21, 12.5, 12.5, 13, 9, 3.5, 8.5, 8, 11];
 
-// x-axis labels for both lines: the point nearest each new year
-const MONTHS = ['', '2021', '', '', '', '', '', '2022', '', '', '', '',
-                '', '2023', '', '', '', '', '', '2024', '', ''];
 // where the two vertical markers sit, as a fraction of the way across the
 // 22 points: ChatGPT (month 0, between −1 and +1) and the AI tool (month +5)
 const X_CHATGPT = 11.5 / 21, X_TOOL = 14 / 21;
 
-// Galdin & Silbert, Figure 13: percentage change in hiring rates when written
-// applications stop carrying information, by worker ability quintile (rows,
-// best fifth at the top) and worker cost quintile (columns, cheapest first).
+// Figure 13: percentage change in hiring rates when written applications stop
+// carrying information, by worker ability quintile (rows, best fifth at the
+// top) and worker cost quintile (columns, cheapest first).
 const HEAT = [
   [-14.9, -17.9, -22.0, -21.4, -24.1],
   [ -8.7,  -9.9,  -9.8,  -9.4,  -6.1],
@@ -281,19 +220,10 @@ const HEAT = [
   [ 13.8,  13.6,   8.9,  22.9,  38.6],
 ];
 
-// Galdin & Silbert, Table 2: what employers would pay, in dollars off the bid,
-// for one standard deviation more of each thing. Considered applications;
-// the post-LLM column controls for AI-written proposals.
+// Table 2: what employers would pay, in dollars off the bid, for one standard
+// deviation more of each thing. Considered applications; the post-LLM column
+// controls for AI-written proposals.
 const WTP = { tailoringBefore: 25.67, tailoringAfter: 10.82, reputationBefore: 27.96, reputationAfter: 47.22 };
-
-// Cui, Dias & Ye, Tables 5 and 6, as an index (before = 100): how well a
-// well-matched letter, and a worker's reputation rank, predicted a callback.
-const LETTER = { before: 100, after: 49.5 };        // 0.0485 → 0.0240, −51%
-const HISTORY = { before: 100, after: 105.2 };      // 0.2223 → 0.2339, +5%
-
-// D&AD AI & Creativity Report 2026: generative AI in AI-declaring entries vs
-// AI-declaring Pencil winners.
-const DANDAD = { entries: 56.2, winners: 44.7 };
 
 // The world: Natural Earth 1:110m land (public domain, via world-atlas), as one SVG path in an
 // equirectangular projection cropped to 83°N–56°S (Greenland to Cape Horn, no Antarctica), with
@@ -301,6 +231,8 @@ const DANDAD = { entries: 56.2, winners: 44.7 };
 // Units are tenths of a degree: x = (longitude + 180) × 10, y = (83 − latitude) × 10.
 const WORLD = 'M1122 1368 L1149 1377 L1108 1385 L1053 1358 L1089 1371 L1107 1355 L1122 1368 Z M3530 1239 L3542 1243 L3531 1269 L3515 1272 L3493 1296 L3467 1292 L3470 1281 L3530 1239 Z M3546 1192 L3568 1209 L3585 1207 L3552 1247 L3549 1229 L3538 1225 L3547 1204 L3526 1175 L3546 1192 Z M0 996 L3594 998 L3587 1000 L3594 994 L0 996 Z M2301 966 L2304 987 L2297 987 L2271 1079 L2254 1086 L2240 1080 L2233 1051 L2244 1031 L2244 992 L2277 976 L2292 950 L2301 966 Z M3236 968 L3254 980 L3264 1020 L3288 1034 L3331 1091 L3331 1139 L3300 1204 L3263 1220 L3250 1209 L3236 1218 L3206 1210 L3196 1191 L3181 1186 L3182 1174 L3168 1183 L3178 1159 L3160 1179 L3143 1156 L3113 1145 L3061 1152 L3037 1169 L2999 1170 L2980 1181 L2950 1172 L2957 1146 L2933 1091 L2942 1093 L2934 1074 L2941 1048 L2942 1055 L2967 1037 L3009 1027 L3057 972 L3071 968 L3096 980 L3106 955 L3126 951 L3124 941 L3165 949 L3155 980 L3202 1007 L3225 937 L3236 968 Z M3141 842 L3155 864 L3183 847 L3246 869 L3276 891 L3272 904 L3307 936 L3279 931 L3247 906 L3226 923 L3176 914 L3187 903 L3179 884 L3137 865 L3130 871 L3120 858 L3137 852 L3105 839 L3124 834 L3141 842 Z M3052 816 L3037 828 L3002 828 L3009 844 L3033 836 L3015 849 L3032 883 L3022 883 L3027 875 L3015 876 L3010 856 L3003 859 L3004 885 L2994 884 L2988 858 L3000 824 L3052 816 Z M2858 889 L2826 872 L2753 775 L2775 778 L2838 829 L2834 837 L2861 861 L2858 889 Z M2979 812 L2990 821 L2978 822 L2961 870 L2902 859 L2891 835 L2897 810 L2912 811 L2930 799 L2967 761 L2992 776 L2973 798 L2979 812 Z M3210 459 L3203 479 L3158 495 L3151 484 L3110 491 L3120 499 L3113 515 L3102 516 L3094 497 L3126 476 L3157 475 L3167 457 L3174 462 L3194 448 L3199 424 L3214 416 L3219 438 L3210 459 Z M1239 323 L1232 332 L1265 338 L1269 363 L1258 362 L1258 352 L1246 361 L1207 354 L1226 323 L1246 314 L1239 323 Z M1770 244 L1759 254 L1780 253 L1769 270 L1817 303 L1814 317 L1748 330 L1766 316 L1747 310 L1758 307 L1754 295 L1771 290 L1752 282 L1750 272 L1744 277 L1738 262 L1750 244 L1770 244 Z M1655 165 L1664 179 L1613 195 L1572 190 L1582 186 L1560 181 L1578 176 L1557 174 L1579 166 L1594 173 L1655 165 Z M0 140 L57 167 L54 159 L81 161 L101 170 L75 176 L70 187 L1 171 L0 180 L3600 180 L3574 184 L3592 207 L3537 213 L3503 231 L3489 224 L3435 231 L3420 248 L3432 254 L3421 281 L3404 287 L3400 298 L3385 300 L3368 320 L3354 276 L3359 262 L3437 219 L3445 204 L3401 225 L3393 212 L3367 216 L3342 232 L3350 239 L3222 240 L3151 283 L3182 292 L3199 288 L3214 308 L3201 346 L3182 367 L3149 396 L3123 397 L3075 432 L3095 462 L3091 479 L3065 486 L3061 463 L3069 461 L3047 449 L3053 434 L3011 441 L3022 426 L3016 421 L2980 438 L2975 443 L2989 456 L3024 455 L2992 481 L3019 513 L3017 548 L2987 585 L2959 602 L2908 616 L2904 627 L2885 613 L2859 632 L2893 696 L2892 713 L2852 744 L2851 731 L2801 696 L2792 738 L2830 775 L2842 817 L2814 802 L2801 765 L2785 746 L2783 752 L2788 716 L2772 661 L2754 673 L2742 670 L2743 648 L2714 602 L2670 615 L2665 628 L2603 671 L2599 726 L2575 750 L2535 670 L2526 616 L2505 621 L2464 576 L2374 573 L2365 559 L2347 565 L2315 551 L2301 529 L2280 530 L2308 582 L2316 572 L2318 590 L2340 589 L2364 566 L2368 588 L2398 607 L2377 641 L2353 658 L2287 690 L2235 704 L2227 662 L2191 617 L2185 593 L2146 549 L2149 535 L2139 554 L2124 531 L2155 599 L2169 610 L2175 644 L2233 706 L2227 713 L2246 726 L2311 710 L2310 724 L2277 788 L2203 856 L2192 877 L2188 895 L2205 938 L2208 977 L2195 997 L2148 1028 L2155 1071 L2126 1087 L2122 1118 L2082 1158 L1996 1178 L1982 1169 L1982 1147 L1952 1101 L1943 1051 L1918 1011 L1937 937 L1919 880 L1888 841 L1894 793 L1885 782 L1859 787 L1843 767 L1780 783 L1710 782 L1676 757 L1634 708 L1624 683 L1639 649 L1630 611 L1656 567 L1704 531 L1707 504 L1741 472 L1778 478 L1815 464 L1895 456 L1911 461 L1903 492 L1991 527 L2001 508 L2015 502 L2089 521 L2110 514 L2138 520 L2160 484 L2162 463 L2076 463 L2062 435 L2092 418 L2135 410 L2183 421 L2217 410 L2167 378 L2191 357 L2150 367 L2163 379 L2139 386 L2125 377 L2133 369 L2107 364 L2077 404 L2088 419 L2026 427 L2040 453 L2031 451 L2032 466 L2025 466 L1994 427 L1995 413 L1931 373 L1923 376 L1926 389 L1985 428 L1969 426 L1971 441 L1961 450 L1954 430 L1889 386 L1865 399 L1831 399 L1830 411 L1808 420 L1801 443 L1779 463 L1746 471 L1735 461 L1711 461 L1706 400 L1786 390 L1788 370 L1754 343 L1784 344 L1781 332 L1813 329 L1847 299 L1881 295 L1888 290 L1885 259 L1906 253 L1909 265 L1896 275 L1909 290 L1997 286 L2013 278 L2016 256 L2041 260 L2044 246 L2033 238 L2091 230 L2029 232 L2013 223 L2015 198 L2054 179 L2022 173 L2014 186 L1978 203 L1971 217 L1988 229 L1968 243 L1959 269 L1929 276 L1904 235 L1884 247 L1857 244 L1850 210 L1859 204 L1992 132 L2045 120 L2082 118 L2113 125 L2100 128 L2111 134 L2165 139 L2211 155 L2211 162 L2184 170 L2132 164 L2148 171 L2149 186 L2170 191 L2165 182 L2172 179 L2196 185 L2204 182 L2198 175 L2221 165 L2240 169 L2245 162 L2235 144 L2263 148 L2268 153 L2256 160 L2263 163 L2337 141 L2345 142 L2335 148 L2388 141 L2399 147 L2411 141 L2400 135 L2406 131 L2485 149 L2492 144 L2469 135 L2467 120 L2492 102 L2526 102 L2518 116 L2528 126 L2526 140 L2537 146 L2513 167 L2524 168 L2551 152 L2549 140 L2536 134 L2544 124 L2531 116 L2549 109 L2547 102 L2557 107 L2553 117 L2564 118 L2559 111 L2576 107 L2615 113 L2605 94 L2668 91 L2660 85 L2672 79 L2808 66 L2844 53 L2872 65 L2941 72 L2894 88 L3032 100 L3033 93 L3070 94 L3113 122 L3123 112 L3199 115 L3191 106 L3205 102 L3295 108 L3330 122 L3390 121 L3409 136 L3478 134 L3496 143 L3508 140 L3505 129 L3586 136 L0 140 Z M895 135 L895 145 L908 137 L927 158 L945 131 L974 133 L987 138 L980 149 L987 154 L967 166 L942 164 L927 182 L868 210 L853 241 L868 242 L877 259 L977 279 L979 297 L1001 318 L1014 304 L1002 283 L1035 265 L1015 242 L1027 231 L1019 207 L1062 206 L1104 219 L1107 240 L1123 248 L1154 227 L1186 260 L1182 267 L1227 284 L1243 309 L1200 328 L1136 328 L1089 362 L1149 338 L1158 343 L1149 349 L1155 368 L1185 371 L1195 360 L1202 371 L1146 395 L1138 385 L1156 377 L1129 379 L1093 400 L1100 414 L1063 421 L1081 421 L1060 422 L1051 441 L1045 435 L1049 446 L1041 458 L1036 439 L1037 449 L1030 448 L1043 474 L987 516 L996 578 L983 571 L959 529 L908 527 L908 537 L898 539 L862 533 L834 547 L821 606 L837 637 L856 649 L880 643 L892 637 L897 620 L929 615 L911 671 L966 677 L962 719 L986 742 L1004 734 L1032 744 L1051 719 L1082 706 L1089 709 L1081 716 L1083 739 L1086 720 L1101 708 L1118 724 L1181 723 L1176 731 L1229 770 L1260 772 L1287 788 L1300 813 L1296 831 L1314 832 L1314 842 L1322 836 L1351 846 L1354 857 L1400 859 L1444 881 L1453 903 L1449 920 L1413 961 L1407 1009 L1391 1049 L1324 1079 L1311 1117 L1262 1174 L1238 1179 L1216 1169 L1232 1199 L1208 1217 L1177 1218 L1173 1240 L1149 1241 L1150 1251 L1165 1256 L1148 1265 L1144 1280 L1127 1286 L1124 1293 L1144 1302 L1140 1311 L1109 1337 L1118 1354 L1092 1359 L1090 1368 L1051 1353 L1044 1317 L1059 1299 L1044 1296 L1056 1271 L1068 1275 L1073 1254 L1057 1262 L1068 1223 L1064 1202 L1086 1154 L1098 1028 L1085 1004 L1040 976 L1002 902 L987 891 L986 877 L1002 857 L990 852 L991 841 L1029 792 L1018 747 L1004 741 L991 758 L943 731 L925 697 L888 691 L853 668 L834 673 L765 647 L745 631 L740 602 L678 540 L669 518 L652 512 L653 528 L706 598 L700 602 L678 583 L677 570 L649 553 L658 544 L627 500 L594 484 L556 427 L561 375 L553 348 L574 359 L572 340 L526 322 L522 307 L459 249 L329 221 L283 238 L294 217 L216 270 L152 286 L223 254 L230 241 L180 243 L181 234 L162 232 L139 215 L154 199 L192 192 L185 186 L192 182 L150 186 L119 173 L155 164 L183 169 L132 146 L234 116 L435 141 L519 125 L542 135 L585 132 L661 146 L647 151 L711 156 L722 151 L712 147 L718 143 L739 142 L785 154 L823 144 L839 148 L839 157 L858 139 L835 129 L848 111 L885 128 L876 133 L895 135 Z M658 99 L653 103 L701 100 L718 113 L716 99 L735 99 L755 120 L790 130 L773 135 L776 142 L667 145 L627 130 L676 126 L621 125 L616 121 L639 117 L606 114 L621 103 L658 99 Z M934 98 L942 105 L977 92 L992 109 L1022 102 L1059 117 L1078 114 L1130 138 L1112 143 L1181 161 L1161 180 L1120 167 L1153 196 L1150 203 L1112 193 L1138 211 L1052 183 L1023 188 L1014 184 L1021 177 L1060 175 L1071 153 L1010 128 L951 130 L901 118 L906 99 L942 92 L934 98 Z M595 116 L569 121 L541 111 L561 93 L551 87 L645 95 L595 116 Z M718 68 L743 75 L678 86 L661 83 L682 78 L623 78 L646 65 L709 75 L695 66 L718 68 Z M2375 123 L2337 122 L2315 110 L2356 79 L2489 65 L2385 87 L2354 106 L2375 123 Z M853 59 L908 74 L989 73 L1002 81 L902 85 L829 62 L853 59 Z M1983 33 L2015 40 L1959 62 L1904 33 L1983 33 Z M2799 41 L2750 40 L2712 27 L2759 17 L2802 32 L2799 41 Z M930 33 L942 37 L892 48 L833 28 L876 17 L930 33 Z M1115 0 L1181 4 L1123 15 L1145 15 L1088 32 L1031 37 L1046 45 L1002 58 L1021 62 L994 68 L905 65 L922 58 L917 51 L950 55 L920 46 L949 37 L931 27 L982 25 L924 25 L884 11 L989 0 L1115 0 Z M1529 0 L1592 3 L1481 8 L1579 13 L1568 18 L1642 11 L1678 17 L1600 28 L1623 29 L1603 42 L1603 54 L1615 60 L1583 64 L1602 69 L1604 78 L1593 78 L1606 87 L1564 97 L1577 108 L1552 107 L1582 123 L1545 116 L1548 122 L1536 128 L1577 129 L1402 175 L1372 203 L1366 229 L1317 221 L1284 194 L1260 158 L1291 131 L1253 134 L1256 122 L1286 124 L1242 113 L1253 104 L1214 75 L1115 69 L1086 60 L1132 56 L1067 50 L1143 36 L1120 29 L1197 10 L1296 6 L1355 13 L1332 4 L1529 0 Z';
 const LAT_TOP = 83, LAT_BOT = -56;
+// India, from the same Natural Earth file, in the same units, so the map can light the dots inside it.
+const INDIA = 'M2773 547 L2771 559 L2764 557 L2751 564 L2746 583 L2741 591 L2733 589 L2732 607 L2727 610 L2721 594 L2717 600 L2712 595 L2724 580 L2699 577 L2698 570 L2686 566 L2682 572 L2689 578 L2681 585 L2687 588 L2689 613 L2670 615 L2670 623 L2665 628 L2651 635 L2622 660 L2622 664 L2603 671 L2599 726 L2593 727 L2589 735 L2592 738 L2583 741 L2575 750 L2566 741 L2535 670 L2526 616 L2505 621 L2492 609 L2496 605 L2493 602 L2482 593 L2488 586 L2510 586 L2502 565 L2495 561 L2506 550 L2518 551 L2544 520 L2544 513 L2553 507 L2545 502 L2537 487 L2542 483 L2569 483 L2578 475 L2589 487 L2592 500 L2592 505 L2585 504 L2587 515 L2611 528 L2601 542 L2633 556 L2681 566 L2681 551 L2687 549 L2688 559 L2697 563 L2720 562 L2717 552 L2746 537 L2754 540 L2761 535 L2766 542 L2762 546 L2773 547 Z';
 
 // Two hundred cities, as a stand-in for the office list: [name, latitude, longitude].
 // Replace with the real list; the map will place whatever is here.
@@ -354,197 +286,217 @@ const CITY_PINS = CITIES.map(([, lat, lon]) => [(lon + 180) / 360, (LAT_TOP - la
 
 /* ----------------------------------------------------------------------
    THE PICTURES THIS TALK DRAWS. Small generators, so a scene can say
-   docs(29) and mean it. Each returns compose parts.
+   circles(3) and mean it. Each returns compose parts or labels.
    ---------------------------------------------------------------------- */
 
-// mix two hex colours: t = 0 is a, 1 is b
-function mix(a, b, t) {
+const DOT = 0.0105 * 2.8 * 1280 / 5888;                // one grid step, as a fraction of stage width
+const discR = n => 0.0105 * 2.35 * Math.sqrt(n / Math.PI);   // a disc's radius, as a fraction of stage height
+
+// ---- the career: four discs, growing left to right ----------------------
+// Dot budgets grow about ×2.2 a step, so the diameters roughly double. The orange core of each is
+// the part of the job that is actually designing; it shrinks as the circle grows.
+const CIRCLE_DOTS = [40, 110, 240, 500], CIRCLE_X = [0.17, 0.35, 0.54, 0.78], CIRCLE_Y = 0.56;
+const CIRCLE_CORE = [0.9, 0.65, 0.4, 0.18];            // orange centre, as a fraction of each radius
+const CIRCLE_TEXT = [['Designer'], ['Computer Science'], ['UX & UI Designer', 'Startups & creative agencies'],
+                     ['McKinsey & Company', 'Partner + Head of McKinsey Design Europe']];
+const circles = (n, cores, full) => CIRCLE_DOTS.slice(0, n).map((dots, i) => ({ type: 'shape', shape: 'disc', dots,
+  x: CIRCLE_X[i], y: CIRCLE_Y, size: 0.9, ...(cores ? { core: full ? 1.01 : CIRCLE_CORE[i], coreColor: 'orange' } : {}) }));
+// Labels sit above each circle. A circle with a second line keeps its first line high enough that
+// nothing moves when the second one arrives.
+function circleLabels(n, secondLineOfLast) {
+  const out = [];
+  CIRCLE_TEXT.slice(0, n).forEach(([a, b], i) => {
+    const top = CIRCLE_Y - discR(CIRCLE_DOTS[i]) - (b ? 0.13 : 0.07);
+    out.push({ text: a, x: CIRCLE_X[i], y: top, size: 0.044, weight: 700, color: 'white' });
+    if (b && (i < n - 1 || secondLineOfLast)) out.push({ text: b, x: CIRCLE_X[i], y: top + 0.06, size: 0.034, color: 'grey' });
+  });
+  return out;
+}
+const CIRCLES_WHITE = { type: 'compose', parts: circles(4), labels: circleLabels(4, true) };               // all white
+const CIRCLES_LIT   = { type: 'compose', parts: circles(4, true), labels: circleLabels(4, true) };         // orange cores
+// At the close the same four circles stand for everyone, so they carry no words at all.
+const CIRCLES_LIT_BARE  = { type: 'compose', parts: circles(4, true) };
+const CIRCLES_FULL_BARE = { type: 'compose', parts: circles(4, true, true) };                              // all orange
+
+// ---- the line in dots -------------------------------------------------------
+// One line of LED letters, in three parts that share the whole line's spacing, so the word DECIDING
+// can be lit on its own and nothing moves. The line is 305 letter columns squeezed into 0.9 of the
+// stage: "DESIGN IS" is 51 columns wide, DECIDING starts at column 56 and is 47 wide, the rest
+// starts at 108 and is 197 wide. Each part is placed and sized from those columns.
+const LINE = [['DESIGN IS', 0, 51], ['DECIDING', 56, 47], ['WHAT OTHER PEOPLE HAVE TO LIVE WITH', 108, 197]];
+const deciding = lit => ({ type: 'compose', parts: LINE.map(([text, col, wide], i) =>
+  ({ type: 'text', text, align: 'left', x: 0.05 + 0.9 * col / 305, width: 0.9 * wide / 305, color: lit && i === 1 ? 'orange' : 'white' })) });
+
+// ---- the three challenges: LED letters, one line per click, each holding its place ----
+const CHALLENGES = ['EVERYONE HAS A STOPWATCH NOW.', 'EVERYTHING LOOKS "OK" NOW.', 'NOBODY CAN TELL WHO\'S GOOD NOW.'];
+const challenges = n => CHALLENGES.slice(0, n).map((text, i) => ({ type: 'text', text, x: 0.5, y: 0.2 + i * 0.27, width: 0.94, height: 0.2 }));
+
+// ---- the documents (Example 1) -----------------------------------------
+// 4 × 4 dots each, 21 to a row, three rows. The job post sits alone at the far left.
+const DOC_COLS = 21;
+const docAt = i => ({ x: 0.145 + (i % DOC_COLS) * 0.0405, y: 0.24 + Math.floor(i / DOC_COLS) * 0.26 });
+const docs = (n, colorOf) => [...Array(n).keys()].map(i => ({ type: 'grid', dots: 16, cols: 4, ...docAt(i), color: colorOf ? colorOf(i) : undefined }));
+const JOB_POST = { type: 'grid', dots: 16, cols: 4, x: 0.06, y: 0.5, color: 'white' };
+const TAILORED = new Set([1, 4, 9, 13, 17, 22, 26]);   // the 29's tailored ones: fixed, so every replay matches
+
+// ---- the heatmap: 25 cells of 12 × 4 dots, row names at the left ---------
+function mix(a, b, t) {                                // t = 0 is a, 1 is b
   const h = c => [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16));
   const A = h(a), B = h(b);
   return '#' + [0, 1, 2].map(k => Math.round(A[k] + (B[k] - A[k]) * Math.max(0, Math.min(1, t))).toString(16).padStart(2, '0')).join('');
 }
-// the heatmap's colour for a value: ash at zero, red for losses, green for gains
 const heat = v => v < 0 ? mix(COLORS.ash, COLORS.red, Math.pow(-v / 25, 0.8)) : mix(COLORS.ash, COLORS.green, Math.pow(v / 32, 0.8));
-
-// Documents: 4 × 4 dots each, 21 to a row, three rows, filling the wall left
-// to right and top to bottom. The job post sits alone at the far left.
-const DOC_ROWS = 3, DOC_COLS = 21;
-const docAt = i => ({ x: 0.145 + (i % DOC_COLS) * 0.0405, y: 0.24 + Math.floor(i / DOC_COLS) * 0.26 });
-function docs(n, colorOf) {
-  const parts = [];
-  for (let i = 0; i < n; i++) {
-    const p = docAt(i);
-    parts.push({ type: 'grid', dots: 16, cols: 4, x: p.x, y: p.y, color: colorOf ? colorOf(i) : undefined });
-  }
-  return parts;
-}
-const JOB_POST = { type: 'grid', dots: 16, cols: 4, x: 0.06, y: 0.5, color: 'white' };
-// which of the 29 pre-tool proposals were the tailored ones, and which of the
-// 63 come from India (36.5%, Table 1): fixed picks, so every replay matches
-const TAILORED = new Set([1, 4, 9, 13, 17, 22, 26]);
-const INDIA = new Set([0, 2, 5, 8, 11, 12, 15, 19, 21, 24, 27, 30, 33, 35, 38, 41, 44, 47, 50, 53, 56, 59, 62]);
-const EDITED = new Set([3, 12, 20, 29, 37, 45, 52, 60]);
-
-// A phone wireframe, 100 wide by 200 tall, as one outline path: frame, header,
-// search bar and a grid of tiles, with small honest differences between the six.
-function phone(tiles, searchLow, tallHeader) {
-  const R = (x, y, w, h) => `M${x} ${y} h${w} v${h} h${-w} Z `;
-  let d = 'M12 0 H88 A12 12 0 0 1 100 12 V188 A12 12 0 0 1 88 200 H12 A12 12 0 0 1 0 188 V12 A12 12 0 0 1 12 0 Z ';
-  d += R(10, 12, 80, tallHeader ? 18 : 12);
-  d += R(10, searchLow ? 168 : (tallHeader ? 40 : 34), 80, 14);
-  const ty = searchLow ? (tallHeader ? 40 : 34) : (tallHeader ? 64 : 58);
-  const cols = tiles === 6 ? 3 : 2, tw = tiles === 6 ? 22 : 34, gap = tiles === 6 ? 7 : 12;
-  for (let i = 0; i < tiles; i++) d += R(10 + (i % cols) * (tw + gap), ty + Math.floor(i / cols) * (tw + gap), tw, tw);
-  return d;
-}
-const PHONES = [phone(4, false, false), phone(4, true, false), phone(6, false, false),
-                phone(4, false, true),  phone(4, false, false), phone(6, true, false)];
-const lineup = () => PHONES.map((d, i) => ({ type: 'shape', path: d, outline: true, dots: 200, x: (i + 0.5) / 6, y: 0.5, size: 0.72, width: 0.14 }));
-
-// A page of text: rows of dots with ragged right edges. Eight of them across the
-// wall. Where a page says "you", the word is its own two-dot part so it can be lit.
-const PAGE_LINES = [11, 9, 12, 8, 11, 10, 12, 7, 11, 9, 10, 6];
-const YOU_AT = { 1: [4, 3], 4: [7, 5], 6: [2, 6] };   // page → [line, dot offset] of the word
-const DOT = 0.0105 * 2.8 * 1280 / 5888;                // one grid step, as a fraction of stage width
-function page(p, pageColor, youColor) {
-  const left = 0.05 + p * 0.118, parts = [];
-  PAGE_LINES.forEach((len, li) => {
-    const y = 0.2 + li * 0.052, you = YOU_AT[p];
-    const row = (n, x0, color) => n > 0 && parts.push({ type: 'grid', dots: n, cols: n, x: x0 + (n - 1) * DOT / 2, y, color });
-    if (you && you[0] === li) {            // the word sits in this line, one dot of space either side
-      row(you[1], left, pageColor);
-      row(2, left + (you[1] + 1) * DOT, youColor || pageColor);
-      row(len - you[1] - 3, left + (you[1] + 4) * DOT, pageColor);
-    } else row(len, left, pageColor);
-  });
-  return parts;
-}
-const pages = (pageColor, youColor) => [...Array(8).keys()].flatMap(p => page(p, pageColor, youColor));
-
-// The diff: lines of "code" across the wall. Each is [length in dots, kind],
-// where kind is ' ' for context, '-' for removed and '+' for added.
-const DIFF = [[88, ' '], [110, ' '], [72, '-'], [96, '-'], [120, '+'], [84, '+'], [104, '+'], [66, ' '],
-              [92, '-'], [100, '+'], [78, ' ']];
-const FAKE = [[90, '+'], [70, '+'], [60, '+']];   // the counterfeit edits
-const DIFF_TOP = 0.1, DIFF_STEP = 0.058, DIFF_LEFT = 0.05;
-function diff(lines, colorOf) {
-  return lines.map(([len, kind], i) => ({ type: 'grid', dots: len, cols: len,
-    x: DIFF_LEFT + (len - 1) * DOT / 2, y: DIFF_TOP + i * DIFF_STEP, color: colorOf(kind, i) }));
-}
-const KIND_COLOR = { ' ': 'ash', '-': 'red', '+': 'green' };
-const diffY = i => DIFF_TOP + i * DIFF_STEP;
-
-// The heatmap: 25 cells of 12 × 4 dots, plus the row and column labels.
-const CELL_X = c => 0.31 + c * 0.11, CELL_Y = r => 0.26 + r * 0.165;
+const CELL_X = c => 0.31 + c * 0.11, CELL_Y = r => 0.13 + r * 0.155;   // the bottom fifth of the wall stays black
 const heatCells = coloured => HEAT.flatMap((row, r) => row.map((v, c) =>
   ({ type: 'grid', dots: 48, cols: 12, x: CELL_X(c), y: CELL_Y(r), color: coloured ? heat(v) : 'white' })));
-const HEAT_AXES = [
-  { text: 'Worker cost, cheapest fifth → most expensive fifth', x: 0.53, y: 0.12, size: 0.032, color: 'ash' },
-  ...['Best fifth', '', 'Middle', '', 'Worst fifth'].map((t, r) => ({ text: t, x: 0.245, y: CELL_Y(r), size: 0.036, align: 'right', color: 'ash' })),
-  { text: 'Worker ability', x: 0.245, y: 0.12, size: 0.032, align: 'right', color: 'ash' },
-];
-const heatValues = () => HEAT.flatMap((row, r) => row.map((v, c) =>
-  ({ text: (v > 0 ? '+' : '') + v.toFixed(1) + '%', x: CELL_X(c), y: CELL_Y(r), size: 0.042, weight: 800, color: 'white' })));
+const HEAT_ROWS = ['Best', '', 'Middle', '', 'Worst'].map((t, r) => ({ text: t, x: 0.245, y: CELL_Y(r), size: 0.036, align: 'right', color: 'ash' }));
 
-// The two chart lines share one x-axis. Where a value lands on the y-axis:
+// ---- the two chart lines, one x-axis ------------------------------------
 const yOf = (v, lo, hi, base, top) => base - (v - lo) / (hi - lo) * (base - top);
 const CH = { left: 0.1, right: 0.9 };
 const chartX = f => CH.left + (CH.right - CH.left) * f;
 const marker = (f, color) => ({ type: 'shape', path: 'M0 0 V100', outline: true, dots: 30, x: chartX(f), y: 0.5, size: 0.8, color });
 const signalLine = { type: 'line', values: SIGNAL, dots: 300, left: CH.left, right: CH.right, top: 0.12, baseline: 0.43, labelSize: 0.028, color: 'white' };
-const payoffLine = { type: 'line', values: PAYOFF, labels: MONTHS, zero: true, dots: 300, left: CH.left, right: CH.right, top: 0.56, baseline: 0.9, labelSize: 0.03, color: 'white' };
+const payoffLine = { type: 'line', values: PAYOFF, zero: true, dots: 300, left: CH.left, right: CH.right, top: 0.56, baseline: 0.9, labelSize: 0.03, color: 'white' };
 const CHART_LABELS = [
   { text: 'ChatGPT · Nov 2022', x: chartX(X_CHATGPT) - 0.006, y: 0.06, size: 0.028, align: 'right', color: 'ash' },
   { text: 'AI writing tool · Apr 2023', x: chartX(X_TOOL) + 0.006, y: 0.06, size: 0.028, align: 'left', color: 'ash' },
+  ...[[1, '2021'], [7, '2022'], [13, '2023'], [19, '2024']].map(([i, t]) => ({ text: t, x: chartX(i / 21), y: 0.115, size: 0.03, color: 'ash' })),
 ];
 
+// ---- the bars: where the engine puts a value label, so a free label can sit exactly there ----
+const H = 1280, BAR_STEP = 0.0105 * H * 2.3;
+const BAR = { perDot: 0.1, cols: 20, left: 0.1, right: 0.9, top: 0.08, baseline: 0.7, labelSize: 0.038 };   // the bottom sixth stays black
+const barValue = (slot, text, value, color) => ({ text, x: BAR.left + (BAR.right - BAR.left) * (slot + 0.5) / 4,
+  y: (BAR.baseline * H - Math.ceil(Math.round(value / BAR.perDot) / BAR.cols) * BAR_STEP - BAR.labelSize * H * 0.9) / H,
+  size: BAR.labelSize * 1.15, weight: 700, color });
 
-/*  ======================  WHERE THE NUMBERS COME FROM  ==================
-    Every figure on the wall, so you can defend any of them from the stage.
-    Check the ones marked ☐ before you run it.
+// ---- solution 1: the expertise map — three buckets, the examples beside each ----
+// A bucket is three parts on one lattice: the outline (handle, rim, body) and the two halves of its
+// contents. All three paths carry the same two invisible corner marks, so they share a box and
+// line up exactly; between clicks only colours change, so nothing moves.
+const BUCKET_FRAME = ' M0 -8 L0.01 -8 M120 150 L119.99 150';
+const BUCKET_OUTLINE = 'M10 45 C10 -5 110 -5 110 45 M4 45 H116 V57 H4 Z M4 57 L116 57 L98 150 L22 150 Z' + BUCKET_FRAME;
+const BUCKET_TOP = 'M12.5 70 L107.5 70 L100.5 105.9 L19.5 105.9 Z' + BUCKET_FRAME;        // the contents, upper half
+const BUCKET_BOTTOM = 'M19.5 106.1 L100.5 106.1 L93.5 142 L26.5 142 Z' + BUCKET_FRAME;    // and lower half
+// lit: what each half of the contents turns once the bucket's examples are up
+const BUCKETS = [
+  { title: ['Technology does it', 'as well as you, or better'], lit: ['white', 'white'], lines: [
+      'First-draft UI from known patterns', 'Tightening, shortening and tone-matching copy', 'Turning design into working prototypes',
+      'Asset production: resizing, reformatting, localisation', 'Specs, handoff notes, release notes', 'Competitive benchmarks',
+      'Format translation, e.g. sketch to vector'] },
+  { title: ['Technology looks like it does it', 'unless you know what you\'re looking for'], lit: ['white', 'orange'], lines: [
+      'Information architecture for our specific domain', 'Research synthesis that weighs themes meaningfully', 'Local and cultural specificity',
+      'Personas that don\'t flatten everyone to average', 'Microcopy under emotional load', 'Empty, error and loading states',
+      'Service edge cases and exceptions'] },
+  { title: ['Technology', 'can\'t do it'], lit: ['orange', 'orange'], lines: [
+      'First-hand contact with users, clients, colleagues', 'Deciding what matters most', 'Accountability when things go wrong',
+      'Understanding organisational politics', 'Being able to say no, and stand by it'] },
+];
+const BUCKET_X = c => 0.085 + c / 3, BUCKET_TEXT_X = c => 0.15 + c / 3, BUCKET_Y = 0.52;
+// lit = how many buckets have had their examples revealed; a bucket's orange arrives with its examples.
+// The three parts of a bucket share one box (the corner marks), so they land on one lattice.
+const bucketPart = (c, path, color) => ({ type: 'shape', path, dots: 400, x: BUCKET_X(c), y: BUCKET_Y, size: 0.5, width: 0.12, color });
+const buckets = lit => BUCKETS.flatMap((b, c) => [
+  { ...bucketPart(c, BUCKET_OUTLINE, 'ash'), outline: true },
+  bucketPart(c, BUCKET_TOP, c < lit ? b.lit[0] : 'white'),
+  bucketPart(c, BUCKET_BOTTOM, c < lit ? b.lit[1] : 'white'),
+]);
+// titled = how many buckets have their title up
+const bucketTitles = titled => BUCKETS.slice(0, titled).flatMap((b, c) => b.title.map((t, i) => ({ text: t, x: BUCKET_TEXT_X(c), y: 0.19 + i * 0.055, size: 0.038, align: 'left', weight: 700, color: 'white' })));
+const bucketLines = lit => BUCKETS.slice(0, lit).flatMap((b, c) => b.lines.map((t, i) => ({ text: t, x: BUCKET_TEXT_X(c), y: 0.35 + i * 0.056, size: 0.03, align: 'left', color: 'grey' })));
 
-    SCENES 1–8, 24–25 · Galdin & Silbert
-      Anaïs Galdin (Tuck, Dartmouth) & Jesse Silbert (Princeton), "Making
-      Talk Cheap: Generative AI and Labor Market Signaling", arXiv 2511.08785
-      / SSRN 5735785, November 2025. A job market paper: say "working paper".
-      Freelancer.com coding jobs, 1 January 2021 – 26 July 2024; the platform's
-      AI proposal-writing tool launched 18 April 2023.
-      Table 1: applications per job 28.92 → 62.67 (median 19 → 46); each
-      application's win rate fell to 0.45 of its pre-LLM level; 14% of
-      post-LLM applications used the on-platform tool; workers' home country:
-      India 36.48% pre-LLM, 30.38% post; Pakistan 13.2%; the US 3.6% → 10.8%.
-      Table 2, considered applications: employers' willingness to pay for one
-      standard deviation more tailoring, $25.67 before, $10.82 after (column
-      6, controlling for AI-written proposals; $14.85 without that control);
-      for one standard deviation of reputation score, $27.96 → $47.22.
-      Figures 8 and 9 (scenes 7–8) are transcribed point by point from the
-      printed charts; treat each value as ±1 on the y-axis.                 ☐
-      Figure 13 (scenes 12–13): every cell as printed. The abstract's
-      headline is the row and column averages: top ability quintile hired
-      19% less often, bottom quintile 14% more, average wages −5%, hiring
-      per job −1.5%, worker surplus −4%.
-      The quote: "Employers are receiving around 60 applications within a
-      few minutes, so it's really hard to figure out who is good and who is
-      bad." — Galdin, Tuck School of Business news, "What Happens to Hiring
-      When AI Writes Job Applications?"
+// ---- solution 2: lanes --------------------------------------------------
+const lanes = slow => [
+  { y: 0.3, height: 0.32, speed: 2.2, share: 0.5, color: 'white' },
+  { y: 0.72, height: 0.32, speed: slow ? 0.25 : 2.2, share: 0.5, color: 'orange' },
+];
+const laneLabels = slow => [
+  { text: 'FAST', x: 0.03, y: 0.3, size: 0.07, align: 'left', weight: 800, color: 'white' },
+  { text: slow ? 'SLOW' : 'FAST', x: 0.03, y: 0.72, size: 0.07, align: 'left', weight: 800, color: 'orange' },
+];
 
-    SCENES 26–27 · Cui, Dias & Ye
-      Jingyi Cui, Gabriel Dias & Justin Ye, "Signaling in the Age of AI:
-      Evidence from Cover Letters", arXiv 2509.25054, v2 November 2025.
-      NOTE: this is the SAME platform, Freelancer.com, and the same tool (the
-      AI Bid Writer, 19 April 2023) — not "another large platform" as the
-      draft had it. Say "a second team, same platform, same data": two
-      independent teams reaching the same finding is the stronger line.
-      5,499,707 bids, 264,082 workers, 106,714 jobs, 19 January – 15
-      September 2023. Table 5: the link between a well-matched letter and a
-      callback fell 51% (0.0485 → 0.0240); for offers, 79%. Table 6: the
-      rank percentile of past reviews predicted callbacks 5% more strongly
-      after the tool (0.2223 → 0.2339). Table 8: one standard deviation more
-      time editing the AI draft (3.5 minutes) → +0.31 points on the chance
-      of an offer, about 52% of the average win rate among AI-assisted bids
-      (0.6%); the authors say not to read it as causal. Callbacks: access
-      to the tool raised them about 6% (ITT) on a 7.0% base.
+// ---- solution 3: the decision brief — a page in four sections ------------
+const BRIEF = [
+  { head: 'Who and what this is for', lines: [50, 42, 56], color: 'white' },
+  { head: 'What we decided', lines: [46, 58, 40, 52], color: 'orange' },
+  { head: 'What we are deliberately not doing', lines: [44, 54, 38], color: 'ash' },
+  { head: 'What we expect will happen', lines: [50, 44, 56, 42, 48], color: 'white' },
+];
+const MARKS = ['green', 'red', 'green', 'red', 'green'];   // the expectations, marked 30 days on: came true, didn't
+const BRIEF_LEFT = 0.36, BRIEF_TOP = 0.08, BRIEF_PITCH = 0.04, BRIEF_GAP = 1.2;
+function brief(n, marked) {
+  const parts = []; let row = 0;
+  BRIEF.slice(0, n).forEach((p, pi) => {
+    p.lines.forEach((len, li) => {
+      const color = marked && pi === 3 ? MARKS[li] : p.color;
+      parts.push({ type: 'grid', dots: len, cols: len, x: BRIEF_LEFT + (len - 1) * DOT / 2, y: BRIEF_TOP + row++ * BRIEF_PITCH, color });
+    });
+    row += BRIEF_GAP;
+  });
+  return parts;
+}
+function briefLabels(n) {
+  const out = []; let row = 0;
+  BRIEF.slice(0, n).forEach(p => {
+    out.push({ text: p.head, x: 0.34, y: BRIEF_TOP + row * BRIEF_PITCH, size: 0.038, align: 'right', weight: 700, color: 'white' });
+    row += p.lines.length + BRIEF_GAP;
+  });
+  return out;
+}
 
-    SCENE 11 · Spence
-      Michael Spence, "Job Market Signaling", Quarterly Journal of
-      Economics 87(3), 1973; Nobel 2001. The line on the wall is the idea in
-      plain words, not a quotation — say so if asked.
 
-    SCENE 16 · the D&AD line
-      David Patton, chief executive of D&AD, in the D&AD AI & Creativity
-      Report 2026, "The Cost of the Shortcut", published 18 August 2026:
-      "AI has changed what bad work looks like. It's no longer lazy or
-      derivative in any obvious way – it's competent, polished, and generic,
-      and it's the default output for anyone, anywhere."
-      Same report (scene 28): entries declaring AI more than doubled year on
-      year to 27.6%; generative AI in 56.2% of AI-declaring entries and 44.7%
-      of AI-declaring Pencil winners; 197 leaders, 30 countries, 10,000+
-      entries. The report itself is behind a form; the numbers are from
-      D&AD's release as carried by LBB and others.                         ☐
+// ---- the three objects: a map, a pedal, a stamp, each with its name in LED letters beside it ----
+// Drawn on a 100-unit box; every part carries the same two invisible corner marks, so the parts of
+// one object share a lattice and sit flush. White is the object, orange the part that acts, green
+// where it lands.
+const OBJ_FRAME = ' M0 0 L0.01 0.01 M100 100 L99.99 99.99';
+const MAP_PANELS = 'M0 10 L30.50 0.76 L30.50 90.76 L0 100 Z M35.50 0.76 L63.50 9.24 L63.50 99.24 L35.50 90.76 Z M68.50 9.26 L100 0 L100 90 L68.50 99.26 Z M84 52 L93.85 37.86 L94.79 36.25 L95.47 34.51 L95.88 32.69 L96 30.83 L95.83 28.97 L95.37 27.16 L94.64 25.45 L93.65 23.86 L92.42 22.45 L91 21.25 L89.40 20.28 L87.68 19.58 L85.86 19.15 L84 19 L82.14 19.15 L80.32 19.58 L78.60 20.28 L77 21.25 L75.58 22.45 L74.35 23.86 L73.36 25.45 L72.63 27.16 L72.17 28.97 L72 30.83 L72.12 32.69 L72.53 34.51 L73.21 36.25 L74.15 37.86 Z' + OBJ_FRAME;   // three panels, the folds as gaps, the pin cut out
+const MAP_ROUTE = 'M6.31 77.76 L21.31 59.76 L26.69 64.24 L11.69 82.24 Z M25.85 59.03 L41.85 69.03 L38.15 74.97 L22.15 64.97 Z M36.79 70.60 L50.79 38.60 L57.21 41.40 L43.21 73.40 Z M55.57 36.87 L71.57 44.87 L68.43 51.13 L52.43 43.13 Z M70.76 44.58 L79.76 46.58 L78.24 53.42 L69.24 51.42 Z M20.50 62 L24 58.50 L27.50 62 L24 65.50 Z M36.50 72 L40 68.50 L43.50 72 L40 75.50 Z M50.50 40 L54 36.50 L57.50 40 L54 43.50 Z M66.50 48 L70 44.50 L73.50 48 L70 51.50 Z';                 // a route across the panels, lit on them
+const MAP_PIN = 'M74.15 37.86 L73.21 36.25 L72.53 34.51 L72.12 32.69 L72 30.83 L72.17 28.97 L72.63 27.16 L73.36 25.45 L74.35 23.86 L75.58 22.45 L77 21.25 L78.60 20.28 L80.32 19.58 L82.14 19.15 L84 19 L85.86 19.15 L87.68 19.58 L89.40 20.28 L91 21.25 L92.42 22.45 L93.65 23.86 L94.64 25.45 L95.37 27.16 L95.83 28.97 L96 30.83 L95.88 32.69 L95.47 34.51 L94.79 36.25 L93.85 37.86 L84 52 Z' + OBJ_FRAME;
+const PEDAL_PLATFORM = 'M34 76 L96 76 L96 90 L34 90 Z' + OBJ_FRAME;   // a bicycle pedal, seen from the side
+const PEDAL_CRANK = 'M35 45.10 L42.20 39.70 L69.30 75.80 L58 75.80 Z' + OBJ_FRAME;      // the crank arm, up to the chainring
+const PEDAL_RING = 'M46 27 L45.77 29.97 L45.07 32.87 L43.93 35.63 L42.37 38.17 L40.44 40.44 L38.17 42.37 L35.63 43.93 L32.87 45.07 L29.97 45.77 L27 46 L24.03 45.77 L21.13 45.07 L18.37 43.93 L15.83 42.37 L13.56 40.44 L11.63 38.17 L10.07 35.63 L8.93 32.87 L8.23 29.97 L8 27 L8.23 24.03 L8.93 21.13 L10.07 18.37 L11.63 15.83 L13.56 13.56 L15.83 11.63 L18.37 10.07 L21.13 8.93 L24.03 8.23 L27 8 L29.97 8.23 L32.87 8.93 L35.63 10.07 L38.17 11.63 L40.44 13.56 L42.37 15.83 L43.93 18.37 L45.07 21.13 L45.77 24.03 Z M36.38 25.51 L36.04 24.06 L35.46 22.69 L34.69 21.42 L33.72 20.28 L32.58 19.31 L31.31 18.54 L29.94 17.96 L28.49 17.62 L27 17.50 L25.51 17.62 L24.06 17.96 L22.69 18.54 L21.42 19.31 L20.28 20.28 L19.31 21.42 L18.54 22.69 L17.96 24.06 L17.62 25.51 L17.50 27 L17.62 28.49 L17.96 29.94 L18.54 31.31 L19.31 32.58 L20.28 33.72 L21.42 34.69 L22.69 35.46 L24.06 36.04 L25.51 36.38 L27 36.50 L28.49 36.38 L29.94 36.04 L31.31 35.46 L32.58 34.69 L33.72 33.72 L34.69 32.58 L35.46 31.31 L36.04 29.94 L36.38 28.49 L36.50 27 Z' + OBJ_FRAME;
+const STAMP_HANDLE = 'M34 16 L34 8 C34 0 38 0 46 0 L54 0 C62 0 66 0 66 8 L66 16 Z M44 16.10 L56 16.10 L56 37.90 L44 37.90 Z' + OBJ_FRAME;
+const STAMP_BASE = 'M16 48 C16 40 28 38 50 38 C72 38 84 40 84 48 L84 60 L16 60 Z' + OBJ_FRAME;
+const STAMP_MARK = 'M22 70 L78 70 L78 78 L22 78 Z' + OBJ_FRAME;
+const OBJECTS = {
+  map: [{ path: MAP_PANELS, dots: 600, color: 'white', highlightRegion: MAP_ROUTE, highlightColor: 'orange' }, { path: MAP_PIN, dots: 60, color: 'green' }],
+  pedal: [{ path: PEDAL_PLATFORM, dots: 120, color: 'white' }, { path: PEDAL_CRANK, dots: 60, color: 'orange' }, { path: PEDAL_RING, dots: 120, color: 'green' }],
+  stamp: [{ path: STAMP_HANDLE, dots: 80, color: 'white' }, { path: STAMP_BASE, dots: 120, color: 'orange' }, { path: STAMP_MARK, dots: 50, color: 'green' }],
+};
+const OBJ_SIZE = 0.56, OBJ_W = OBJ_SIZE * 1280 / 5888, OBJ_GAP = 0.035;   // the box is square, so its width follows from its height
+const LED_COL = 0.0105 * 2.35 * 1280 / 5888;                             // one LED letter column, as a fraction of stage width
+const ledCols = s => [...s].reduce((w, ch) => w + (ch === ' ' ? 3 : 5) + 1, -1);
+// The object and its name, centred together on the stage.
+function object(name, word) {
+  const wordW = ledCols(word) * LED_COL, left = 0.5 - (OBJ_W + OBJ_GAP + wordW) / 2;
+  return { type: 'compose', parts: OBJECTS[name].map(p => ({ type: 'shape', x: left + OBJ_W / 2, y: 0.5, size: OBJ_SIZE, width: 0.3, ...p }))
+    .concat([{ type: 'text', text: word, align: 'left', x: left + OBJ_W + OBJ_GAP, y: 0.5 }]) };
+}
 
-    SCENE 23 · workslop (optional scene)
-      Niederhoffer, Kellerman, Lee, Liebscher, Rapuano & Hancock, "AI-
-      Generated 'Workslop' Is Destroying Productivity", HBR, 22 September
-      2025. BetterUp Labs & Stanford Social Media Lab; 1,150 US full-time
-      workers; 41% received workslop in the last month; 1 hour 56 minutes to
-      deal with each instance; $186 a month per worker; $9m+ a year for a
-      10,000-person company.
+// ---- the close: folded hands, traced into dots --------------------------
+// The drawing is Twemoji's "folded hands" (Twitter, CC BY 4.0), as three paths on one 36-unit box:
+// the left hand, the right hand and the two sleeves, with the hands trimmed where the sleeves cover
+// them. Each carries the same two invisible corner marks, so the three parts share a box and land
+// on one lattice. One hand white, one orange, the sleeves green: the crowd and the deciding part,
+// pressed together, in the place we are.
+const HAND_FRAME = ' M0 0 L0.01 0.01 M36 36 L35.99 35.99';
+const HAND_L = 'M16.061 0.011 C14.795 -0.116 13.728 0.875 13.728 2.114 C13.728 2.894 13.544 12.433 13.544 12.433 L17.895 18 L17.957 2.235 C17.957 1.129 17.162 0.121 16.061 0.011 Z ' +
+               'M17.125 4.323 C17.125 3.224 16.273 2.334 15.222 2.334 C14.171 2.334 13.319 3.225 13.319 4.323 C13.319 4.323 12.784 10.265 12.127 13.693 C11.249 15.559 10.758 18.375 10.866 19.941 L7.85 22.76 L8.64 23.47 L9.41 24.35 L10.15 25.36 L10.83 26.45 L11.45 27.58 L11.99 28.72 L12.43 29.81 L12.76 30.83 L13.521 30.182 C16.406 29.778 17.979 26.851 17.979 25.918 C17.979 22.934 17.125 4.323 17.125 4.323 Z' + HAND_FRAME;
+const HAND_R = 'M19.939 0.011 C21.205 -0.116 22.272 0.875 22.272 2.114 C22.272 2.894 22.456 12.433 22.456 12.433 L18.105 18 L18.043 2.235 C18.043 1.129 18.838 0.121 19.939 0.011 Z ' +
+               'M18.875 4.323 C18.875 3.224 19.727 2.334 20.778 2.334 C21.829 2.334 22.681 3.225 22.681 4.323 C22.681 4.323 23.216 10.265 23.873 13.693 C24.751 15.559 25.242 18.375 25.134 19.941 L28.15 22.76 L27.36 23.47 L26.59 24.35 L25.85 25.36 L25.17 26.45 L24.55 27.58 L24.01 28.72 L23.57 29.81 L23.24 30.83 L22.479 30.182 C19.594 29.778 18.021 26.851 18.021 25.918 C18.021 22.934 18.875 4.323 18.875 4.323 Z' + HAND_FRAME;
+const SLEEVES = 'M30 22c-3 0-6.688 7.094-7 10-.421 3.915 2 4 2 4h11V26s-3.438-4-6-4z M6 22c3 0 6.688 7.094 7 10 .421 3.915-2 4-2 4H0V26s3.438-4 6-4z' + HAND_FRAME;
+const hands = (left, right, sleeves, place) => [[HAND_L, left], [HAND_R, right], [SLEEVES, sleeves]].map(([path, color]) =>
+  ({ type: 'shape', path, dots: 700, width: 0.3, color, ...place }));
+// THANK YOU in big letters with the hands beside them, both orange, the same height as the letters. (LED letters
+// are seven dots tall whatever you do, far too small for a pair of hands to match, so these are drawn
+// letters.) The letters are capped at 0.52 of the stage width, so the pair stays centred whatever
+// font the machine has.
+const THANKS = { type: 'compose', parts: [
+  { type: 'text', text: 'THANK YOU', style: 'bold', x: 0.17, y: 0.5, align: 'left', height: 0.34, width: 0.52, dots: 900 },
+  ...hands('orange', 'orange', 'green', { x: 0.785, y: 0.5, size: 0.42 }) ] };
 
-    SCENES 19–22 · the travel group and the bank
-      Yours. Anonymise both; check with the clients even so.
-
-    SCENE 32 · the mortgage form
-      Yours. The green line is a placeholder in square brackets — put what
-      you actually changed at that step in it before you run this.       ☐
-
-    SCENES 9–10 · the world, and the cities
-      Land from Natural Earth 1:110m (public domain) via the world-atlas
-      package, simplified to 933 points. The 200 cities are a STAND-IN list
-      of major cities, not the office list — replace CITIES above with the
-      real one (name, latitude, longitude) and the pins follow. A city on a
-      small island (Honolulu, Malta, Bahrain's Manama) lands on the nearest
-      mainland dot, because the island has no dot of its own.             ☐
-    ====================================================================== */
 
 /* ======================  SCENE REFERENCE  =============================
 
@@ -590,6 +542,8 @@ const CHART_LABELS = [
              every dot in its path bolts out of the way, up or down, so it
              leaves a cleared corridor behind it.
              → one person changing a room, a cut through the noise.
+     stream  lanes of dots flowing across the stage, each at its own pace.
+             → what should be fast and what should be slow.
 
    PHYSICS
      gravity  weight switches on: the dots fall, land and pile up for real.
@@ -644,6 +598,13 @@ const CHART_LABELS = [
    { type: 'shape', shape: 'heart' }          disc, ring, heart, star, arrow
    { type: 'shape', path: 'M10 10 H90 L50 90 Z' }   any SVG path — a logo, an icon
        outline: true strings the dots along the edge instead of filling it.
+   { type: 'shape', shape: 'disc', core: 0.5, coreColor: 'orange' }
+       core colours the dots nearer the centre than that fraction of the
+       radius (0.5 is the inner half of the radius, a quarter of the dots).
+       Any filled shape; the rest keep the shape's colour.
+   { type: 'shape', path: WORLD, highlightRegion: INDIA, highlightColor: 'green' }
+       lights the dots inside a second path given in the SAME units as the
+       picture's own path — a country on a map. highlightScale enlarges them.
 
    { type: 'grid', highlight: 0.2, highlightColor: 'magenta' }
        highlight   a share (0.2) or a count (12) of the grid lit up
@@ -728,6 +689,14 @@ const CHART_LABELS = [
        swirl   0 is formless churn (default); 1 pulls it into a tornado
        x, y    where the eye of the tornado sits
 
+   { type: 'stream', lanes: [ { y: 0.3, height: 0.3, speed: 2, share: 0.5 },
+                              { y: 0.7, height: 0.3, speed: 0.3, share: 0.5, color: 'orange' } ] }
+       lanes of dots flowing left to right, each at its own pace, forever.
+       speed 1 crosses the wall in about 15 seconds: 0.3 crawls, 3 races, and
+       a negative speed flows the other way. y and height place the band,
+       share splits the crowd between lanes, color is per lane. A dot leaving
+       one side comes back in at the other. → fast lanes and slow lanes.
+
    { type: 'walk', color: 'amber' }
        color       the walker (the crowd stays SETTINGS.color, or set crowdColor)
        seconds     how long the crossing takes (9 by default) — THE main dial
@@ -748,408 +717,212 @@ const CHART_LABELS = [
 
    ====================================================================== */
 
-// evidence lines for the real edits in the diff, by line index
-const EVIDENCE = { 4: 'evidence: search logs', 5: 'evidence: support tickets', 6: 'evidence: a clip from a session',
-                   9: 'evidence: a prediction, written down before shipping' };
-const evidenceLabels = (color, extra) => Object.entries(EVIDENCE).map(([i, t]) =>
-  ({ text: t, x: 0.97, y: diffY(+i), size: 0.034, align: 'right', color }))
-  .concat(extra || []);
-// where the engine puts a bar's value label, so a free label can sit exactly there and stay put
-const H = 1280, BAR_STEP = 0.0105 * H * 2.3;
-const barValueY = (value, perDot, cols, baseline, labelSize) =>
-  (baseline * H - Math.ceil(Math.round(value / perDot) / cols) * BAR_STEP - labelSize * H * 0.9) / H;
-const barValue = (slot, nSlots, left, right, text, value, perDot, cols, baseline, labelSize, color) =>
-  ({ text, x: left + (right - left) * (slot + 0.5) / nSlots, y: barValueY(value, perDot, cols, baseline, labelSize),
-     size: labelSize * 1.15, weight: 700, color });
-// the years, along the top of the chart (the pile lives along the bottom)
-const YEARS = [[1, '2021'], [7, '2022'], [13, '2023'], [19, '2024']].map(([i, t]) => ({ text: t, x: chartX(i / 21), y: 0.115, size: 0.03, color: 'ash' }));
-const MONDAY = [
-  '1 · The afternoon test. Could a competitor with the same tools make this in an afternoon? If yes, it isn\'t your contribution.',
-  '2 · Review in diffs. The default, what we shipped, and why — three columns. Engineers will recognise a pull request.',
-  '3 · Keep a diff log. Over a quarter it shows exactly where your team\'s knowledge changed the product.',
-  '4 · Make every edit checkable. Each change links to something a sceptic can open. No link, no edit.',
-  '5 · Leaders: hire on the diff. A polished portfolio now tells you almost nothing; ask for one project as a diff.',
-  '6 · Juniors: build a diff portfolio. Show your working and your wrong turns. Polish is table stakes; the edit is the evidence.',
-];
-const monday = n => MONDAY.slice(0, n).map((t, i) => ({ text: t, x: 0.06, y: 0.16 + i * 0.135, size: 0.046, align: 'left', color: 'white', weight: 600 }));
-
 const SCENES = [
 
-/* ===== ACT 0 · SIXTY APPLICATIONS IN A FEW MINUTES ======================
-   Documents. The job post never moves; the proposals fill in around it.
-   Then the two charts from the paper, drawn left to right like time.   */
+/* ===== ACT 0 · INTRO ======================
+   Introducing myself, audience does not realise dots are so dynamic until a few minutes in.   */
 
-  // "A company posts a coding job on Freelancer.com."
-  { title: '1 · A job post. Alone.', type: 'compose', parts: [JOB_POST] },
 
-  // "Until 2023, one of the best ways to find the right person was to read
-  //  the proposals — because writing one that really engaged with the job
-  //  took time..."
-  //  [29 proposals arrive, left to right. That is the average, before.]
-  { title: '2 · 29 proposals arrive', type: 'compose', parts: [JOB_POST, ...docs(29)],
+  { title: 'Cold open, grey dots', type: 'field', jitter: 0, color: 'ash' },
+
+  { title: 'Dots brighten', type: 'field', jitter: 0, color: 'white' },
+
+  { title: 'Circle 1 · Designer', type: 'compose', parts: circles(1), labels: circleLabels(1) },
+
+  // "The same machinery could behave in completely different ways depending on the instructions it received." 
+  { title: 'Circle 2 · Computer Science', type: 'compose', parts: circles(2), labels: circleLabels(2) },
+  { title: 'Circle 3 · UX & UI Designer', type: 'compose', parts: circles(3), labels: circleLabels(3) },
+  { title: 'Circle 3 · + Startups & creative agencies', type: 'compose', parts: circles(3), labels: circleLabels(3, true) },
+  { title: 'Circle 4 · McKinsey & Company', type: 'compose', parts: circles(4), labels: circleLabels(4) },
+  { title: 'Circle 4 · + Partner, Head of McKinsey Design Europe', ...CIRCLES_WHITE },
+
+  { title: 'Design is deciding what other people have to live with', ...deciding(false) },
+
+  { title: '...DECIDING, in orange', ...deciding(true) },
+
+  { title: 'Circles again, white', ...CIRCLES_WHITE },
+
+  // "The part of each job that was actually deciding. It shrank as the circle grew."
+  { title: 'Orange centres: the part that is actually designing', ...CIRCLES_LIT },
+
+  { title: 'I do that all over the world', type: 'shape', path: WORLD, grid: 'square', size: 0.92, width: 0.9 },
+
+  { title: 'Cities highlight, green', type: 'shape', path: WORLD, grid: 'square', size: 0.92, width: 0.9,
+    highlightAt: CITY_PINS, highlightColor: 'green', highlightScale: 1.4 },
+
+  { title: 'India, green', type: 'shape', path: WORLD, grid: 'square', size: 0.92, width: 0.9,
+    highlightRegion: INDIA, highlightColor: 'green', highlightScale: 1.3 },
+
+  { title: 'Reset, grid dots', type: 'field', jitter: 0, color: 'white' },
+
+  { title: 'Storm 1/4', type: 'storm', gust: 0.1 },
+  { title: 'Storm 2/4', type: 'storm', gust: 0.4 },
+  { title: 'Storm 3/4', type: 'storm', gust: 0.8 },
+  { title: 'Storm 4/4', type: 'storm', swirl: 1, gust: 1.1 },
+
+  { title: 'Drop', type: 'gravity' },
+
+  { title: 'Challenge 1 · Everyone has a stopwatch now.', type: 'compose', parts: challenges(1) },
+  { title: 'Challenge 2 · Everything looks "OK" now.', type: 'compose', parts: challenges(2) },
+  { title: 'Challenge 3 · Nobody can tell who\'s good now.', type: 'compose', parts: challenges(3) },
+
+  // "And the question underneath it all is how do I set myself apart..."
+  { title: '★ THE WALK — "how do I set myself apart"', type: 'walk',
+    color: 'orange', crowdColor: 'white', seconds: 14, walkerSize: 1.2,
+    hop: 0.05, cadence: 1.6, fear: 1.2, reach: 0.4, calm: 0.22 },
+
+  { title: 'Design is DECIDING... (orange)', ...deciding(true) },
+
+  { title: 'DROP', type: 'gravity' },
+
+
+/* ============== EXAMPLE 1: FREELANCER.COM ================ */
+
+  // There's a lot we can learn from other fields, and a lot of research that answers these questions.
+  { title: 'A job post.', type: 'compose', parts: [JOB_POST] },
+
+  // "Until 2023, one of the best ways to find the right person was to read the proposals — because
+  //  writing one that really engaged with the job took time..."
+  // 29 proposals: the average, before.
+  { title: '29 proposals arrive', type: 'compose', parts: [JOB_POST, ...docs(29)],
     order: 'left', stagger: 3 },
 
-  // "...and the people who took the time tended to be the people who'd do the
-  //  work well. Employers paid more for them."
-  //  [The tailored ones stay lit. The rest go quiet. Nothing moves.]
-  { title: '3 · The ones worth reading stay lit', type: 'compose',
-    parts: [JOB_POST, ...docs(29, i => TAILORED.has(i) ? 'white' : 'ash')],
-    labels: [{ text: 'Before the tool, employers paid $25.67 more for a proposal one standard deviation more tailored to the job', x: 0.5, y: 0.86, size: 0.034, color: 'ash' }] },
+  // "...and the people who took the time tended to be the people who'd do the work well. Employers paid more for them."
+  { title: 'The ones worth reading stay lit', type: 'compose',
+    parts: [JOB_POST, ...docs(29, i => TAILORED.has(i) ? 'white' : 'ash')] },
 
-  // "In April 2023 the platform added an AI writing tool. The proposals got
-  //  better overnight."
-  //  [63 snap in, every one of them polished. The 29 do not move.]
-  { title: '4 · ★ April 2023: 63, all polished, in a second', type: 'compose',
+  // "In April 2023 the platform added an AI writing tool. And almost overnight, things began to change."
+  { title: 'Number of applications more than doubled, received in a fraction of the time.', type: 'compose',
     parts: [JOB_POST, ...docs(63)], stagger: 0.2, order: 'none' },
 
-  // "And employers stopped paying for them."
-  //  [Recolour. Every proposal goes quiet, together.]
-  //  "One of the researchers described the new reality:"
-  { title: '5 · "...and employers stopped paying for them." Quote', type: 'compose',
-    parts: [JOB_POST, ...docs(63, () => 'ash')],
-    labels: [
-      { text: '"Employers are receiving around 60 applications within a few minutes,', x: 0.5, y: 0.4, size: 0.062, color: 'white', weight: 600 },
-      { text: 'so it\'s really hard to figure out who is good and who is bad."', x: 0.5, y: 0.5, size: 0.062, color: 'white', weight: 600 },
-      { text: 'Anaïs Galdin, Tuck School of Business, Dartmouth', x: 0.5, y: 0.6, size: 0.032, color: 'ash' },
-      { text: 'Applications per job: 29 → 63  ·  each application\'s chance of winning: down 55%  ·  Galdin & Silbert, working paper, Nov 2025', x: 0.5, y: 0.9, size: 0.03, color: 'ash' },
-    ], labelDelay: 1.2 },
+  { title: 'But the number they spent real time on dropped to almost zero. They could no longer tell what and who was good.', type: 'compose',
+    parts: [JOB_POST, ...docs(63, () => 'ash')] },
 
-  // "Here is what the researchers measured. This is how tailored the average
-  //  proposal was to the job it was applying for — every month for three and
-  //  a half years."
-  //  [The line draws itself left to right. Let it reach the right edge.]
-  { title: '6 · CHART: proposals got better — draws L→R (4s)', type: 'compose',
+  // "Here is what the researchers measured. This is how tailored the average proposal was to the job
+  //  it was applying for — every month for three and a half years."
+  { title: 'CHART: proposals got better — draws L→R (4s)', type: 'compose',
     parts: [marker(X_CHATGPT, 'ash'), marker(X_TOOL, 'ash'), signalLine],
     order: 'left', stagger: 4,
-    labels: CHART_LABELS.concat(YEARS, [
+    labels: CHART_LABELS.concat([
       { text: 'How tailored the average proposal was to the job', x: 0.1, y: 0.06, size: 0.04, align: 'left', color: 'white', weight: 700 },
       { text: 'more tailored', x: 0.088, y: 0.14, size: 0.026, align: 'right', color: 'ash' },
       { text: 'less tailored', x: 0.088, y: 0.41, size: 0.026, align: 'right', color: 'ash' },
       { text: 'Galdin & Silbert, Figure 8', x: 0.9, y: 0.06, size: 0.026, align: 'right', color: 'ash' },
     ]) },
 
-  // "And this is what a more tailored proposal was worth to an employer: how
-  //  much more likely it was to get you hired."
-  //  [The second line draws beneath the first. 30 to 40% — then about 10.]
-  //  "The proposals got better. And the payoff for a better proposal fell to
-  //  almost nothing."
-  { title: '7 · CHART: the payoff collapses — draws beneath (4s)', type: 'compose',
-    parts: [marker(X_CHATGPT, 'ash'), marker(X_TOOL, 'ash'), signalLine, { ...payoffLine, labels: undefined }],
+  // "And this is what a more tailored proposal was worth to an employer: how much more likely it was
+  //  to get you hired." 30 to 40 percent — then about 10.
+  // "The proposals got better. And the payoff for a better proposal fell to almost nothing."
+  { title: 'CHART: the payoff collapses — draws beneath (4s)', type: 'compose',
+    parts: [marker(X_CHATGPT, 'ash'), marker(X_TOOL, 'ash'), signalLine, payoffLine],
     order: 'left', stagger: 4,
-    labels: CHART_LABELS.concat(YEARS, [
-      { text: 'How tailored the average proposal was to the job', x: 0.1, y: 0.06, size: 0.04, align: 'left', color: 'white', weight: 700 },
-      { text: 'What a more tailored proposal was worth: how much likelier to be hired', x: 0.1, y: 0.515, size: 0.04, align: 'left', color: 'white', weight: 700 },
+    labels: CHART_LABELS.concat([
+      { text: 'How tailored the average proposal was to the job?', x: 0.1, y: 0.06, size: 0.04, align: 'left', color: 'white', weight: 700 },
+      { text: 'What was a more tailored proposal worth?', x: 0.1, y: 0.515, size: 0.04, align: 'left', color: 'white', weight: 700 },
       { text: '+40%', x: 0.088, y: yOf(40, 0, 42, 0.9, 0.56), size: 0.028, align: 'right', color: 'ash' },
       { text: '+20%', x: 0.088, y: yOf(20, 0, 42, 0.9, 0.56), size: 0.028, align: 'right', color: 'ash' },
       { text: '0', x: 0.088, y: 0.9, size: 0.028, align: 'right', color: 'ash' },
       { text: 'Galdin & Silbert, Figures 8 and 9', x: 0.9, y: 0.06, size: 0.026, align: 'right', color: 'ash' },
     ]) },
 
-  // [beat]
-  // "One more detail. The most common home country of the workers in that
-  //  data was India. About a third of them."
-  //  [The proposals come back. A third of them light up.]
-  //  "This isn't a story from somewhere else."
-  { title: '8 · [beat] "A third of them: India."', type: 'compose',
-    parts: [{ ...JOB_POST, color: 'ash' }, ...docs(63, i => INDIA.has(i) ? 'white' : 'ash')],
-    labels: [{ text: '36% of the workers in the data listed India as home · Galdin & Silbert, Table 1', x: 0.5, y: 0.9, size: 0.03, color: 'ash' }], labelDelay: 2 },
+  // 25 kids of freelancer.
+  { title: 'The heatmap, unlit: 25 kinds of freelancer', type: 'compose', parts: heatCells(false), labels: HEAT_ROWS },
 
-
-/* ===== THE WORLD ==========================================================
-   One map, two states. Natural Earth land as dots, then the cities lit:
-   bigger, blue, and not one dot moves between the two.                  */
-
-  // [Your line here. The world, in dots.]
-  { title: '9 · The world', type: 'shape', path: WORLD, grid: 'square', size: 0.92, width: 0.9 },
-
-  // [CLICK. 200 cities light up, bigger and blue. Nothing moves.]
-  // "These are the cities we are in."
-  // For a dimmer world under the cities, add  color: 'ash'  to this scene.
-  { title: '10 · Where we are: 200 cities', type: 'shape', path: WORLD, grid: 'square', size: 0.92, width: 0.9,
-    highlightAt: CITY_PINS, highlightColor: 'blue', highlightScale: 1.4 },
-
-
-/* ===== ACT 1 · WHAT A SIGNAL IS ========================================
-   One sentence in dots. Then the paper's own heatmap, lit cell by cell. */
-
-  // "Michael Spence, 1973, Nobel Prize for it: a signal only works while it's
-  //  costly to fake. When the cost of producing it falls to zero, so does the
-  //  information in it."
-  //  [WORDS 1 of 2.]
-  { title: '11 · ★ WORDS 1/2 — Spence', type: 'text',
-    text: 'A SIGNAL ONLY WORKS\nWHILE IT IS COSTLY TO FAKE', style: 'bold', width: 0.92, height: 0.74,
-    labels: [{ text: 'Michael Spence, "Job Market Signaling", 1973 · Nobel 2001', x: 0.5, y: 0.92, size: 0.028, color: 'ash' }] },
-
-  // "And in the researchers' model of a market where written applications no
-  //  longer signal anything, the people who lose most are the best workers —
-  //  because the thing that set them apart stopped being visible."
-  //  [The heatmap arrives white: 25 groups of workers, by ability and cost.]
-  { title: '12 · The heatmap, unlit: 25 kinds of worker', type: 'compose', parts: heatCells(false),
-    labels: HEAT_AXES.concat([{ text: 'What happens to hiring when written applications stop carrying information', x: 0.53, y: 0.05, size: 0.04, color: 'white', weight: 700 }]) },
-
-  // [CLICK. Nothing moves. The top row goes red, the bottom row green.]
-  //  "The top fifth of workers get hired 19% less often. The bottom fifth 14%
-  //  more often. Average wages fall 5%."
-  { title: '13 · ★ Lit: the best lose the most', type: 'compose', parts: heatCells(true),
-    labels: HEAT_AXES.concat(heatValues(), [
-      { text: 'What happens to hiring when written applications stop carrying information', x: 0.53, y: 0.05, size: 0.04, color: 'white', weight: 700 },
-      { text: 'Best fifth: hired 19% less', x: 0.83, y: 0.3, size: 0.044, align: 'left', color: 'red', weight: 700 },
-      { text: 'Worst fifth: hired 14% more', x: 0.83, y: 0.4, size: 0.044, align: 'left', color: 'green', weight: 700 },
-      { text: 'Average wages: −5%', x: 0.83, y: 0.5, size: 0.044, align: 'left', color: 'white', weight: 700 },
-      { text: 'Galdin & Silbert, Figure 13 · change in hiring rates', x: 0.83, y: 0.6, size: 0.026, align: 'left', color: 'ash' },
-      { text: 'when applications carry no signal, against the status quo', x: 0.83, y: 0.65, size: 0.026, align: 'left', color: 'ash' },
+  { title: '★ Lit: the best lose the most', type: 'compose', parts: heatCells(true),
+    labels: HEAT_ROWS.concat([
+      { text: 'Best freelancers: hired 19% less', x: 0.83, y: 0.26, size: 0.044, align: 'left', color: 'red', weight: 700 },
+      { text: 'Worst freelancers: hired 14% more', x: 0.83, y: 0.36, size: 0.044, align: 'left', color: 'green', weight: 700 },
+      { text: 'Average wages: −5%', x: 0.83, y: 0.46, size: 0.044, align: 'left', color: 'white', weight: 700 },
+      { text: 'Galdin & Silbert, Figure 13 · change in hiring rates', x: 0.83, y: 0.56, size: 0.026, align: 'left', color: 'ash' },
+      { text: 'when applications carry no signal, against the status quo', x: 0.83, y: 0.61, size: 0.026, align: 'left', color: 'ash' },
     ]) },
 
-
-/* ===== ACT 2 · OUR COSTLY SIGNAL WAS POLISH =============================
-   A perfect wall. The flood. The line. The line-up. The fall.            */
-
-  // "For twenty years, a polished screen told a stakeholder something: a
-  //  skilled person spent real time on this."
-  { title: '14 · Polish: a perfect white wall', type: 'field', jitter: 0, margin: 0.1, color: 'white' },
-
-  // "Then a developer picked indigo for a demo, the models learned it, and
-  //  polish became the default."
-  //  [CLICK, then stop talking. Seven seconds. Nothing moves; the wall goes
-  //   purple from the left.]
-  { title: '15 · ★ THE FLOOD — click, then let it run (7s)', type: 'field', jitter: 0, margin: 0.1,
-    color: 'indigo', stagger: 7, order: 'left' },
-
-  // "D&AD's chief executive put it better than I can."
-  //  [Same wall. The line lands on it.]
-  { title: '16 · The D&AD line', type: 'field', jitter: 0, margin: 0.1, color: 'indigo',
-    labels: [
-      { text: '"AI has changed what bad work looks like. It\'s no longer lazy or derivative in any obvious way –', x: 0.5, y: 0.05, size: 0.05, color: 'white', weight: 700 },
-      { text: 'it\'s competent, polished, and generic, and it\'s the default output for anyone, anywhere."', x: 0.5, y: 0.94, size: 0.05, color: 'white', weight: 700 },
-      { text: 'David Patton, chief executive, D&AD · AI & Creativity Report 2026, August 2026', x: 0.5, y: 0.985, size: 0.022, color: 'ash' },
-    ] },
-
-  // "Behind me are six home screens. Same category, six companies. I've taken
-  //  the logos off. Put your hand up when you spot yours."
-  //  [wait] [beat]
-  //  "For users, that's fine — they'd quite like your product to work like
-  //  the others. The problem is ours."
-  { title: '17 · Six screens, logos off. "Spot yours."', type: 'compose', parts: lineup() },
-
-  // "The thing we used to hold up as proof stopped being proof."
-  //  [CLICK. The six screens fall.]
-  //  "That's a large part of why so many of you are being asked to justify
-  //  your team's value right now. The evidence you used to show for it
-  //  stopped meaning anything."
-  { title: '18 · ★ THE FALL — the screens drop', type: 'gravity' },
-
-
-/* ===== ACT 3 · POLISH CAN NOW COUNT AGAINST YOU =========================
-   Eight documents, one word, and a room that reads them all differently. */
-
-  // "A travel group I work with runs business reviews across its eight
-  //  brands. Recently they started coming back looking the same — same
-  //  structure, same voice."
-  { title: '19 · Eight documents, identical', type: 'compose', parts: pages('white') },
-
-  // "And some of them still said 'you' where the brand's name should have
-  //  been."
-  //  [Nothing moves. One word goes red, in three of them.]
-  { title: '20 · One unedited word', type: 'compose', parts: pages('white', 'red') },
-
-  // "One unedited word. And now the reader goes back and reads all eight
-  //  documents differently."
-  //  [Nothing moves. Every document goes quiet. The red stays.]
-  { title: '21 · ...and all eight are read differently', type: 'compose', parts: pages('ash', 'red') },
-
-  // "At a bank I work with, design review now opens with one question."
-  //  "Polish used to buy you trust. Now it prompts the question."
-  { title: '22 · The bank\'s question', type: 'compose', parts: pages('ash', 'red'),
-    labels: [
-      { text: '"Have you actually thought about the customer at all,', x: 0.5, y: 0.42, size: 0.07, color: 'white', weight: 800 },
-      { text: 'or did this come from ChatGPT?"', x: 0.5, y: 0.55, size: 0.07, color: 'white', weight: 800 },
-    ] },
-
-  // OPTIONAL — delete this scene if you are short of time; nothing depends on it.
-  // "There's a number for this now. Forty-one percent of workers say they
-  //  received AI-generated work last month that looked finished and wasn't.
-  //  Nearly two hours of rework, each time."
-  { title: '23 · (optional) Workslop: 41%, two hours each', type: 'grid',
-    color: 'ash', highlight: 0.41, highlightColor: 'white', pick: 'left',
-    cols: 125, x: 0.5, y: 0.63, width: 0.9, height: 0.55,
-    labels: [
-      { text: '41%', x: 0.5, y: 0.15, size: 0.19, weight: 800, color: 'white' },
-      { text: 'received AI-generated "workslop" in the last month — an hour and 56 minutes of rework, each time', x: 0.5, y: 0.3, size: 0.05, color: 'white' },
-      { text: 'BetterUp Labs & Stanford Social Media Lab, Harvard Business Review, September 2025 · 1,150 US workers', x: 0.5, y: 0.95, size: 0.028, color: 'ash' },
-    ] },
-
-
-/* ===== ACT 4 · WHAT THE MARKET DID NEXT =================================
-   The same chart comes back and completes itself. Then a second team,
-   same platform. Then the juries. Every "before" bar holds still while
-   the "after" arrives: keep perDot and cols exactly as they are.         */
-
-  // "Markets don't stop looking for signals. They move to the ones that are
-  //  still expensive. Here's the first study again. Before the tool, this is
-  //  what an employer would pay for one standard deviation more of two
-  //  things: a more tailored proposal, and a better reputation score."
-  { title: '24 · What employers paid for, before', type: 'bars',
-    values: [WTP.tailoringBefore, 0, WTP.reputationBefore, 0], perDot: 0.1, cols: 16,
-    left: 0.1, right: 0.9, top: 0.1, baseline: 0.85, labelSize: 0.038,
+  // What an employer would pay for a more tailored proposal, and for a better reputation score. Before the tool.
+  { title: 'What employers paid for, before', type: 'bars', ...BAR,
+    values: [WTP.tailoringBefore, 0, WTP.reputationBefore, 0],
     labels: ['A more tailored proposal', '', 'A better reputation score', '',
-      { text: 'What an employer would pay for one standard deviation more of…', x: 0.5, y: 0.05, size: 0.04, color: 'white', weight: 700 },
-      barValue(0, 4, 0.1, 0.9, '$' + WTP.tailoringBefore, WTP.tailoringBefore, 0.1, 16, 0.85, 0.038, 'white'),
-      barValue(2, 4, 0.1, 0.9, '$' + WTP.reputationBefore, WTP.reputationBefore, 0.1, 16, 0.85, 0.038, 'white'),
-      { text: 'Galdin & Silbert, Table 2 · dollars off the bid an employer would accept in return, considered applications', x: 0.5, y: 0.095, size: 0.026, color: 'ash' } ] },
+      barValue(0, '$' + WTP.tailoringBefore, WTP.tailoringBefore, 'white'),
+      barValue(2, '$' + WTP.reputationBefore, WTP.reputationBefore, 'white') ] },
 
-  // "After the tool: the proposal is worth less than half what it was. The
-  //  reputation score — the thing that is still expensive to fake — is worth
-  //  seventy percent more."
-  //  [The two "after" bars arrive. The "before" bars do not move.]
-  { title: '25 · ★ ...and after: the market moved', type: 'bars',
-    values: [WTP.tailoringBefore, WTP.tailoringAfter, WTP.reputationBefore, WTP.reputationAfter], perDot: 0.1, cols: 16,
-    left: 0.1, right: 0.9, top: 0.1, baseline: 0.85, labelSize: 0.038,
-    labels: ['A more tailored proposal', 'after the tool', 'A better reputation score', 'after the tool',
-      { text: 'What an employer would pay for one standard deviation more of…', x: 0.5, y: 0.05, size: 0.04, color: 'white', weight: 700 },
-      { text: 'Galdin & Silbert, Table 2 · dollars off the bid an employer would accept in return, considered applications', x: 0.5, y: 0.095, size: 0.026, color: 'ash' } ],
+  // Today: tailoring is worth almost nothing; reputation is worth more.
+  { title: '★ ...and today: the market moved', type: 'bars', ...BAR,
+    values: [WTP.tailoringBefore, WTP.tailoringAfter, WTP.reputationBefore, WTP.reputationAfter],
+    labels: ['A more tailored proposal', 'today', 'A better reputation score', 'today'],
     colors: ['white', 'red', 'white', 'green'], showValues: true, prefix: '$' },
 
-  // "A second team looked at the same platform, month by month, five and a
-  //  half million cover letters. Before the tool, a well-matched letter
-  //  predicted a callback. And a worker's past history predicted it too."
-  { title: '26 · Second study: what predicted a callback, before', type: 'bars',
-    values: [LETTER.before, 0, HISTORY.before, 0], perDot: 0.5, cols: 8,
-    left: 0.1, right: 0.9, top: 0.1, baseline: 0.85, labelSize: 0.038,
-    labels: ['A well-matched letter', '', 'The work history', '',
-      { text: 'A second team, same platform, 5.5 million cover letters: what predicted a callback (before the tool = 100)', x: 0.5, y: 0.05, size: 0.04, color: 'white', weight: 700 },
-      { text: 'Cui, Dias & Ye, Tables 5 and 6 · Freelancer.com, January–September 2023', x: 0.5, y: 0.095, size: 0.026, color: 'ash' } ] },
+  { title: 'RESET, grey dots', type: 'field', jitter: 0, color: 'ash' },
 
-  // "Afterwards, the letter's link to a callback fell by half. The work
-  //  history's went up. And the time people spent editing the AI draft
-  //  predicted who got hired."
-  { title: '27 · ★ ...after: the letter halves, the history rises', type: 'bars',
-    values: [LETTER.before, LETTER.after, HISTORY.before, HISTORY.after], perDot: 0.5, cols: 8,
-    left: 0.1, right: 0.9, top: 0.1, baseline: 0.85, labelSize: 0.038,
-    labels: ['A well-matched letter', 'after the tool', 'The work history', 'after the tool',
-      { text: 'A second team, same platform, 5.5 million cover letters: what predicted a callback (before the tool = 100)', x: 0.5, y: 0.05, size: 0.04, color: 'white', weight: 700 },
-      barValue(1, 4, 0.1, 0.9, '−51%', LETTER.after, 0.5, 8, 0.85, 0.038, 'red'),
-      barValue(3, 4, 0.1, 0.9, '+5%', HISTORY.after, 0.5, 8, 0.85, 0.038, 'green'),
-      { text: 'And time spent editing the AI draft predicted who got hired: 3.5 minutes more editing, +52% on the chance of an offer', x: 0.5, y: 0.14, size: 0.036, color: 'white', weight: 600 },
-      { text: 'Cui, Dias & Ye, Tables 5, 6 and 8 · Freelancer.com, January–September 2023', x: 0.5, y: 0.095, size: 0.026, color: 'ash' } ],
-    colors: ['white', 'red', 'white', 'green'] },
-
-  // "Design juries look to be doing something similar. In this year's D&AD
-  //  awards, generative tools appeared in 56% of the entries that declared
-  //  AI — and in 45% of the winners."
-  { title: '28 · D&AD: 56% of entries, 45% of winners', type: 'bars',
-    values: [DANDAD.entries, DANDAD.winners], perDot: 0.2, cols: 12, showValues: true, suffix: '%',
-    left: 0.22, right: 0.78, top: 0.2, baseline: 0.85, labelSize: 0.04,
-    labels: ['AI-declaring entries using generative AI', 'AI-declaring Pencil winners using generative AI',
-      { text: 'D&AD Awards 2026 · entries declaring AI more than doubled year on year, to 27.6% · where generative AI was used', x: 0.5, y: 0.07, size: 0.04, color: 'white', weight: 700 },
-      { text: 'D&AD AI & Creativity Report 2026, "The Cost of the Shortcut", August 2026 · 10,000+ entries', x: 0.5, y: 0.115, size: 0.026, color: 'ash' } ],
-    colors: ['white', 'white'] },
+  { title: 'The three challenges, again', type: 'compose', parts: challenges(3) },
 
 
-/* ===== ACT 5 · FOR DESIGN, THE SIGNAL IS THE DIFF =======================
-   Finished screens tell you nothing. The diff builds in three clicks.    */
+/* ===== SOLUTIONS ====== */
 
-  // "Most design review still looks at finished screens. Which now tell you
-  //  almost nothing."
-  { title: '29 · Finished screens tell you nothing', type: 'compose', parts: lineup() },
+  { title: 'Solutions. Talk about my clients. Tee up buckets, lanes, log', type: 'float', speed: 0.8 },
+  { title: 'Solution 1 · Three buckets · title 1', type: 'compose', parts: buckets(0), labels: bucketTitles(1) },
+  { title: 'Solution 1 · title 2', type: 'compose', parts: buckets(0), labels: bucketTitles(2) },
+  { title: 'Solution 1 · title 3', type: 'compose', parts: buckets(0), labels: bucketTitles(3) },
 
-  // "Engineers solved this a long time ago. Nobody reviews code by admiring
-  //  the finished file. They review the diff — what changed, line by line,
-  //  and why. So show the diff. Here's what the tool gave us."
-  //  [Lines of code scroll in, top to bottom, all quiet: the default.]
-  { title: '30 · THE DIFF · "Here\'s what the tool gave us"', type: 'compose',
-    parts: diff(DIFF, () => 'ash'), order: 'top', stagger: 3 },
+  // Most people underestimate this bucket, then get defensive, then get honest. It's bigger than is
+  // comfortable, and it's usually the part of the job that produced your most visible output.
+  // Let it go. Stop charging for it.
+  { title: 'Solution 1 · Bucket 1 examples', type: 'compose', parts: buckets(1), labels: bucketTitles(3).concat(bucketLines(1)) },
 
-  // "Here's what we changed."
-  //  [Nothing moves. Red for what came out, green for what went in.]
-  { title: '31 · "Here\'s what we changed" — red and green', type: 'compose',
-    parts: diff(DIFF, k => KIND_COLOR[k]) },
+  // The orange underneath: it looks fine from the top.
+  { title: 'Solution 1 · Bucket 2 examples (orange underneath)', type: 'compose', parts: buckets(2), labels: bucketTitles(3).concat(bucketLines(2)) },
 
-  // "Here's the evidence for every change."
-  { title: '32 · "Here\'s the evidence for every change"', type: 'compose',
-    parts: diff(DIFF, k => KIND_COLOR[k]), labels: evidenceLabels('white') },
+  // Smaller than people hope. More durable than people fear.
+  //
+  // Bucket one and bucket three are where all the public arguing happens. Both are boring. Bucket 2
+  // is largely invisible. It produces nothing. No deliverable, no artefact, no metric. But it's the
+  // work that stops an organisation walking confidently off a cliff, and it shows up in no
+  // productivity measure anywhere.
+  { title: 'Solution 1 · Bucket 3 examples (all orange)', type: 'compose', parts: buckets(3), labels: bucketTitles(3).concat(bucketLines(3)) },
 
-  // "The worked example is a mortgage form. Every tool and every best-practice
-  //  checklist would have made that form smoother. Research showed that
-  //  smoother made people more frightened, because they believed one mistake
-  //  was irreversible. So at that step we changed [say what you changed]. A
-  //  diff nobody could have generated — it cost a round of research to know."
-  { title: '33 · One changed line, with its reason', type: 'compose',
-    parts: [{ type: 'grid', dots: 120, cols: 120, x: DIFF_LEFT + 119 * DOT / 2, y: 0.22, color: 'red' },
-            { type: 'grid', dots: 120, cols: 120, x: DIFF_LEFT + 119 * DOT / 2, y: 0.48, color: 'green' }],
-    labels: [
-      { text: '− The smoother form. Every tool and every best-practice checklist would have made it.', x: DIFF_LEFT, y: 0.31, size: 0.046, align: 'left', color: 'red', weight: 700 },
-      { text: '+ [WHAT YOU ACTUALLY CHANGED AT THAT STEP]', x: DIFF_LEFT, y: 0.57, size: 0.046, align: 'left', color: 'green', weight: 700 },
-      { text: 'evidence: a round of research. Smoother made people more frightened — they believed one mistake was irreversible.', x: 0.97, y: 0.57, size: 0.034, align: 'right', color: 'white' },
-      { text: 'A diff nobody could have generated. It cost a round of research to know.', x: DIFF_LEFT, y: 0.8, size: 0.056, align: 'left', color: 'white', weight: 800 },
-    ], labelDelay: 1.2 },
+  // The first thing I'm handing you: a map. So you can see it.
+  { title: '★ Object 1 · A MAP', ...object('map', 'MAP') },
 
-  // "Take the last thing your team shipped. Twenty decisions in it — the
-  //  colour, the copy, the order of the steps, what happens when it fails."
-  { title: '34 · Twenty decisions', type: 'bars',
-    values: Array(20).fill(1), cols: 2, baseline: 0.9, top: 0.06, left: 0.08, right: 0.92,
-    labels: [{ text: 'Twenty decisions in the last thing you shipped', x: 0.5, y: 0.05, size: 0.045, color: 'white', weight: 700 }] },
+  { title: 'Solution 2 · Everything in the fast lane', type: 'stream', lanes: lanes(false), labels: laneLabels(false) },
 
-  // "Next to each one: chosen, or inherited. The chosen column is the diff."
-  //  [Nothing moves. Seventeen go the colour of the default. Three go green.]
-  { title: '35 · Chosen is the diff. Inherited is the default.', type: 'bars',
-    values: Array(20).fill(1), cols: 2, baseline: 0.9, top: 0.06, left: 0.08, right: 0.92,
-    colors: Array.from({ length: 20 }, (_, i) => [2, 9, 15].includes(i) ? 'green' : 'indigo'),
-    labels: [{ text: 'Chosen: the diff  ·  Inherited: the default', x: 0.5, y: 0.05, size: 0.045, color: 'white', weight: 700 }] },
+  // The criteria: Is it reversible? How many people does it touch? Does this moment
+  // carry the brand's promise?
+  // YOU NEED to become the person who knows where speed is safe.
+  { title: 'Solution 2 · ...and a slow lane', type: 'stream', lanes: lanes(true), labels: laneLabels(true) },
+
+  // The second: a pedal. So you can pace it.
+  { title: '★ Object 2 · A PEDAL', ...object('pedal', 'PEDAL') },
+
+  { title: 'S3 · Who and what this is for', type: 'compose', parts: brief(1), labels: briefLabels(1) },
+  { title: 'S3 · What we decided', type: 'compose', parts: brief(2), labels: briefLabels(2) },
+  { title: 'S3 · What we are deliberately not doing', type: 'compose', parts: brief(3), labels: briefLabels(3) },
+  { title: 'S3 · What we expect will happen', type: 'compose', parts: brief(4), labels: briefLabels(4) },
+
+  // Thirty days later: mark your homework. Green came true, red didn't.
+  { title: 'Solution 3 · 30 days later: mark your homework (voiced)', type: 'compose', parts: brief(4, true), labels: briefLabels(4) },
+
+  // The third: a stamp. So you can prove it.
+  { title: '★ Object 3 · A STAMP', ...object('stamp', 'STAMP') },
 
 
-/* ===== ACT 6 · THE NEXT THING TO BE COUNTERFEITED =======================
-   The diff again, with cheap green arriving. Then the reasons.           */
+/* ===== CLOSE ====== */
 
-  // "As soon as the diff becomes the signal, people will fake diffs. Cosmetic
-  //  tweaks. Generated personas. Research nobody did. Every costly signal
-  //  eventually gets a counterfeit."
-  //  [Six more green lines arrive under the real ones, cheaply.]
-  { title: '36 · Counterfeit: cheap green arrives', type: 'compose',
-    parts: diff([...DIFF, ...FAKE], k => KIND_COLOR[k]), stagger: 0.4 },
+  // I want to be honest about the limits. None of this fixes the hiring market. None of it un-cuts
+  // the junior roles that are slipping. I don't have an instrument for that. What I can do is make
+  // sure that when the decision actually is yours, you can see it, you can pace it, and you can
+  // prove it.
+  { title: 'Role circles again', ...CIRCLES_LIT_BARE },
 
-  // "The defence is the one science uses: make it checkable. Every edit links
-  //  to something a sceptic can open — a search log, a support ticket, a
-  //  clip from a session, a prediction you wrote down before you shipped."
-  //  [The real edits get their evidence. The rest turn the colour of a default.]
-  //  "An edit without a reason is just a different default."
-  { title: '37 · ★ Checkable — the rest turn into defaults', type: 'compose',
-    parts: diff([...DIFF, ...FAKE], (k, i) => i >= DIFF.length ? 'indigo' : KIND_COLOR[k]),
-    labels: evidenceLabels('white', FAKE.map(([len], j) =>
-      ({ text: 'no link', x: 0.97, y: diffY(DIFF.length + j), size: 0.034, align: 'right', color: 'indigo' }))) },
+  { title: 'Deciding orange', ...CIRCLES_FULL_BARE },
 
+  { title: 'Design is DECIDING... (orange), once more', ...deciding(true) },
 
-/* ===== ACT 7 · MONDAY ===================================================
-   Six lines, one per click, over a dim crowd. On the fourth, the crowd
-   leaves. The lines stay.                                                */
+  { title: 'THANK YOU 🙏', ...THANKS },
 
-  { title: '38 · Monday 1 — the afternoon test', type: 'float', speed: 0.6, opacity: 0.3, labels: monday(1) },
-  { title: '39 · Monday 2 — review in diffs', type: 'float', speed: 0.6, opacity: 0.3, labels: monday(2) },
-  { title: '40 · Monday 3 — keep a diff log', type: 'float', speed: 0.6, opacity: 0.3, labels: monday(3) },
-  // "No link, no edit." [Every dot leaves. Let them notice.]
-  { title: '41 · ★ Monday 4 — "No link, no edit." The wall vanishes', type: 'blank', labels: monday(4) },
-  { title: '42 · Monday 5 — leaders: hire on the diff', type: 'blank', labels: monday(5) },
-  { title: '43 · Monday 6 — juniors: a diff portfolio', type: 'blank', labels: monday(6) },
-
-
-/* ===== CLOSE ============================================================ */
-
-  // "When writing became free, the market stopped reading the writing and
-  //  started reading what people did to it."
-  //  [The 63 proposals come back, quiet — and the ones that were edited are
-  //   lit green.]
-  //  "Your work is about to be read the same way."
-  { title: '44 · The proposals again, read the new way', type: 'compose',
-    parts: [{ ...JOB_POST, color: 'ash' }, ...docs(63, i => EDITED.has(i) ? 'green' : 'ash')] },
-
-  // [WORDS 2 of 2. Then silence.]
-  { title: '45 · ★ WORDS 2/2 — SHOW THE DIFF', type: 'text', text: 'SHOW THE DIFF', style: 'bold',
-    width: 0.86, height: 0.66, color: 'white', extras: 'dim', extrasColor: 'ghost', extrasOpacity: 0.5 },
-
-  // "Thank you."
-  { title: '46 · Release. Thank you.', type: 'float', speed: 0.7 },
+  { title: 'Everything orange, rising', type: 'rise', color: 'orange', lift: 0.8 },
 ];
 
-/* ---------- 2. ENGINE: no need to edit below this line ---------------- */
+
+
+/* ---------- 2. ENGINE: only edit below this line if adding/editing feature/modes ---------------- */
 (() => {
 'use strict';
 
@@ -1169,9 +942,9 @@ const SUB = 8;              // physics sub-steps per frame
 // centre-to-centre spacings each kind of scene uses, measured in dot radii.
 const GAP = { fill: 2.35, grid: 2.8, clump: 2.5, bars: 2.3, line: 2.1 };
 const STAGGER = { float: 0.8, text: 1.0, shape: 0.9, grid: 1.1, field: 1.2, split: 1.0, bars: 1.6, line: 1.4, gravity: 0,
-                  rise: 0.8, spotlight: 1.2, storm: 0.25, walk: 0 };
+                  rise: 0.8, spotlight: 1.2, storm: 0.25, walk: 0, stream: 0.8 };
 const PACE = { spotlight: 0.45 };   // modes that want to run gentler than everything else by default
-const COLLIDE = { phys: 1, float: 1, roam: 1, rise: 1, storm: 1 };  // modes whose dots knock into each other
+const COLLIDE = { phys: 1, float: 1, roam: 1, rise: 1, storm: 1, stream: 1 };  // modes whose dots knock into each other
 const DIRS = {
   down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0],
   'down-left': [-0.5, 0.866], 'down-right': [0.5, 0.866], 'up-left': [-0.5, -0.866], 'up-right': [0.5, -0.866],
@@ -1247,6 +1020,7 @@ function makeDots() {
       mode: 'float', prev: 'float', delay: 0, kick: null,
       tx: 0, ty: 0, ox: 0, oy: 0, gx: 0, gy: 0, ogx: 0, ogy: 0, px: 0, py: 0, ivx: 0, ivy: 0, soft: false,
       rx: x, ry: y, rw: 0, rh: 1, rk: 0, wrap: false,   // the patch of stage this dot keeps to (roam, rise)
+      flow: 0, wrapX: false,                             // its lane's pace, and sideways wrap (stream)
       k: 0.82 + Math.random() * 0.36,       // each dot's own pace, so they never move in lockstep
       ph: Math.random() * TAU,
     });
@@ -1333,6 +1107,17 @@ function lift(d, h) {
   d.vy += (wantY - d.vy) * Math.min(1, 3 * h);
 }
 
+// A lane: a steady current along it, a bobble, and a pull back into the lane's own band when a dot
+// strays. Leaving one side of the stage puts a dot back in at the other (in solve), so a lane never
+// runs dry. speed 1 crosses the wall in about 15 seconds.
+function flow(d, h) {
+  const sp = SETTINGS.speed * scn.speed, v = (W / 15) * d.flow * sp * (0.85 + (d.k - 0.82) / 0.36 * 0.3);
+  const bob = Math.sin(now * 1.1 * d.k + d.ph) * PHY.float * 0.6 * sp;
+  const off = d.y - d.ry, out = Math.max(0, Math.abs(off) - d.rh), back = -Math.sign(off) * out * 2;
+  d.vx += (v - d.vx) * Math.min(1, 2.5 * h);
+  d.vy += (bob + back - d.vy) * Math.min(1, 2.5 * h);
+}
+
 // Turbulence. Each dot flies a course of its own and turns all the time, rather than following a
 // shared wind: any single flow field, however it is built, sweeps dots into the same few streams and
 // leaves the rest of the stage bare within seconds. eddy sets how tightly a dot curls, gust how fast
@@ -1401,6 +1186,7 @@ function solve(h) {
     d.soft = m !== 'phys';               // only falling dots bounce; the rest just ease apart, because
                                          // bouncing at storm speed jams dots into clumps within seconds
     d.wrap = m === 'rise';
+    d.wrapX = m === 'stream';
     live.push(d);
   }
   if (!live.length) return;
@@ -1423,7 +1209,10 @@ function solve(h) {
   for (const d of live) {
     const r = d.r;
     let hit = 0;
-    if (d.x < r) { d.x = r; hit |= 1; } else if (d.x > W - r) { d.x = W - r; hit |= 2; }
+    if (d.wrapX) {                         // a lane dot leaves one side and comes back in at the other
+      const span = W + r * 2;
+      if (d.x > W + r) { d.x -= span; d.px -= span; } else if (d.x < -r) { d.x += span; d.px += span; }
+    } else if (d.x < r) { d.x = r; hit |= 1; } else if (d.x > W - r) { d.x = W - r; hit |= 2; }
     if (d.wrap) {                          // a rising dot leaves the top and comes back up from the floor
       const span = H + r * 2;              // px moves with it, so the dot keeps the speed it had
       if (d.y < -r) { d.y += span; d.py += span; d.rx = Math.random() * W; }
@@ -1469,6 +1258,7 @@ function step(dt) {
       else if (m === 'roam') roam(d, h);
       else if (m === 'rise') lift(d, h);
       else if (m === 'storm') churn(d, h);
+      else if (m === 'stream') flow(d, h);
       else if (m === 'walk') strut(d);
       else if (m === 'phys') { d.vx += gx * h; d.vy += gy * h; }
       else { const f = Math.exp(-5 * h); d.vx *= f; d.vy *= f; }   // 'hold': glide to a stop
@@ -1715,6 +1505,13 @@ function svgPath(d) {
   return { el: p, box: p.getBBox(), len: p.getTotalLength(), remove: () => svg.remove() };
 }
 
+// core colours the dots nearer the centre than that fraction of the radius (0.5 is the inner half of
+// the radius, which is a quarter of a disc's dots). Any filled shape; the rest keep the shape's colour.
+function coreOf(T, sc) {
+  if (sc.core == null) return;
+  const c = sc.coreColor || 'magenta';
+  for (const t of T) if ((t.o ?? 1) <= sc.core) { t.c = c; t.hl = true; }
+}
 function layoutShape(sc) {
   let n = Math.min(sc.dots ?? N, N);
   const size = (sc.size ?? 0.78) * H, r = (sc.radius ?? SETTINGS.radius) * H;
@@ -1727,6 +1524,7 @@ function layoutShape(sc) {
       const q = R * Math.sqrt((i + 0.5) / n), a = i * GOLDEN;
       T.push({ x: cx + q * Math.cos(a), y: cy + q * Math.sin(a), r, o: q / R });
     }
+    coreOf(T, sc);
     return { targets: T, order: 'center' };
   }
   if (kind === 'ring') {
@@ -1770,6 +1568,18 @@ function layoutShape(sc) {
     const res = sampleFill(g => { g.scale(k, k); g.translate(-b.x, -b.y); g.fill(shape); }, bw, bh, n, sc.grid || 'hex', r * GAP.fill, true);
     const x0 = cx - res.w * align01(sc.align), y0 = cy - res.h * align01(sc.valign), far = Math.hypot(res.w, res.h) / 2 || 1;
     for (const [x, y] of res.pts) T.push({ x: x0 + x, y: y0 + y, r, o: Math.hypot(x - res.w / 2, y - res.h / 2) / far });
+    coreOf(T, sc);
+    if (sc.highlightRegion) {              // light the dots inside a second path, in this path's own units
+      const region = new Path2D(sc.highlightRegion), g = scratch();
+      const z = 200 / Math.max(1, b.x + b.width, b.y + b.height);   // keep the test inside the scratch canvas
+      g.setTransform(z, 0, 0, z, 0, 0);
+      const color = sc.highlightColor || 'magenta';
+      for (const t of T) {
+        const u = b.x + (t.x - x0) / (res.w || 1) * b.width, v = b.y + (t.y - y0) / (res.h || 1) * b.height;
+        if (g.isPointInPath(region, u * z, v * z)) { t.c = color; t.hl = true; }
+      }
+      g.setTransform(1, 0, 0, 1, 0, 0);
+    }
     return { targets: T, order: 'center', box: { x: x0, y: y0, w: res.w, h: res.h } };
   } finally { p.remove(); }
 }
@@ -2194,6 +2004,27 @@ function applyStorm(sc) {
   note = `${N} dots in the storm`;
 }
 
+// Lanes of dots flowing across the stage, each lane at its own pace, forever. The top lane takes the
+// dots already nearest the top, and so on down, so joining a lane is a short trip.
+function applyStream(sc) {
+  const R = (sc.radius ?? SETTINGS.radius) * H;
+  const lanes = (sc.lanes && sc.lanes.length ? sc.lanes : [{ y: 0.5 }]).map((l, i) => ({ ...l, i }));
+  const counts = apportion(lanes.map(l => l.share ?? 1), N);
+  const stagger = (sc.stagger ?? STAGGER.stream) / (SETTINGS.speed * scn.speed);
+  const order = [...Array(N).keys()].sort((a, b) => dots[a].y - dots[b].y);
+  let at = 0;
+  for (const l of [...lanes].sort((a, b) => (a.y ?? 0.5) - (b.y ?? 0.5))) {
+    const col = toRGB(l.color || sc.color || SETTINGS.color);
+    for (let j = 0; j < counts[l.i]; j++) {
+      const d = dots[order[at++]];
+      retarget(d, 'stream', Math.random() * stagger);
+      d.ry = (l.y ?? 0.5) * H; d.rh = Math.max(0, (l.height ?? 0.25) * H / 2 - R); d.flow = l.speed ?? 1;
+      d.tr = R; d.ta = l.opacity ?? sc.opacity ?? 1; d.tcol = col.slice();
+    }
+  }
+  note = `${N} dots in ${lanes.length} lane${lanes.length === 1 ? '' : 's'}`;
+}
+
 // One dot walks; every other dot is left where the last scene put it, to be scattered on the way.
 function applyWalk(sc) {
   const R = (sc.radius ?? SETTINGS.radius) * H, sp = SETTINGS.speed * scn.speed;
@@ -2271,9 +2102,9 @@ function setLabels(list, delay) {
 
 // The modes that run themselves, as against the layouts, which send the dots to fixed places.
 const MODES = { float: applyFloat, gravity: applyGravity, rise: applyRise,
-                spotlight: applySpotlight, storm: applyStorm, walk: applyWalk };
+                spotlight: applySpotlight, storm: applyStorm, walk: applyWalk, stream: applyStream };
 // Scenes that never settle, so a reload plays them forward instead of snapping to the end...
-const FLOW = new Set(['float', 'gravity', 'rise', 'spotlight', 'storm', 'walk']);
+const FLOW = new Set(['float', 'gravity', 'rise', 'spotlight', 'storm', 'walk', 'stream']);
 // ...and the ones that start from wherever the dots already were, so the scene before them matters.
 const CARRIES_ON = new Set(['gravity', 'walk']);
 
@@ -2351,8 +2182,15 @@ function updateHud() {
   $('#num').textContent = `${cur + 1} / ${SCENES.length}`;
   $('#title').textContent = sc.title || sc.type || '';
   const n = $('#note');
-  n.textContent = note;
-  n.classList.toggle('warn', /needs|unknown|error|no dot|blocked/i.test(note));
+  // The dot tally ("uses 640 of 1250 dots", "1250 dots drifting", "too small for this many dots") is
+  // for building a talk, not giving one, so the bar leaves it out and shows only what needs acting
+  // on: a scene short of dots, a letter the font lacks, a blocked window. Tooling can still read the
+  // whole note from the bar's data-note attribute.
+  n.dataset.note = note;
+  const routine = /^(uses \d+ of \d+ dots|\d+ dots? \w.*|\d+ of \d+ dots lit|too small for this many dots)$/;
+  const shown = note.split('; ').filter(s => s && !routine.test(s)).join('; ');
+  n.textContent = shown;
+  n.classList.toggle('warn', /needs|unknown|error|no dot|blocked/i.test(shown));
 }
 // Keeping the scene number in the address bar is a rehearsal convenience: a reload lands you back
 // where you were. Safari treats every file: URL as its own security origin and refuses to let a page
