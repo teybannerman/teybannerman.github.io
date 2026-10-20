@@ -30,6 +30,29 @@ My co-authored book *The AI Revolution* reached #1 on Amazon AI charts globally,
 
 ---
 
+## Recent & upcoming stages
+
+- Oxford Generative AI Summit, Oxford (2026)
+- DesignUp, Bangalore (2026)
+- Canva Create, Los Angeles (2026)
+- East Meets West, Hawaii (2026)
+- Design Matters, Tokyo (2026, 2025)
+- World AI Cannes Festival, Cannes (2025, 2024, 2023)
+- 3daysofdesign, Copenhagen (2026, 2025, 2024)
+- AI Hot 100 Summit, New York (2025, 2024)
+- Design Matters, Copenhagen (2025, 2024, 2022, 2018)
+- iF Design Trend Conference, Berlin (2025)
+- Founders Forum Global, Oxford (2024)
+- AI Festival, Milan (2025)
+- Packaging Innovations, Birmingham (2025)
+- Bucharest Tech Week, Bucharest (2024)
+- Leading Design, London (2024)
+- Miro Canvas Leadership Summit, London (2024)
+- Nedbank Create, Johannesburg (2023)
+- Google Industry Webinar Series (2023)
+
+---
+
 ## Signature talks
 
 <ul class="post-list">
@@ -54,27 +77,6 @@ My co-authored book *The AI Revolution* reached #1 on Amazon AI charts globally,
 		Ethics isn't a theoretical concern in AI - it's an engineering problem. Concrete approaches to building trust calibration systems, testing for bias, and creating governance that enables innovation rather than creating bureaucratic theatre.
 	</li>
 </ul>
-
----
-
-## Recent & upcoming stages
-
-- Canva Create, Los Angeles (2026)
-- East Meets West, Hawaii (2026)
-- Design Matters, Tokyo (2026, 2025)
-- World AI Cannes Festival, Cannes (2025, 2024, 2023)
-- 3daysofdesign, Copenhagen (2026, 2025, 2024)
-- AI Hot 100 Summit, New York (2025, 2024)
-- Design Matters, Copenhagen (2025, 2024, 2022, 2018)
-- iF Design Trend Conference, Berlin (2025)
-- Founders Forum Global, Oxford (2024)
-- AI Festival, Milan (2025)
-- Packaging Innovations, Birmingham (2025)
-- Bucharest Tech Week, Bucharest (2024)
-- Leading Design, London (2024)
-- Miro Canvas Leadership Summit, London (2024)
-- Nedbank Create, Johannesburg (2023)
-- Google Industry Webinar Series (2023)
 
 ---
 
