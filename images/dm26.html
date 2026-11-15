@@ -1,0 +1,2697 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>dm26</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --page: #d9d6d0;
+  --ink: #1c1b19;
+  --muted: #66625b;
+  --panel: rgba(250, 249, 246, 0.88);
+  --line: rgba(28, 27, 25, 0.14);
+  --warn: #a4460b;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #17171a; --ink: #eeebe6; --muted: #9a958d;
+    --panel: rgba(38, 38, 42, 0.9); --line: rgba(255, 255, 255, 0.12); --warn: #ffb35c;
+  }
+}
+:root[data-theme="dark"] {
+  --page: #17171a; --ink: #eeebe6; --muted: #9a958d;
+  --panel: rgba(38, 38, 42, 0.9); --line: rgba(255, 255, 255, 0.12); --warn: #ffb35c;
+}
+*, *::before, *::after { box-sizing: inherit; }
+html { height: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); }
+body {
+  height: 100%; margin: 0; position: relative; overflow: hidden;
+  background: var(--page); color: var(--ink);
+  font: 500 13px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+#stage { position: absolute; display: block; outline: 1px solid var(--line); touch-action: manipulation; cursor: pointer; }
+body.fs { background: #000; }
+body.fs #stage { outline: none; }
+body.idle, body.idle #stage { cursor: none; }
+
+#bar {
+  position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 2px;
+  width: max-content; max-width: calc(100% - 20px); padding: 4px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+}
+#bar button {
+  flex: none; width: 36px; height: 36px; display: grid; place-items: center;
+  border: 0; border-radius: 8px; background: transparent; color: var(--ink);
+  font: 600 15px/1 system-ui, -apple-system, sans-serif; cursor: pointer;
+}
+#bar button:hover { background: var(--line); }
+#bar button:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+#bar svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+#info { min-width: 0; display: flex; align-items: baseline; gap: 10px; padding: 0 8px; white-space: nowrap; overflow: hidden; }
+#num { flex: none; color: var(--muted); font-variant-numeric: tabular-nums; }
+#title { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+#note { min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--muted); }
+#note.warn { color: var(--warn); }
+#help {
+  position: absolute; left: 50%; bottom: 64px; transform: translateX(-50%);
+  width: min(520px, calc(100% - 20px)); padding: 12px 16px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); line-height: 1.6;
+}
+#help[hidden] { display: none; }
+#help p { margin: 0 0 6px; }
+#help p:last-child { margin: 0; color: var(--muted); }
+kbd { display: inline-block; min-width: 1.6em; padding: 1px 5px; text-align: center; font: 600 11px/1.5 system-ui, sans-serif; border: 1px solid var(--line); border-radius: 5px; }
+body.fs #bar, body.fs #help, body.nohud #bar, body.nohud #help, body.bare #bar, body.bare #help { display: none; }
+body.bare { background: #000; }
+body.bare #stage { outline: none; cursor: default; }
+@media (max-width: 560px) { #note { display: none; } }
+</style>
+</head>
+<body>
+<canvas id="stage" aria-label="Animated dots"></canvas>
+
+<div id="help" hidden>
+  <p><kbd>→</kbd> <kbd>Space</kbd> or a clicker moves to the next scene, <kbd>←</kbd> goes back, <kbd>1</kbd>–<kbd>9</kbd> jump.</p>
+  <p><kbd>R</kbd> replays the transition into this scene. <kbd>F</kbd> fullscreen. <kbd>H</kbd> hides this bar. <kbd>B</kbd> blacks out the screen.</p>
+  <p><kbd>P</kbd> opens presenter notes in a second window: drag it to your laptop screen, leave this one fullscreen on the wall. Its keys drive the wall too.</p>
+  <p>On a phone, tap the right side of the stage to go forward and the left side to go back.</p>
+</div>
+
+<div id="bar" role="toolbar" aria-label="Rehearsal controls">
+  <button type="button" id="prev" aria-label="Previous scene"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div id="info"><span id="num"></span><span id="title"></span><span id="note"></span></div>
+  <button type="button" id="next" aria-label="Next scene"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  <button type="button" id="replay" aria-label="Replay this transition" title="Replay this transition (R)"><svg viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4 4.5V9h4.5"/></svg></button>
+  <button type="button" id="full" aria-label="Fullscreen" title="Fullscreen (F)"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  <button type="button" id="keys" aria-label="Keyboard shortcuts" aria-expanded="false" title="Keyboard shortcuts">?</button>
+</div>
+
+<script>
+/* ======================================================================
+   DOTTIE
+   One file. A crowd of balls that becomes whatever the story needs:
+   a word, a chart, a shape, a rising column of air, a storm, a crowd
+   parting for someone walking through it.
+
+   Open it in any browser. Nothing to install, no internet needed. (With
+   internet it picks up a nicer typeface for labels; without, it falls
+   back to Helvetica and everything else is identical.)
+
+   DRIVING IT
+     →  Space  or a presentation clicker   next scene
+     ←  back        1–9 jump to a scene        R replay this transition
+     F  fullscreen  H  hide the rehearsal bar  B  black the screen out
+     P  presenter notes in a second window, for the laptop screen: the scene
+        you are on, the next one, and the script comments above each scene
+     On a tablet, tap the right of the stage to go on, the left to go back.
+     The address bar remembers the scene (#7), so a reload lands you back.
+
+   MAKING A VERSION FOR ONE TALK
+     Copy this file, rename it, and edit ONLY section 1 below — the
+     settings, the palette, and the list of scenes. Section 2 is the
+     engine and never needs touching. Section 1 is written to be readable
+     by a person or an LLM turning a talk outline into scenes: the SCENE
+     REFERENCE further down lists every mode and every option. For which of
+     those options makes a room FEEL something, see DIRECTING.md in the repo
+     this file came from.
+
+     The balls are called "dots" in the settings and options below, which
+     is the word the engine uses. Same thing.
+
+   THIS TALK: dm26
+     16:9, 1200 dots. One white dot in a dark room; the room comes up grey and
+     starts to tremble; everyone gathers into a circle, then a prompt box, a
+     cat, the world, and Japan in green. The grid again, the storm from du26,
+     a crash, the grid back on its feet, one green dot walking through it, and
+     a last crash. No words on stage: the presenter carries them.
+     Scene titles are the cues; the rehearsal bar shows them.
+   ====================================================================== */
+
+/* ---------- 1. YOUR TALK ---------------------------------------------- */
+
+const SETTINGS = {
+  // A 16:9 screen: a projector, a laptop, a conference stage. Everything below is written as
+  // fractions of this, so it re-flows if the venue turns out to be a different shape.
+  width: 1920, height: 1080,
+
+  // These two were tuned together for this stage, so change them as a pair. A shape is drawn by
+  // covering it at the dots' own fixed spacing, so its density follows from its AREA, not from how
+  // many dots exist: more dots alone will not thicken anything; finer dots will. At this radius
+  // 1200 dots make a disc 0.87 of the stage tall, and the opening grid's dots fill half a cell.
+  dots: 1200,
+  radius: 0.0095,            // ~10px radius, 20px across
+
+  color: 'grey',             // the crowd, once the lights are up
+  background: '#000000',     // pure black
+
+  labelColor: '#9a9a9a',
+  labelFont: 'Barlow, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  boldFont: 'Barlow, "Arial Black", "Helvetica Neue", Arial, sans-serif',
+  speed: 0.9,                // a notch calmer than default, as du26
+  motionBlur: 0.6,
+
+  // Every dot is always on stage. The ones a scene doesn't need fall to the floor and wait there,
+  // dim, until a later scene calls them back up: nothing appears from thin air.
+  extras: 'drop',
+  extrasOpacity: 0.35,       // how bright the waiting pile is
+};
+
+const COLORS = {
+  white: '#ffffff',          // the one dot at the start, and the button you press. Nothing else.
+  night: '#161616',          // the crowd before the lights come up: a couple of shades above black.
+                             // If the projector swallows it, raise it a step or two (#1c1c1c).
+  grey:  '#808080',          // the crowd: medium grey
+  green: '#3ddc84',          // here: Japan, and the one who walks through. Nothing else.
+};
+
+/* ----------------------------------------------------------------------
+   THE PICTURES THIS TALK DRAWS
+   ---------------------------------------------------------------------- */
+
+// ---- the grid: the opening, and the grid again before the storm ------------
+// 47 x 25 is the squarest grid with a dot at the exact middle of the stage (a field centres its
+// cells, so only odd counts both ways have a middle dot). 1200 has no odd x odd split, so 25 dots
+// are left over. They wait on the floor like any spare dots, below the grid's margin, but in the
+// dark: 25 dim dots under a full grid read as a mistake, not as a crowd sitting down. Every grid
+// scene shares this, so the grid never moves between them: only colour and trembling change.
+const GRID = { type: 'field', cols: 47, rows: 25, jitter: 0, margin: 0.02, extrasColor: 'night' };
+const MIDDLE = { highlight: 1, pick: [0.5, 0.5], highlightColor: 'white' };   // the one dot, dead centre
+
+// ---- the prompt box: a rounded rectangle, and the send button at its right end ----
+// The box is an outline, built in stage pixels from these fractions.
+const BOX = { x: 0.5, y: 0.42, w: 0.84, h: 0.3 };
+const BOX_W = BOX.w * 1920, BOX_H = BOX.h * 1080, BOX_R = BOX_H * 0.4;
+const BOX_PATH = `M${BOX_R} 0 H${BOX_W - BOX_R} A${BOX_R} ${BOX_R} 0 0 1 ${BOX_W} ${BOX_R} V${BOX_H - BOX_R} ` +
+  `A${BOX_R} ${BOX_R} 0 0 1 ${BOX_W - BOX_R} ${BOX_H} H${BOX_R} A${BOX_R} ${BOX_R} 0 0 1 0 ${BOX_H - BOX_R} ` +
+  `V${BOX_R} A${BOX_R} ${BOX_R} 0 0 1 ${BOX_R} 0 Z`;
+// The button: a white disc with an up arrow cut out of it, laid out dot by dot so the arrow is exact
+// (a filled shape this small rounds the hole away). Each run of dots in a row is a one-row grid part,
+// at a grid's own spacing (2.8 radii), so the button sits on one lattice.
+const BUTTON = [
+  '..#####..',
+  '.###.###.',
+  '###...###',
+  '##.#.#.##',
+  '####.####',
+  '####.####',
+  '####.####',
+  '.###.###.',
+  '..#####..',
+];
+const STEP = SETTINGS.radius * 2.8;                              // as a fraction of stage height
+const BUTTON_X = (BOX.x * 1920 + BOX_W / 2 - BOX_H / 2) / 1920;  // centred half the box's height in from its right end
+function button(x, y) {
+  const parts = [];
+  BUTTON.forEach((row, r) => {
+    for (const run of row.matchAll(/#+/g)) {
+      const n = run[0].length, mid = run.index + (n - 1) / 2 - 4;
+      parts.push({ type: 'grid', dots: n, cols: n, x: x + mid * STEP * 1080 / 1920, y: y + (r - 4) * STEP, color: 'white' });
+    }
+  });
+  return parts;
+}
+const PROMPT = { type: 'compose', parts: [
+  { type: 'shape', path: BOX_PATH, outline: true, dots: 400, x: BOX.x, y: BOX.y, size: BOX.h, width: BOX.w },
+  ...button(BUTTON_X, BOX.y),
+] };
+
+// ---- the cat: sitting, facing us, tail curled round to the right --------------
+// Drawn for this talk on a 100 x 112 box. The tail winds the same way as the body, so where they
+// overlap it fills rather than cutting a hole.
+const CAT_PATH = 'M27 2 L38 13 Q44 10.5 50 13 L61 2 L60 24 C61 36 56 42 51 45 C63 52 72 68 72 88 ' +
+  'C72 100 68 108 60 110 L22 110 C14 108 12 98 13 88 C14 68 22 52 32 45 C26 41 22 35 23 24 Z ' +
+  'M64 98 C70 101 80 102 86 98 C92 94 92 86 88 84 C86 83 86 80 88 79 C93 78 98 84 97 92 C96 106 80 112 62 104 Z';
+const CAT = { type: 'shape', path: CAT_PATH, size: 0.8, y: 0.44 };
+
+// ---- the world: the same map as du26 ------------------------------------------
+// Natural Earth 1:110m land (public domain, via world-atlas), as one SVG path in an equirectangular
+// projection cropped to 83°N–56°S (Greenland to Cape Horn, no Antarctica), with islands under about
+// 12 square degrees left out because no dot would land on them anyway.
+// Units are tenths of a degree: x = (longitude + 180) × 10, y = (83 − latitude) × 10.
+const WORLD = 'M1122 1368 L1149 1377 L1108 1385 L1053 1358 L1089 1371 L1107 1355 L1122 1368 Z M3530 1239 L3542 1243 L3531 1269 L3515 1272 L3493 1296 L3467 1292 L3470 1281 L3530 1239 Z M3546 1192 L3568 1209 L3585 1207 L3552 1247 L3549 1229 L3538 1225 L3547 1204 L3526 1175 L3546 1192 Z M0 996 L3594 998 L3587 1000 L3594 994 L0 996 Z M2301 966 L2304 987 L2297 987 L2271 1079 L2254 1086 L2240 1080 L2233 1051 L2244 1031 L2244 992 L2277 976 L2292 950 L2301 966 Z M3236 968 L3254 980 L3264 1020 L3288 1034 L3331 1091 L3331 1139 L3300 1204 L3263 1220 L3250 1209 L3236 1218 L3206 1210 L3196 1191 L3181 1186 L3182 1174 L3168 1183 L3178 1159 L3160 1179 L3143 1156 L3113 1145 L3061 1152 L3037 1169 L2999 1170 L2980 1181 L2950 1172 L2957 1146 L2933 1091 L2942 1093 L2934 1074 L2941 1048 L2942 1055 L2967 1037 L3009 1027 L3057 972 L3071 968 L3096 980 L3106 955 L3126 951 L3124 941 L3165 949 L3155 980 L3202 1007 L3225 937 L3236 968 Z M3141 842 L3155 864 L3183 847 L3246 869 L3276 891 L3272 904 L3307 936 L3279 931 L3247 906 L3226 923 L3176 914 L3187 903 L3179 884 L3137 865 L3130 871 L3120 858 L3137 852 L3105 839 L3124 834 L3141 842 Z M3052 816 L3037 828 L3002 828 L3009 844 L3033 836 L3015 849 L3032 883 L3022 883 L3027 875 L3015 876 L3010 856 L3003 859 L3004 885 L2994 884 L2988 858 L3000 824 L3052 816 Z M2858 889 L2826 872 L2753 775 L2775 778 L2838 829 L2834 837 L2861 861 L2858 889 Z M2979 812 L2990 821 L2978 822 L2961 870 L2902 859 L2891 835 L2897 810 L2912 811 L2930 799 L2967 761 L2992 776 L2973 798 L2979 812 Z M3210 459 L3203 479 L3158 495 L3151 484 L3110 491 L3120 499 L3113 515 L3102 516 L3094 497 L3126 476 L3157 475 L3167 457 L3174 462 L3194 448 L3199 424 L3214 416 L3219 438 L3210 459 Z M1239 323 L1232 332 L1265 338 L1269 363 L1258 362 L1258 352 L1246 361 L1207 354 L1226 323 L1246 314 L1239 323 Z M1770 244 L1759 254 L1780 253 L1769 270 L1817 303 L1814 317 L1748 330 L1766 316 L1747 310 L1758 307 L1754 295 L1771 290 L1752 282 L1750 272 L1744 277 L1738 262 L1750 244 L1770 244 Z M1655 165 L1664 179 L1613 195 L1572 190 L1582 186 L1560 181 L1578 176 L1557 174 L1579 166 L1594 173 L1655 165 Z M0 140 L57 167 L54 159 L81 161 L101 170 L75 176 L70 187 L1 171 L0 180 L3600 180 L3574 184 L3592 207 L3537 213 L3503 231 L3489 224 L3435 231 L3420 248 L3432 254 L3421 281 L3404 287 L3400 298 L3385 300 L3368 320 L3354 276 L3359 262 L3437 219 L3445 204 L3401 225 L3393 212 L3367 216 L3342 232 L3350 239 L3222 240 L3151 283 L3182 292 L3199 288 L3214 308 L3201 346 L3182 367 L3149 396 L3123 397 L3075 432 L3095 462 L3091 479 L3065 486 L3061 463 L3069 461 L3047 449 L3053 434 L3011 441 L3022 426 L3016 421 L2980 438 L2975 443 L2989 456 L3024 455 L2992 481 L3019 513 L3017 548 L2987 585 L2959 602 L2908 616 L2904 627 L2885 613 L2859 632 L2893 696 L2892 713 L2852 744 L2851 731 L2801 696 L2792 738 L2830 775 L2842 817 L2814 802 L2801 765 L2785 746 L2783 752 L2788 716 L2772 661 L2754 673 L2742 670 L2743 648 L2714 602 L2670 615 L2665 628 L2603 671 L2599 726 L2575 750 L2535 670 L2526 616 L2505 621 L2464 576 L2374 573 L2365 559 L2347 565 L2315 551 L2301 529 L2280 530 L2308 582 L2316 572 L2318 590 L2340 589 L2364 566 L2368 588 L2398 607 L2377 641 L2353 658 L2287 690 L2235 704 L2227 662 L2191 617 L2185 593 L2146 549 L2149 535 L2139 554 L2124 531 L2155 599 L2169 610 L2175 644 L2233 706 L2227 713 L2246 726 L2311 710 L2310 724 L2277 788 L2203 856 L2192 877 L2188 895 L2205 938 L2208 977 L2195 997 L2148 1028 L2155 1071 L2126 1087 L2122 1118 L2082 1158 L1996 1178 L1982 1169 L1982 1147 L1952 1101 L1943 1051 L1918 1011 L1937 937 L1919 880 L1888 841 L1894 793 L1885 782 L1859 787 L1843 767 L1780 783 L1710 782 L1676 757 L1634 708 L1624 683 L1639 649 L1630 611 L1656 567 L1704 531 L1707 504 L1741 472 L1778 478 L1815 464 L1895 456 L1911 461 L1903 492 L1991 527 L2001 508 L2015 502 L2089 521 L2110 514 L2138 520 L2160 484 L2162 463 L2076 463 L2062 435 L2092 418 L2135 410 L2183 421 L2217 410 L2167 378 L2191 357 L2150 367 L2163 379 L2139 386 L2125 377 L2133 369 L2107 364 L2077 404 L2088 419 L2026 427 L2040 453 L2031 451 L2032 466 L2025 466 L1994 427 L1995 413 L1931 373 L1923 376 L1926 389 L1985 428 L1969 426 L1971 441 L1961 450 L1954 430 L1889 386 L1865 399 L1831 399 L1830 411 L1808 420 L1801 443 L1779 463 L1746 471 L1735 461 L1711 461 L1706 400 L1786 390 L1788 370 L1754 343 L1784 344 L1781 332 L1813 329 L1847 299 L1881 295 L1888 290 L1885 259 L1906 253 L1909 265 L1896 275 L1909 290 L1997 286 L2013 278 L2016 256 L2041 260 L2044 246 L2033 238 L2091 230 L2029 232 L2013 223 L2015 198 L2054 179 L2022 173 L2014 186 L1978 203 L1971 217 L1988 229 L1968 243 L1959 269 L1929 276 L1904 235 L1884 247 L1857 244 L1850 210 L1859 204 L1992 132 L2045 120 L2082 118 L2113 125 L2100 128 L2111 134 L2165 139 L2211 155 L2211 162 L2184 170 L2132 164 L2148 171 L2149 186 L2170 191 L2165 182 L2172 179 L2196 185 L2204 182 L2198 175 L2221 165 L2240 169 L2245 162 L2235 144 L2263 148 L2268 153 L2256 160 L2263 163 L2337 141 L2345 142 L2335 148 L2388 141 L2399 147 L2411 141 L2400 135 L2406 131 L2485 149 L2492 144 L2469 135 L2467 120 L2492 102 L2526 102 L2518 116 L2528 126 L2526 140 L2537 146 L2513 167 L2524 168 L2551 152 L2549 140 L2536 134 L2544 124 L2531 116 L2549 109 L2547 102 L2557 107 L2553 117 L2564 118 L2559 111 L2576 107 L2615 113 L2605 94 L2668 91 L2660 85 L2672 79 L2808 66 L2844 53 L2872 65 L2941 72 L2894 88 L3032 100 L3033 93 L3070 94 L3113 122 L3123 112 L3199 115 L3191 106 L3205 102 L3295 108 L3330 122 L3390 121 L3409 136 L3478 134 L3496 143 L3508 140 L3505 129 L3586 136 L0 140 Z M895 135 L895 145 L908 137 L927 158 L945 131 L974 133 L987 138 L980 149 L987 154 L967 166 L942 164 L927 182 L868 210 L853 241 L868 242 L877 259 L977 279 L979 297 L1001 318 L1014 304 L1002 283 L1035 265 L1015 242 L1027 231 L1019 207 L1062 206 L1104 219 L1107 240 L1123 248 L1154 227 L1186 260 L1182 267 L1227 284 L1243 309 L1200 328 L1136 328 L1089 362 L1149 338 L1158 343 L1149 349 L1155 368 L1185 371 L1195 360 L1202 371 L1146 395 L1138 385 L1156 377 L1129 379 L1093 400 L1100 414 L1063 421 L1081 421 L1060 422 L1051 441 L1045 435 L1049 446 L1041 458 L1036 439 L1037 449 L1030 448 L1043 474 L987 516 L996 578 L983 571 L959 529 L908 527 L908 537 L898 539 L862 533 L834 547 L821 606 L837 637 L856 649 L880 643 L892 637 L897 620 L929 615 L911 671 L966 677 L962 719 L986 742 L1004 734 L1032 744 L1051 719 L1082 706 L1089 709 L1081 716 L1083 739 L1086 720 L1101 708 L1118 724 L1181 723 L1176 731 L1229 770 L1260 772 L1287 788 L1300 813 L1296 831 L1314 832 L1314 842 L1322 836 L1351 846 L1354 857 L1400 859 L1444 881 L1453 903 L1449 920 L1413 961 L1407 1009 L1391 1049 L1324 1079 L1311 1117 L1262 1174 L1238 1179 L1216 1169 L1232 1199 L1208 1217 L1177 1218 L1173 1240 L1149 1241 L1150 1251 L1165 1256 L1148 1265 L1144 1280 L1127 1286 L1124 1293 L1144 1302 L1140 1311 L1109 1337 L1118 1354 L1092 1359 L1090 1368 L1051 1353 L1044 1317 L1059 1299 L1044 1296 L1056 1271 L1068 1275 L1073 1254 L1057 1262 L1068 1223 L1064 1202 L1086 1154 L1098 1028 L1085 1004 L1040 976 L1002 902 L987 891 L986 877 L1002 857 L990 852 L991 841 L1029 792 L1018 747 L1004 741 L991 758 L943 731 L925 697 L888 691 L853 668 L834 673 L765 647 L745 631 L740 602 L678 540 L669 518 L652 512 L653 528 L706 598 L700 602 L678 583 L677 570 L649 553 L658 544 L627 500 L594 484 L556 427 L561 375 L553 348 L574 359 L572 340 L526 322 L522 307 L459 249 L329 221 L283 238 L294 217 L216 270 L152 286 L223 254 L230 241 L180 243 L181 234 L162 232 L139 215 L154 199 L192 192 L185 186 L192 182 L150 186 L119 173 L155 164 L183 169 L132 146 L234 116 L435 141 L519 125 L542 135 L585 132 L661 146 L647 151 L711 156 L722 151 L712 147 L718 143 L739 142 L785 154 L823 144 L839 148 L839 157 L858 139 L835 129 L848 111 L885 128 L876 133 L895 135 Z M658 99 L653 103 L701 100 L718 113 L716 99 L735 99 L755 120 L790 130 L773 135 L776 142 L667 145 L627 130 L676 126 L621 125 L616 121 L639 117 L606 114 L621 103 L658 99 Z M934 98 L942 105 L977 92 L992 109 L1022 102 L1059 117 L1078 114 L1130 138 L1112 143 L1181 161 L1161 180 L1120 167 L1153 196 L1150 203 L1112 193 L1138 211 L1052 183 L1023 188 L1014 184 L1021 177 L1060 175 L1071 153 L1010 128 L951 130 L901 118 L906 99 L942 92 L934 98 Z M595 116 L569 121 L541 111 L561 93 L551 87 L645 95 L595 116 Z M718 68 L743 75 L678 86 L661 83 L682 78 L623 78 L646 65 L709 75 L695 66 L718 68 Z M2375 123 L2337 122 L2315 110 L2356 79 L2489 65 L2385 87 L2354 106 L2375 123 Z M853 59 L908 74 L989 73 L1002 81 L902 85 L829 62 L853 59 Z M1983 33 L2015 40 L1959 62 L1904 33 L1983 33 Z M2799 41 L2750 40 L2712 27 L2759 17 L2802 32 L2799 41 Z M930 33 L942 37 L892 48 L833 28 L876 17 L930 33 Z M1115 0 L1181 4 L1123 15 L1145 15 L1088 32 L1031 37 L1046 45 L1002 58 L1021 62 L994 68 L905 65 L922 58 L917 51 L950 55 L920 46 L949 37 L931 27 L982 25 L924 25 L884 11 L989 0 L1115 0 Z M1529 0 L1592 3 L1481 8 L1579 13 L1568 18 L1642 11 L1678 17 L1600 28 L1623 29 L1603 42 L1603 54 L1615 60 L1583 64 L1602 69 L1604 78 L1593 78 L1606 87 L1564 97 L1577 108 L1552 107 L1582 123 L1545 116 L1548 122 L1536 128 L1577 129 L1402 175 L1372 203 L1366 229 L1317 221 L1284 194 L1260 158 L1291 131 L1253 134 L1256 122 L1286 124 L1242 113 L1253 104 L1214 75 L1115 69 L1086 60 L1132 56 L1067 50 L1143 36 L1120 29 L1197 10 L1296 6 L1355 13 L1332 4 L1529 0 Z';
+const LAT_TOP = 83, LAT_BOT = -56;
+// Japan, from the same file in the same units: Honshu with Kyushu, which this simplification joins.
+const JAPAN = 'M3210 459 L3203 479 L3158 495 L3151 484 L3110 491 L3120 499 L3113 515 L3102 516 L3094 497 L3126 476 L3157 475 L3167 457 L3174 462 L3194 448 L3199 424 L3214 416 L3219 438 L3210 459 Z';
+const MAP = { type: 'shape', path: WORLD, grid: 'square', size: 0.92, width: 0.94, y: 0.46 };
+
+
+/* ======================  SCENE REFERENCE  =============================
+
+   A talk is a list of scenes; each click moves to the next. The same dots
+   live through all of them — nothing is created or destroyed, each dot
+   just gets a new job — which is why a word can collapse into a bar chart.
+
+   Every dot is the same size everywhere (SETTINGS.radius), so a scene
+   sizes ITSELF around the dots it has. The rehearsal bar reports how many
+   a scene used, and warns you in orange if it wanted more than exist.
+
+   ---- THE MODES -------------------------------------------------------
+   Pick by what the moment has to say.
+
+   PICTURES — the dots travel to their places and then hold still. Good for
+   a point you will stand and talk to.
+     text    a word or short line, spelled out in dots
+     shape   disc, ring, heart, star, arrow, or any SVG path (a logo)
+     grid    a tidy block of dots, with a share of it lit up  → "1 in 5"
+     field   a grid covering the whole stage, perfect or knocked out of true
+             → a system, a population, everyone in the room, order itself
+     split   two or more clumps  → "80 / 20"
+     bars    a bar chart where each dot is one unit
+     line    a line or area chart
+     compose several pictures at once, each with its own place, colour and
+             dot budget  → a word inside a box, six screens in a row
+     blank   no dots at all: the wall goes dark, and only labels show
+
+   AMBIENT — nothing ever settles, so these can run for as long as you
+   talk over them.
+     float   weightless drift. The resting state; good to open and close on.
+     rise    everything lifts slowly and bobs, as if on a column of air
+             from below, spread right across the stage. A dot leaving the
+             top reappears at the bottom, so it never runs out.
+             → potential, optimism, things surfacing, ideas bubbling up.
+     spotlight  a chosen NUMBER of dots turn one colour and gather loosely
+             near the middle; every other dot keeps the default colour and
+             drifts out at the sides. Everything keeps moving very gently.
+             → "these few, out of all of these".
+     storm   fast, churning, turbulent motion. Add swirl for a tornado.
+             → chaos, overwhelm, the market, the noise.
+     walk    one dot strolls across the stage with a merry bounce, and
+             every dot in its path bolts out of the way, up or down, so it
+             leaves a cleared corridor behind it.
+             → one person changing a room, a cut through the noise.
+     stream  lanes of dots flowing across the stage, each at its own pace.
+             → what should be fast and what should be slow.
+     flock   a murmuration: the whole crowd flying as one, pouring into sheets
+             and turning together, every dot steering by its neighbours alone.
+             → moving as one, a movement, a crowd with a will of its own.
+
+   PHYSICS
+     gravity  weight switches on: the dots fall, land and pile up for real.
+              Any direction, and different groups can fall different ways.
+
+   ---- OPTIONS ANY SCENE TAKES -----------------------------------------
+     title   'Act 2: the turn'   shown only in the rehearsal bar, never on stage
+     color   'magenta'           a name from COLORS, or any CSS colour
+     speed   1 normal, 0.5 half, 2 double — this scene only
+     stagger seconds between the first dot setting off and the last
+     labels  words on stage, any scene:
+             [{ text: '1 in 5', x: 0.5, y: 0.9, size: 0.08, color: 'magenta', weight: 700 }]
+             x, y and size are fractions of the stage. align: 'left' | 'center' | 'right'.
+             font: 'Menlo, monospace' sets one label's typeface (code on the wall).
+             A label the next scene repeats exactly stays up rather than
+             blinking, so a list can build a line per click.
+     radius  ball size for this one scene; normally leave it, so every ball matches
+     ease    seconds for this scene's dials to glide from where the last scene
+             left them, instead of changing at the click: a storm after a storm
+             gathers or calms, a rise lifts harder, a drift quickens. The Ramp,
+             as a glide.
+     pulse   0.2 swells every dot by up to a fifth and lets it go, beat after
+             beat, a ripple spreading out from the middle: a heartbeat, a
+             breath. pulseRate is the beats per minute (60). Only the drawing
+             swells, so nothing moves and no picture changes size.
+     tremble 0.4 sets every dot quivering where it stands, a few times a
+             second, each on a course of its own, by up to that share of its
+             radius: 0.4 a gentle jitter, 1 nervous, 2 a shake. Only the
+             drawing trembles, so a picture still holds and a recolour still
+             moves nothing. With ease it gathers or settles slowly.
+     cycle   seconds: with colors, every dot moves on to the next colour in
+             the list this often, each at a moment of its own, so the palette
+             shimmers with no click (float, rise, storm, flock, any picture).
+     fade    how long a dot takes to change colour, in seconds (0.25); 2 is a
+             slow bleed from one colour into the next
+     opacity 0.4 dims the dots the scene uses, in any scene and any compose
+             part: the ghost of a word, a crowd in mourning. The spare dots
+             keep their own extrasOpacity.
+
+   ---- OPTIONS THE PICTURE MODES TAKE ----------------------------------
+     x, y          where the picture sits, as fractions of the stage (0 to 1)
+     size, width, height    how big, as fractions of the stage
+     align, valign what x and y MEAN, for `text` and for a `shape` drawn from a
+                   path. By default the picture is centred on that point.
+                   align: 'left' or 'right' hangs its left or right edge there
+                   instead, and valign: 'top' or 'bottom' does the same
+                   vertically — useful when you stand in front of the wall and
+                   want the words kept off to one side. Text with more than one
+                   line aligns its lines to match.
+     colors  ['amber','cyan']       alternating
+     gradient ['amber','magenta']   across the shape
+     order   who moves first: 'left','right','top','bottom','center','edges','random'
+     bounce  0 settles smoothly, 1 is very springy
+     burst   1 makes the dots jump outwards before they regroup
+     extras  what the SPARE dots do — the ones this picture doesn't need:
+               'drop'  (default) they fall to the floor under gravity and
+                       wait there, in shot, dim, until a later scene calls
+                       them back up. The crowd sitting down while the point
+                       is made; nothing ever appears from thin air.
+               'hide'  they shrink away to nothing — a true void
+               'dim'   they drift faintly in the background
+             extrasOpacity: 0.35 sets how bright the waiting pile is (or
+             the dim drift), extrasColor: 'violet' recolours it. SETTINGS
+             can change the default for the whole talk (extras: 'hide').
+             A blank scene always hides: its point is that every dot leaves.
+
+   ---- PER-MODE OPTIONS ------------------------------------------------
+
+   { type: 'text', text: 'HELLO', style: 'bold' }
+       style 'bold' draws the word as a solid filled letterform, 'outline'
+       strings the dots along the letters' edges; leave it off for LED-sign
+       letters (about 15 dots per letter). \n splits lines.
+
+   { type: 'shape', shape: 'heart' }          disc, ring, heart, star, arrow
+   { type: 'shape', path: 'M10 10 H90 L50 90 Z' }   any SVG path — a logo, an icon
+       outline: true strings the dots along the edge instead of filling it.
+   { type: 'shape', shape: 'disc', core: 0.5, coreColor: 'orange' }
+       core colours the dots nearer the centre than that fraction of the
+       radius (0.5 is the inner half of the radius, a quarter of the dots).
+       Any filled shape; the rest keep the shape's colour.
+   { type: 'shape', path: WORLD, highlightRegion: INDIA, highlightColor: 'green' }
+       lights the dots inside a second path given in the SAME units as the
+       picture's own path — a country on a map. highlightScale enlarges them.
+
+   { type: 'grid', highlight: 0.2, highlightColor: 'magenta' }
+       highlight   a share (0.2) or a count (12) of the grid lit up
+       pick        which ones: 'random' (default), 'left', 'right', 'center',
+                   'edges', or a point [0.1, 0.5] to light the dots nearest it
+       cols        force a number of columns
+   { type: 'grid', highlightShape: 'heart', highlightColor: 'magenta' }
+       lights up the dots that fall inside a shape instead — a named one or
+       any SVG path as highlightPath — sized and placed with highlightSize,
+       highlightWidth, highlightX and highlightY, like a shape scene. The grid
+       does not move: a picture appears inside a picture already on stage.
+   { type: 'shape', path: WORLD, highlightAt: [[0.52, 0.31], [0.7, 0.4]],
+     highlightColor: 'cyan', highlightScale: 1.4 }
+       ANY picture mode can light the dot nearest each of a list of points,
+       given as fractions of the picture's own box (0,0 top left, 1,1 bottom
+       right): pins on a map, cities on a dotted world. highlightScale makes
+       every lit dot bigger, for highlightAt, highlight and highlightShape
+       alike. Nothing moves between the plain picture and the lit one.
+
+   { type: 'field' }                           a perfect grid, filling the stage
+   { type: 'field', jitter: 0.6 }              the same grid, knocked out of true
+       jitter  how far each dot sits off its spot: 0 is a perfect grid, 1 lets a
+               dot stray half a cell in any direction. 0.15 reads as hand-placed,
+               0.6 as loose, 1 as scattered. The wobble is fixed rather than
+               animated, and is the same every time you replay the scene.
+       cols, rows   force the shape of the grid; leave both off and the cells
+               come out as square as the dots on hand allow
+       margin  inset from the edges, as a fraction of the stage (0 fills it)
+       highlight, highlightColor, pick, seed   exactly as for grid, above
+       Where grid centres a block at the dots' own spacing, field spreads
+       whatever dots it has across the entire stage, however few they are.
+
+   { type: 'split', groups: [ { share: 0.8, x: 0.32, label: '80%' },
+                              { share: 0.2, x: 0.8, color: 'magenta', label: '20%' } ] }
+
+   { type: 'bars', values: [18, 26, 35], labels: ['2024','2025','2026'] }
+       showValues: true prints each number above its bar. colors: [...] per bar.
+       perDot: 5 fixes the scale (one dot = 5 units) instead of using every dot.
+       cols: 20 fixes how many dots wide every bar is. With perDot and cols both
+       set, a bar whose value has not changed does not move between scenes, so
+       one bar can climb while the other stands still.
+
+   { type: 'line', values: [12, 15, 13, 19], labels: ['2016','','',''] }
+       area: true fills underneath. zero: true starts the axis at zero.
+
+   { type: 'compose', parts: [
+       { type: 'shape', path: 'M0 0 H100 V20 H0 Z', outline: true, dots: 300, y: 0.3 },
+       { type: 'text', text: 'HELLO', style: 'bold', dots: 400, y: 0.3, height: 0.15 } ] }
+       Every picture mode can be a part, with all of its own options. Give each
+       part a dots budget. Between two compose scenes, a part that has not
+       changed does not move, so one part can arrive while the rest hold.
+
+   { type: 'blank' }                           the wall goes dark; labels still show
+
+   { type: 'gravity' }                         straight down
+   { type: 'gravity', dir: 'down-left' }       or 'left','right','up','down-right'…
+   { type: 'gravity', groups: [ { share: 0.8, dir: 'down-left' },
+                                { share: 0.2, dir: 'down-right', color: 'magenta' } ] }
+       strength  1 is normal gravity, 0.4 is the moon
+       bounce    how lively the landing is
+       Played again on a crowd that has already fallen the same way, it lets
+       it lie: a new color or opacity changes the dots where they rest, and
+       not one of them moves.
+
+   { type: 'rise' }
+       lift   how fast they climb: 1 normal (about an 11-second climb from the
+              floor to the top), 0.5 a lazy drift, 2 a real updraught
+       sway   how much they wander sideways on the way up (1 normal, 0 straight up)
+       bob    how much they bobble as they climb (1 normal, 0 smooth)
+
+   { type: 'spotlight', count: 12, color: 'amber' }
+       count   how many dots light up — a number (12) or a share (0.1)
+       color   what they turn (default magenta); everything else stays
+               SETTINGS.color, or set restColor to change that too
+       spread  how loosely the lit ones gather: 1 normal, 0.5 a tight knot,
+               2 a loose scatter
+       x, y    where the middle is, if not the middle of the stage
+       clear   how far the unlit ones keep out of that space (1.25 normal)
+       Everything drifts very gently here; speed: 1 makes it livelier.
+
+   { type: 'storm' }
+       gust    how hard it blows: 1 normal, 0.5 a squall, 2 alarming
+       eddy    size of the swirls, as a fraction of stage height (0.55 normal;
+               smaller is more frantic, larger is more rolling)
+       swirl   0 is formless churn (default); 1 pulls it into a tornado
+       x, y    where the eye of the tornado sits
+
+   { type: 'stream', lanes: [ { y: 0.3, height: 0.3, speed: 2, share: 0.5 },
+                              { y: 0.7, height: 0.3, speed: 0.3, share: 0.5, color: 'orange' } ] }
+       lanes of dots flowing left to right, each at its own pace, forever.
+       speed 1 crosses the wall in about 15 seconds: 0.3 crawls, 3 races, and
+       a negative speed flows the other way. y and height place the band,
+       share splits the crowd between lanes, color is per lane. A dot leaving
+       one side comes back in at the other. → fast lanes and slow lanes.
+
+   { type: 'flock' }
+       cohesion    how hard each dot keeps to its neighbours: 1 normal, 2 one
+                   dense body, 0.4 a loose and restless crowd
+       alignment   how much it turns the way they are heading (1)
+       separation  how much room it keeps from the nearest (1)
+       range       how far it sees its neighbours, as a fraction of stage
+                   height (0.16)
+       flocks      several flocks, each a body of its own in a stretch of the
+                   stage of its own, left to right; each turns back from the
+                   line between it and the next, so the flocks share the stage
+                   and never merge. A number for that many alike (with colors,
+                   each takes one), or a flock per item, each with its share of
+                   the crowd and a colour of its own:
+                   [ { share: 0.7, color: 'white' }, { share: 0.3, color: 'orange' } ]
+                   → us and them, teams, silos, the many and the few.
+       avoid       how hard several flocks keep apart (1): 0 lets them fly
+                   through one another as one crowd; above 1 each turns back
+                   sooner, leaving open ground between them.
+       x, y        home, which the flock keeps returning to (the middle); with
+                   several flocks, the middle of their homes
+       colors, opacity and cycle work as they do for float.
+
+   { type: 'walk', color: 'amber' }
+       color       the walker (the crowd stays SETTINGS.color, or set crowdColor)
+       seconds     how long the crossing takes (9 by default) — THE main dial
+       y           the height it walks at (0.5 by default)
+       from, to    where it starts and ends across the stage (0.04 → 0.96)
+       hop         how high the merry bounce is (0.055 of stage height)
+       cadence     hops per second (1.9); lower is a stroll, higher is a scurry
+       reach       how close it gets before a dot panics (0.42 of stage height)
+       fear        how hard they bolt: 1 normal, 0.4 a polite shuffle, 2 terror
+       calm        how much the crowd stirs while it waits, and so how long the
+                   cleared path stays open: 0.25 normal, 1 as restless as float
+                   (which lets the crowd close the path up behind the walker)
+       walkerSize  1 normal; 1.6 makes the hero ball read from the back row
+       walkers     how many walk, in a line, one behind the other (1)
+       loop        true sends it across again and again
+       It ploughs through whatever is already on stage, so put it after a
+       float, rise or storm scene for a full crowd to part — or straight
+       after a word, to have it walk through the word and scatter it.
+
+   ---- ASSETS -----------------------------------------------------------
+   A long string that more than one scene uses — an SVG path, a list of
+   points — can live in a `const ASSETS = { world: 'M…' }` above SCENES and
+   be written as ASSETS.world in each scene. The director saves files this
+   way; by hand it is just tidier.
+
+   ====================================================================== */
+
+const SCENES = [
+
+/* ===== OPENING: one dot, then the room ======================
+   Scenes 1 to 3 hold the room on one picture: it lights up, then trembles, but no dot goes
+   anywhere until the circle (4). That first journey is the big one: don't spend it earlier. */
+
+  { title: 'One white dot, the room in the dark', ...GRID, color: 'night', ...MIDDLE },
+
+  // Only the colour changes: not one dot moves.
+  { title: 'The lights come up: the grid in grey', ...GRID, color: 'grey', ...MIDDLE },
+
+  // Still nothing travels: every dot trembles where it stands, and the trembling gathers over three
+  // seconds. The white dot trembles with them.
+  { title: 'Everything starts to tremble', ...GRID, color: 'grey', ...MIDDLE, tremble: 0.5, ease: 3 },
+
+  // The first time any dot goes anywhere. The white dot stays in the middle; everyone else gathers round it.
+  { title: 'Everyone gathers into a circle', type: 'shape', shape: 'disc', size: 0.9,
+    highlightAt: [[0.5, 0.5]], highlightColor: 'white' },
+
+/* ===== THE BOX, THE CAT, THE WORLD ====================== */
+
+  // The box everyone types into now. The white is the button you press.
+  { title: 'The prompt box, and its button', ...PROMPT },
+
+  { title: 'A cat', ...CAT },
+
+  { title: 'The world', ...MAP },
+
+  // Only colour changes: the map holds and Japan lights. Japan is about 0.2% of the map's land, so
+  // the whole world at 1200 dots gives it one dot, whatever the dot size; highlightScale makes that
+  // one big enough to read from the back of the room.
+  { title: 'Japan, in green', ...MAP, highlightRegion: JAPAN, highlightColor: 'green', highlightScale: 1.8 },
+
+/* ===== THE STORM: the same turbulence as du26 ====================== */
+
+  // The opening grid again, on the same spots, trembling harder than at the start. No white dot now.
+  { title: 'Back to the grid, trembling', ...GRID, color: 'grey', tremble: 0.8 },
+
+  { title: 'Storm 1/4', type: 'storm', gust: 0.1 },
+  { title: 'Storm 2/4', type: 'storm', gust: 0.4 },
+  { title: 'Storm 3/4', type: 'storm', gust: 0.8 },
+  { title: 'Storm 4/4', type: 'storm', swirl: 1, gust: 1.1 },
+
+  { title: 'Everything crashes to the floor', type: 'gravity' },
+
+/* ===== THE WALK ====================== */
+
+  // A walk leaves the crowd where the last scene put it, so the crowd has to be standing for the
+  // walker to split it: it gets back up into the grid first. Still, so the corridor reads.
+  { title: 'The crowd gets back up into the grid', ...GRID, color: 'grey' },
+
+  // Spent once. One dot of the grid turns green and walks; the crowd splits above and below it into
+  // two bands, and the path stays open behind. calm is low so the grid ahead of it barely stirs
+  // and the corridor's edges stay clean (du26 used 0.22, which loosens the crowd within seconds).
+  { title: '★ THE WALK: one green dot splits the crowd', type: 'walk',
+    color: 'green', crowdColor: 'grey', seconds: 11, walkerSize: 1.3,
+    hop: 0.05, cadence: 1.6, fear: 1.2, reach: 0.34, calm: 0.06 },
+
+  { title: 'Everything crashes down', type: 'gravity' },
+];
+
+/* ---------- 2. ENGINE: no need to edit below this line ---------------- */
+(() => {
+'use strict';
+
+/* Dottie engine, version below. Copyright (c) 2026 Tey Bannerman.
+   Licensed under the PolyForm Shield License 1.0.0: https://polyformproject.org/licenses/shield/1.0.0
+
+SPDX-License-Identifier: LicenseRef-PolyForm-Shield-1.0.0
+Required Notice: Copyright (c) 2026 Tey Bannerman (https://madewithdottie.com)
+Licensor Line of Business: Dottie presentation software and services (https://madewithdottie.com)
+
+   Additional permission for talks: whatever the licence's Noncompete section says, anyone may make,
+   edit, present, copy, share and sell talks built with the Dottie engine, for themselves
+   or for clients. The rest of the licence still applies, and this permission will not be withdrawn.
+   It covers talks, not products or services through which other people make talks, such as an
+   editor or a generator; those stay under the Noncompete section.
+
+   The version is bumped on every engine change, so an editor opening this file knows what the engine
+   in it can do and can offer to upgrade it. The talk above this line is its author's own; the scene
+   reference in it comes with the engine, on the same terms. */
+const ENGINE_VERSION = '2026.10.16';
+
+// A setting section 1 leaves out takes the template's own value here, before anything reads it. Read
+// as undefined, the stage's size, the dot size, the speed or the motion blur turns every dot's position
+// to NaN, and a NaN stage draws nothing and says nothing; a missing background is painted in whatever
+// colour was drawn last, and a missing font sets the words in the browser's serif. The stage falls back
+// to 16:9, and dots and radius stay a pair: whichever is given sets the other at the density the
+// director gives a new talk, the crowd covering 0.16 of the stage at the fill spacing (GAP.fill below).
+{
+  const S = SETTINGS, ok = v => v != null && v !== '' && Number.isFinite(+v), pos = v => ok(v) && +v > 0;
+  if (!pos(S.width) && !pos(S.height)) { S.width = 1920; S.height = 1080; }
+  else if (!pos(S.width)) S.width = Math.round(S.height * 16 / 9);
+  else if (!pos(S.height)) S.height = Math.round(S.width * 9 / 16);
+  const cover = 0.16 * S.width / S.height, fill = 2.35;
+  if (!pos(S.dots)) S.dots = pos(S.radius) ? Math.min(3000, Math.max(1, Math.round(cover / (S.radius * fill) ** 2))) : 500;
+  if (!pos(S.radius)) S.radius = +Math.max(0.003, Math.min(0.08, Math.sqrt(cover / S.dots) / fill)).toFixed(4);
+  for (const [k, v] of Object.entries({ speed: 1, motionBlur: 0.6, extrasOpacity: 0.35 })) if (!ok(S[k])) S[k] = v;
+  for (const k of ['width', 'height', 'dots', 'radius', 'speed', 'motionBlur', 'extrasOpacity']) if (typeof S[k] !== 'number') S[k] = +S[k];
+  for (const [k, v] of Object.entries({ color: '#fff0da', background: '#000000', labelColor: '#a8a29a', extras: 'drop',
+    labelFont: 'Barlow, "Helvetica Neue", Helvetica, Arial, sans-serif',
+    boldFont: 'Barlow, "Arial Black", "Helvetica Neue", Arial, sans-serif' })) if (S[k] == null || S[k] === '') S[k] = v;
+}
+
+const W = SETTINGS.width, H = SETTINGS.height, N = Math.max(1, SETTINGS.dots | 0);
+const TAU = Math.PI * 2, GOLDEN = Math.PI * (3 - Math.sqrt(5));
+const PHY = {               // every distance scales with the screen height
+  maxSpeed: 3.2 * H,        // cruising speed, px/s
+  accel: 4.2 * H,           // how hard dots speed up and brake, px/s²
+  near: 5.5,                // stiffness of the final settle, 1/s
+  gravity: 3.4 * H,         // px/s²
+  float: 0.075 * H,         // drifting speed, px/s
+  rest: 0.06 * H,           // impacts slower than this don't bounce, so piles can settle
+  friction: 4,              // rolling resistance between touching dots, 1/s
+};
+const SUB = 8;              // physics sub-steps per frame
+// Dots are always the same size, so scenes size themselves to fit the dots. These are the
+// centre-to-centre spacings each kind of scene uses, measured in dot radii.
+const GAP = { fill: 2.35, grid: 2.8, clump: 2.5, bars: 2.3, line: 2.1 };
+const STAGGER = { float: 0.8, text: 1.0, shape: 0.9, grid: 1.1, field: 1.2, split: 1.0, bars: 1.6, line: 1.4, gravity: 0,
+                  rise: 0.8, spotlight: 1.2, storm: 0.25, walk: 0, stream: 0.8, flock: 0.8 };
+const PACE = { spotlight: 0.45 };   // modes that want to run gentler than everything else by default
+const COLLIDE = { phys: 1, float: 1, roam: 1, rise: 1, storm: 1, stream: 1, flock: 1 };  // modes whose dots knock into each other
+const DIRS = {
+  down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0],
+  'down-left': [-0.5, 0.866], 'down-right': [0.5, 0.866], 'up-left': [-0.5, -0.866], 'up-right': [0.5, -0.866],
+};
+
+const canvas = document.getElementById('stage');
+const ctx = canvas.getContext('2d', { alpha: false });
+const $ = s => document.querySelector(s);
+const dots = [], labels = [], live = [];
+let view = 1, now = 0, cur = 0, note = '', fade = 1, fadeTo = 1, ready = false, walker = null, walkers = [];
+// Every dial any mode reads, at its resting value. go() rebuilds scn from this for each scene, and
+// it is also what the first frames run on, before the opening scene has been set. A dial missing
+// from here reads as undefined, which turns a dot's velocity to NaN; NaN spreads and never comes
+// back, so the stage would stay blank for the rest of the show. Add dials here, nowhere else.
+const DIALS = { speed: 1, bounce: 0.35, wander: 1, restitution: 0.4, calm: 1, lift: 1, sway: 1,
+                bob: 1, gust: 1, eddy: 0.55, swirl: 0, eyeX: W / 2, eyeY: H / 2, walk: null,
+                cohesion: 1, alignment: 1, separation: 1, range: 0.16, flocks: 1, zones: null, avoid: 1,   // flock
+                pulse: 0, pulseRate: 60, tremble: 0, cycle: 0, fade: 0.25, opacity: 1 };   // any scene: a heartbeat, a tremble, living colour, how bright
+let scn = { ...DIALS };
+// The dials that glide rather than jump: between two scenes when the second says `ease`, and when a
+// tool turns them with a 'dials' message. Each eases from where it stands to where it is going.
+const GLIDES = ['speed', 'wander', 'calm', 'lift', 'sway', 'bob', 'gust', 'eddy', 'swirl', 'eyeX', 'eyeY',
+                'cohesion', 'alignment', 'separation', 'range', 'avoid', 'pulse', 'pulseRate', 'tremble', 'opacity'];
+let eases = {}, beat = 0, dimNow = false;
+
+/* ---------- colour helpers ---------- */
+const colorCache = new Map(), unknownColors = new Set(), missedColors = new Set();
+let scratchCtx = null;
+const scratch = () => scratchCtx || (scratchCtx = document.createElement('canvas').getContext('2d'));
+function toRGB(c) {
+  const key = String(c ?? SETTINGS.color);
+  if (!colorCache.has(key)) {
+    const g = scratch(), want = COLORS[key] || key;
+    g.fillStyle = '#000';
+    g.fillStyle = want;                           // the browser parses any CSS colour...
+    const s = g.fillStyle;
+    g.fillStyle = '#fff';
+    g.fillStyle = want;                           // ...and leaves the last one standing when it cannot
+    let out = [255, 255, 255];
+    if (s !== g.fillStyle) { unknownColors.add(key); if (key !== String(SETTINGS.color)) out = toRGB(SETTINGS.color); }
+    else if (s[0] === '#') { const n = parseInt(s.slice(1, 7), 16); out = [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+    else { const p = s.match(/[\d.]+/g); if (p) out = [+p[0], +p[1], +p[2]]; }
+    colorCache.set(key, out);
+  }
+  if (unknownColors.has(key)) missedColors.add(key);   // a misspelt colour falls back to the talk's, and the note says so
+  return colorCache.get(key).slice();
+}
+const css = c => `rgb(${c[0] | 0},${c[1] | 0},${c[2] | 0})`;
+function gradientAt(stops, t) {
+  t = Math.max(0, Math.min(1, t));
+  if (stops.length === 1) return stops[0].slice();
+  const f = t * (stops.length - 1), i = Math.min(stops.length - 2, Math.floor(f)), u = f - i;
+  return [0, 1, 2].map(k => stops[i][k] + (stops[i + 1][k] - stops[i][k]) * u);
+}
+function rng(seed) {
+  let s = (seed >>> 0) || 1;
+  return () => {
+    s = (s + 0x6D2B79F5) >>> 0; let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function shuffle(a, rand = Math.random) {
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+function apportion(weights, n) {        // split n dots between groups, largest remainders first
+  const w = weights.map(v => Math.max(0, +v || 0)), sum = w.reduce((a, b) => a + b, 0);
+  if (!sum) return w.map(() => 0);
+  const raw = w.map(v => v / sum * n), out = raw.map(v => Math.floor(v));
+  let left = n - out.reduce((a, b) => a + b, 0);
+  raw.map((v, i) => [v - out[i], i]).sort((a, b) => b[0] - a[0]).forEach(([, i]) => { if (left > 0) { out[i]++; left--; } });
+  return out;
+}
+
+/* ---------- the dots ---------- */
+function makeDots() {
+  for (let i = 0; i < N; i++) {
+    const col = toRGB(SETTINGS.color), x = Math.random() * W, y = Math.random() * H;
+    dots.push({
+      x, y, vx: 0, vy: 0, fx: x, fy: y, bx: 0, by: 0,
+      r: 0, tr: 0, a: 1, ta: 1, col, tcol: col.slice(),
+      mode: 'float', prev: 'float', delay: 0, kick: null,
+      tx: 0, ty: 0, ox: 0, oy: 0, gx: 0, gy: 0, ogx: 0, ogy: 0, px: 0, py: 0, ivx: 0, ivy: 0, soft: false,
+      rx: x, ry: y, rw: 0, rh: 1, rk: 0, wrap: false,   // the patch of stage this dot keeps to (roam, rise)
+      flow: 0, wrapX: false,                             // its lane's pace, and sideways wrap (stream)
+      pal: null, ci: -1,                                 // its palette and its place in it, while colour cycles
+      dims: false, was: false, ao: 1,                    // one of this scene's own dots, so the opacity dial reaches it;
+                                                         // one of the last scene's; its light as a share of the scene's opacity
+      nc: 0, ncx: 0, ncy: 0, nvx: 0, nvy: 0, nsx: 0, nsy: 0,   // what its neighbours are doing (flock)
+      fk: 0, fn: 0, nax: 0, nay: 0,                      // which flock it flies with, of how many, and a push from the others
+      k: 0.82 + Math.random() * 0.36,       // each dot's own pace, so they never move in lockstep
+      ph: Math.random() * TAU,
+    });
+  }
+  if (sparesDefault() === 'drop') restDots();
+}
+// What the dots a picture does not need do, unless the scene says otherwise: fall to the floor and
+// wait there ('drop', the default), shrink away ('hide'), or drift faintly behind ('dim'). A blank
+// scene hides, because its whole point is that every dot leaves.
+const sparesDefault = () => SETTINGS.extras || 'drop';
+const sparesOf = sc => sc.extras || (sc.type === 'blank' ? 'hide' : sparesDefault());
+// Every dot starts the show resting on the floor, in the waiting pile's colour and brightness: a
+// crowd at the foot of the wall for the first scene to call up. Nothing ever appears from thin air.
+function restDots() {
+  const R = SETTINGS.radius * H, a = SETTINGS.extrasOpacity ?? 0.35, col = toRGB(SETTINGS.extrasColor || SETTINGS.color);
+  for (const d of dots) {
+    d.x = Math.random() * W; d.y = H - Math.random() * 0.3 * H; d.vx = 0; d.vy = 0; d.fx = d.x; d.fy = d.y;
+    d.r = R; d.tr = R; d.a = a; d.ta = a; d.col = col.slice(); d.tcol = col.slice();
+    d.mode = 'phys'; d.prev = 'phys'; d.delay = 0; d.kick = null;
+    d.gx = 0; d.gy = PHY.gravity * SETTINGS.speed ** 2;
+  }
+}
+const modeOf = d => (d.delay > 0 ? d.prev : d.mode);
+
+// Give a dot a new job. Until its delay runs out, it carries on with its old one.
+function retarget(d, mode, delay) {
+  if (!(d.delay > 0)) { d.prev = d.mode; d.ox = d.tx; d.oy = d.ty; d.ogx = d.gx; d.ogy = d.gy; }
+  d.mode = mode; d.delay = delay; d.kick = null;
+}
+
+/* ---------- forces ---------- */
+function seek(d, h, tx, ty) {
+  const sp = SETTINGS.speed * scn.speed * d.k, sp2 = sp * sp;
+  const dx = tx - d.x, dy = ty - d.y, dist = Math.hypot(dx, dy);
+  const near = PHY.near * sp, zeta = 1 - 0.65 * Math.max(0, Math.min(1, scn.bounce));
+  const gain = 4 * zeta * zeta * near;     // turns the last stretch into a damped spring
+  // the fastest speed from which the dot can still brake in time, capped at cruising speed
+  const want = Math.min(PHY.maxSpeed * sp, Math.sqrt(2 * PHY.accel * sp2 * dist), dist * near);
+  let ax = -d.vx, ay = -d.vy;
+  if (dist > 1e-3) { ax += dx / dist * want; ay += dy / dist * want; }
+  ax *= gain; ay *= gain;
+  const lim = PHY.accel * 1.6 * sp2, m = Math.hypot(ax, ay);
+  if (m > lim) { ax *= lim / m; ay *= lim / m; }
+  const v = Math.hypot(d.vx, d.vy);
+  if (v > 1) {                             // a slight sway in flight, so paths curve rather than run on rails
+    const sway = Math.sin(now * 2.1 * d.k + d.ph) * PHY.accel * 0.6 * sp2 * Math.min(1, v / (PHY.maxSpeed * sp)) * scn.wander;
+    ax -= d.vy / v * sway; ay += d.vx / v * sway;
+  }
+  d.vx += ax * h; d.vy += ay * h;
+}
+
+function drift(d, h) {
+  const target = PHY.float * SETTINGS.speed * scn.speed * scn.calm * (0.4 + (d.k - 0.82) / 0.36 * 1.2);
+  let v = Math.hypot(d.vx, d.vy);
+  if (v < 1e-3) { d.vx = Math.cos(d.ph); d.vy = Math.sin(d.ph); v = 1; }
+  const f = 1 + (target / v - 1) * Math.min(1, 1.2 * h);   // ease towards drifting speed
+  d.vx *= f; d.vy *= f;
+  const turn = Math.sin(now * 0.37 * d.k + d.ph) * 0.4 * h; // gentle meander
+  const vx = d.vx; d.vx -= d.vy * turn; d.vy += vx * turn;
+}
+
+// A soft home patch: drift as usual, but steer back on leaving it. With rk set it works the other
+// way round, steering out of the patch and keeping clear of it.
+function roam(d, h) {
+  drift(d, h);
+  if (!(d.rw > 0)) return;
+  const dx = (d.x - d.rx) / d.rw, dy = (d.y - d.ry) / d.rh, q = Math.hypot(dx, dy) || 1e-6;
+  const out = d.rk ? (q < 1 ? 1 - q : 0) : Math.min(1.5, Math.max(0, q - 1));
+  if (!out) return;
+  const pull = PHY.float * SETTINGS.speed * scn.speed * 8 * out * (d.rk ? -1 : 1);
+  d.vx -= dx / q * pull * h; d.vy -= dy / q * pull * h;
+}
+
+// Carried up on a column of air: a steady lift, a bobble in it, a sideways wander, and a slow pull
+// back to this dot's own lane so the crowd stays spread across the stage. Leaving the top puts a dot
+// back at the bottom (in solve), so the column never runs out.
+function lift(d, h) {
+  const sp = SETTINGS.speed * scn.speed, up = PHY.float * 1.3 * sp * scn.lift;
+  const bob = Math.sin(now * 1.7 * d.k + d.ph) * 0.55 * scn.bob;
+  const wantY = -up * (1 + bob) * (0.75 + (d.k - 0.82) / 0.36 * 0.5);
+  const lane = Math.max(-up, Math.min(up, (d.rx - d.x) * 0.4));
+  const wantX = Math.sin(now * 0.63 * d.k + d.ph * 1.7) * up * 0.8 * scn.sway + lane;
+  d.vx += (wantX - d.vx) * Math.min(1, 3 * h);
+  d.vy += (wantY - d.vy) * Math.min(1, 3 * h);
+}
+
+// A lane: a steady current along it, a bobble, and a pull back into the lane's own band when a dot
+// strays. Leaving one side of the stage puts a dot back in at the other (in solve), so a lane never
+// runs dry. speed 1 crosses the wall in about 15 seconds.
+function flow(d, h) {
+  const sp = SETTINGS.speed * scn.speed, v = (W / 15) * d.flow * sp * (0.85 + (d.k - 0.82) / 0.36 * 0.3);
+  const bob = Math.sin(now * 1.1 * d.k + d.ph) * PHY.float * 0.6 * sp;
+  const off = d.y - d.ry, out = Math.max(0, Math.abs(off) - d.rh), back = -Math.sign(off) * out * 2;
+  d.vx += (v - d.vx) * Math.min(1, 2.5 * h);
+  d.vy += (bob + back - d.vy) * Math.min(1, 2.5 * h);
+}
+
+// Turbulence. Each dot flies a course of its own and turns all the time, rather than following a
+// shared wind: any single flow field, however it is built, sweeps dots into the same few streams and
+// leaves the rest of the stage bare within seconds. eddy sets how tightly a dot curls, gust how fast
+// it travels, and swirl steers the whole crowd around one point, which makes it a tornado.
+function churn(d, h) {
+  const sp = SETTINGS.speed * scn.speed, v = PHY.maxSpeed * 0.34 * sp * scn.gust * d.k;
+  let was = Math.hypot(d.vx, d.vy);
+  if (was < 1) { d.vx = Math.cos(d.ph) * v; d.vy = Math.sin(d.ph) * v; was = v || 1; }   // at gust 0, a still storm
+  const wobble = Math.sin(now * (2.1 + d.k * 1.7) + d.ph) + 0.6 * Math.sin(now * 4.3 * d.k + d.ph * 2.7);
+  const ang = wobble * 1.5 * v / Math.max(1, scn.eddy * H) * h;   // a curl radius of about eddy x H
+  const c = Math.cos(ang), n = Math.sin(ang);
+  let vx = d.vx * c - d.vy * n, vy = d.vx * n + d.vy * c;
+  if (scn.swirl) {                       // a tornado: every dot circles the eye at a radius of its own
+    const R = 0.26 * W, AR = R / (0.46 * H);   // stretched, so a wide stage still swirls rather than orbits
+    const ax = d.x - scn.eyeX, ay = (d.y - scn.eyeY) * AR;
+    const q = (Math.hypot(ax, ay) / R) || 1e-3, nx = ax / (q * R), ny = ay / (q * R);
+    const home = 0.25 + 0.75 * (d.k - 0.82) / 0.36;
+    const pull = Math.max(-1, Math.min(1, (home - q) * 2));
+    let wx = -ny + nx * pull * 0.8, wy = (nx + ny * pull * 0.8) / AR;
+    const wl = Math.hypot(wx, wy) || 1, k = Math.min(1, 3 * scn.swirl * h);
+    vx += (wx / wl * v - vx) * k; vy += (wy / wl * v - vy) * k;
+  }
+  const m = 0.1;                         // turn back before reaching an edge, rather than piling on it
+  if (d.x < m * W) vx += v * 6 * h; else if (d.x > (1 - m) * W) vx -= v * 6 * h;
+  if (d.y < m * H) vy += v * 6 * h; else if (d.y > (1 - m) * H) vy -= v * 6 * h;
+  const f = 1 + (v / was - 1) * Math.min(1, 4 * h);   // and hold the gust speed
+  d.vx = vx * f; d.vy = vy * f;
+}
+
+// A murmuration. Every dot flies at a cruising speed of its own and steers by its neighbours alone:
+// away from any too close (separation), the way they are heading (alignment), and towards where they
+// are (cohesion). Nothing steers the crowd as a whole except the edges of the stage and a faint pull
+// home, so the sheets and swirls that form are the crowd's own. With several flocks, a dot sees only
+// its own flock, and each flock has a home of its own, spread across the stage. The neighbours are
+// found once a frame (neighbours, below); between frames each dot steers by what it saw.
+function swarm(d, h) {
+  const sp = SETTINGS.speed * scn.speed, cruise = PHY.maxSpeed * 0.15 * sp * (0.85 + (d.k - 0.82) / 0.36 * 0.3);
+  let v = Math.sqrt(d.vx * d.vx + d.vy * d.vy);
+  if (v < 1) { d.vx = Math.cos(d.ph) * cruise; d.vy = Math.sin(d.ph) * cruise; v = cruise || 1; }   // at speed 0, a still flock
+  const ux = d.vx / v, uy = d.vy / v;
+  let wx = ux, wy = uy;
+  if (d.nc) {
+    wx += d.nvx * scn.alignment * 1.8 + d.ncx * scn.cohesion * 2.2 + d.nsx * scn.separation * 1.45;
+    wy += d.nvy * scn.alignment * 1.8 + d.ncy * scn.cohesion * 2.2 + d.nsy * scn.separation * 1.45;
+  }
+  // How hard several flocks keep apart (avoid): not at all at 0, mingling; at 1 a dot keeps twice
+  // the room from another flock's dots that it keeps from its own, and turns back hard at the line
+  // between them. Above 1 they push no harder, since a flock pushed harder than it steers comes
+  // apart itself; they turn back sooner instead, leaving open ground between them.
+  const apart = Math.min(1, scn.avoid), keep = scn.separation * 2.9 * apart;
+  wx += d.nax * keep; wy += d.nay * keep;   // room from other flocks too
+  const wa = Math.sin(now * 0.45 * d.k + d.ph) * 0.35;   // each dot's own slow wander
+  wx -= uy * wa; wy += ux * wa;
+  const m = 0.16;                        // the edges turn it back, and home pulls it, more the further it strays
+  if (d.x < m * W) wx += (m * W - d.x) / (m * W) * 3; else if (d.x > (1 - m) * W) wx -= (d.x - (1 - m) * W) / (m * W) * 3;
+  if (d.y < m * H) wy += (m * H - d.y) / (m * H) * 3; else if (d.y > (1 - m) * H) wy -= (d.y - (1 - m) * H) / (m * H) * 3;
+  // Several flocks: each has a stretch of the stage of its own, left to right, its home in the middle
+  // of it, and turns back from the line between it and the next as it would from an edge, so the
+  // flocks share the stage and never become one; as hard as `avoid` says, so at 0 they mingle.
+  const nf = scn.flocks;
+  let home = scn.eyeX;
+  if (nf > 1) {
+    const f = d.fk % nf, lo = scn.eyeX + scn.zones[2 * f] * W, hi = scn.eyeX + scn.zones[2 * f + 1] * W, mw = Math.min(0.4, m * Math.max(1, scn.avoid)) * (hi - lo);
+    home = (lo + hi) / 2;
+    const wall = 6 * apart;
+    if (f > 0 && d.x < lo + mw) wx += (lo + mw - d.x) / mw * wall; else if (f < nf - 1 && d.x > hi - mw) wx -= (d.x - hi + mw) / mw * wall;
+  }
+  const hx = (home - d.x) / W, hy = (scn.eyeY - d.y) / H, far = Math.sqrt(hx * hx + hy * hy);
+  wx += hx * (0.4 + 2 * far); wy += hy * (0.4 + 2 * far);
+  const wl = Math.sqrt(wx * wx + wy * wy) || 1, k = Math.min(1, 2.2 * h);
+  let nx = ux + (wx / wl - ux) * k, ny = uy + (wy / wl - uy) * k;
+  const nl = Math.sqrt(nx * nx + ny * ny) || 1, s2 = v + (cruise - v) * Math.min(1, 1.5 * h);
+  d.vx = nx / nl * s2; d.vy = ny / nl * s2;
+}
+// What each flocking dot's neighbours in its own flock are doing: where they are on average (as a
+// pull, up to a range away), the way they are heading, and a push from any that are too close. The
+// flocking dots are sorted into cells half a range wide, flock by flock and row by row, so the cells
+// around a dot are a few runs of one list, read through no lookup; and each pair is measured once,
+// for both. Measured at 1200 dots in a slow headless browser, that is under a millisecond a frame,
+// where a grid of cells a range wide, each pair measured from both ends, took about seven. With
+// several flocks, a dot also keeps its room from the dots of the others, as it does from its own.
+const flockDots = [];
+let fkX = new Float64Array(0), fkY = fkX, fkU = fkX, fkV = fkX, fkSum = fkX;
+let fkCell = new Int32Array(0), fkStart = fkCell, fkAt = fkCell, fkN = fkCell, fkOf = fkCell;
+function neighbours() {
+  flockDots.length = 0;
+  for (const d of dots) if (modeOf(d) === 'flock') flockDots.push(d);
+  const n = flockDots.length;
+  if (!n) return;
+  const R = Math.max(4, scn.range * H), R2 = R * R, near = R * 0.38, near2 = near * near;
+  const cs = Math.max(R / 2, Math.sqrt(W * H / 4096)), ic = 1 / cs, span = Math.ceil(R / cs - 1e-9);
+  const cw = Math.ceil(W * ic) + 1, ch = Math.ceil(H * ic) + 1, nf = Math.max(1, scn.flocks | 0), cells = cw * ch * nf;
+  if (fkX.length < n) {
+    fkX = new Float64Array(n); fkY = new Float64Array(n); fkU = new Float64Array(n); fkV = new Float64Array(n);
+    fkSum = new Float64Array(n * 8); fkCell = new Int32Array(n); fkN = new Int32Array(n); fkOf = new Int32Array(n);
+  }
+  if (fkStart.length < cells + 1) { fkStart = new Int32Array(cells + 1); fkAt = new Int32Array(cells); } else fkStart.fill(0, 0, cells + 1);
+  for (let j = 0; j < n; j++) {         // off the stage counts as its edge: a sight line is never cut short by it
+    const d = flockDots[j];
+    let ix = (d.x * ic) | 0, iy = (d.y * ic) | 0;
+    ix = ix < 0 ? 0 : ix >= cw ? cw - 1 : ix; iy = iy < 0 ? 0 : iy >= ch ? ch - 1 : iy;
+    const c = ((d.fk % nf) * ch + iy) * cw + ix;
+    fkCell[j] = c; fkStart[c + 1]++;
+  }
+  for (let c = 0; c < cells; c++) { fkStart[c + 1] += fkStart[c]; fkAt[c] = fkStart[c]; }
+  for (let j = 0; j < n; j++) {
+    const d = flockDots[j], p = fkAt[fkCell[j]]++, v = Math.sqrt(d.vx * d.vx + d.vy * d.vy) || 1;
+    fkX[p] = d.x; fkY[p] = d.y; fkU[p] = d.vx / v; fkV[p] = d.vy / v; fkOf[p] = j;
+  }
+  fkN.fill(0, 0, n); fkSum.fill(0, 0, n * 8);
+  // each pair once, from whichever of the two comes first: the rest of its own row of cells, to
+  // the right, and the rows below it
+  for (let c = 0; c < cells; c++) {
+    const end0 = fkStart[c + 1];
+    if (fkStart[c] === end0) continue;
+    const ix = c % cw, iy = ((c / cw) | 0) % ch, base = c - iy * cw - ix;
+    const x0 = Math.max(0, ix - span), x1 = Math.min(cw - 1, ix + span), y1 = Math.min(ch - 1, iy + span);
+    for (let p = fkStart[c]; p < end0; p++) {
+      const x = fkX[p], y = fkY[p], up = fkU[p], vp = fkV[p], a = p * 8;
+      for (let r = iy; r <= y1; r++) {
+        const row = base + r * cw;
+        for (let q = r === iy ? p + 1 : fkStart[row + x0], end = fkStart[row + x1 + 1]; q < end; q++) {
+          const dx = fkX[q] - x, dy = fkY[q] - y, q2 = dx * dx + dy * dy;
+          if (q2 > R2 || q2 < 1e-12) continue;   // out of sight, or on top of it
+          const b = q * 8;
+          fkN[p]++; fkN[q]++;
+          fkSum[a] += dx; fkSum[a + 1] += dy; fkSum[b] -= dx; fkSum[b + 1] -= dy;
+          fkSum[a + 2] += fkU[q]; fkSum[a + 3] += fkV[q]; fkSum[b + 2] += up; fkSum[b + 3] += vp;
+          if (q2 < near2) {
+            const dist = Math.sqrt(q2), w = (near - dist) / near / dist;
+            fkSum[a + 4] -= dx * w; fkSum[a + 5] -= dy * w; fkSum[b + 4] += dx * w; fkSum[b + 5] += dy * w;
+          }
+        }
+      }
+    }
+  }
+  if (nf > 1 && scn.avoid > 0) {        // the other flocks, each pair once, from the lower flock
+    const A = near, A2 = near2, sa = Math.ceil(A / cs - 1e-9), block = cw * ch;
+    for (let c = 0; c < cells; c++) {
+      const end0 = fkStart[c + 1];
+      if (fkStart[c] === end0) continue;
+      const f = (c / block) | 0, ix = c % cw, iy = ((c / cw) | 0) % ch;
+      const x0 = Math.max(0, ix - sa), x1 = Math.min(cw - 1, ix + sa), y0 = Math.max(0, iy - sa), y1 = Math.min(ch - 1, iy + sa);
+      for (let p = fkStart[c]; p < end0; p++) {
+        const x = fkX[p], y = fkY[p], a = p * 8;
+        for (let g = f + 1; g < nf; g++) for (let r = y0; r <= y1; r++) {
+          const row = g * block + r * cw;
+          for (let q = fkStart[row + x0], end = fkStart[row + x1 + 1]; q < end; q++) {
+            const dx = fkX[q] - x, dy = fkY[q] - y, q2 = dx * dx + dy * dy;
+            if (q2 >= A2 || q2 < 1e-12) continue;
+            const dist = Math.sqrt(q2), w = (A - dist) / A / dist, b = q * 8;
+            fkSum[a + 6] -= dx * w; fkSum[a + 7] -= dy * w; fkSum[b + 6] += dx * w; fkSum[b + 7] += dy * w;
+          }
+        }
+      }
+    }
+  }
+  for (let p = 0; p < n; p++) {
+    const d = flockDots[fkOf[p]], k = fkN[p], a = p * 8;
+    d.nax = fkSum[a + 6]; d.nay = fkSum[a + 7];
+    d.nc = k;
+    if (!k) continue;
+    d.ncx = fkSum[a] / k / R; d.ncy = fkSum[a + 1] / k / R;
+    const vx = fkSum[a + 2], vy = fkSum[a + 3], vl = Math.sqrt(vx * vx + vy * vy) || 1; d.nvx = vx / vl; d.nvy = vy / vl;
+    d.nsx = fkSum[a + 4]; d.nsy = fkSum[a + 5];
+  }
+}
+
+// The walker: a scripted stroll with a bouncing gait. It chases its mark through a spring rather
+// than being placed there, so its speed stays real and the motion blur still streaks.
+function strut(d) {
+  const w = scn.walk;
+  if (!w) return;
+  let t = now - w.t0 - (d.wo || 0);        // a walker behind the leader starts that much later
+  if (w.loop && t > 0) t %= w.cross;     // a walker behind waits at the start for its turn
+  const u = Math.min(1, Math.max(0, t / w.cross));
+  const tx = w.x0 + (w.x1 - w.x0) * u, ty = w.y - Math.abs(Math.sin(t * w.cadence * Math.PI)) * w.hop;
+  let vx = (tx - d.x) * 12, vy = (ty - d.y) * 12;
+  const m = Math.hypot(vx, vy), cap = PHY.maxSpeed * SETTINGS.speed * scn.speed;
+  if (m > cap) { vx *= cap / m; vy *= cap / m; }
+  d.vx = vx; d.vy = vy;
+}
+
+// Everyone else during a walk scene: bolt clear, mostly up or down, hardest when it is right on top
+// of you. Nothing pulls them back afterwards, so the corridor stays open behind the walker.
+function flee(d, h) {
+  const w = scn.walk;
+  let near = walker, qn = Infinity;        // the nearest walker is the one to get away from
+  for (const k of walkers) { const qq = Math.hypot(d.x - k.x, (d.y - k.y) * 1.25); if (qq < qn) { qn = qq; near = k; } }
+  const dx = d.x - near.x, dy = d.y - near.y, q = qn;
+  if (q > w.reach) return;
+  const f = (1 - q / w.reach) ** 2 * w.fear;
+  d.vy += (dy < 0 || (dy === 0 && d.ph < Math.PI) ? -1 : 1) * f * h;
+  d.vx += (dx < 0 ? -1 : 1) * f * 0.25 * h;
+}
+
+// Collisions for dots under gravity or drifting. Overlaps are fixed by moving the dots, and their
+// velocity then follows what actually happened, which is what lets a pile come completely to rest.
+// Fast impacts still bounce, using the speed the dots had just before they touched.
+const contacts = [];
+function bounceOff(v, soft) { return soft ? v : (v > PHY.rest ? v * scn.restitution : 0); }
+function solve(h) {
+  live.length = 0; contacts.length = 0;
+  for (const d of dots) {
+    const m = modeOf(d);
+    if (!COLLIDE[m]) continue;
+    d.soft = m !== 'phys';               // only falling dots bounce; the rest just ease apart, because
+                                         // bouncing at storm speed jams dots into clumps within seconds
+    d.wrap = m === 'rise';
+    d.wrapX = m === 'stream';
+    live.push(d);
+  }
+  if (!live.length) return;
+  live.sort((a, b) => (a.x - a.r) - (b.x - b.r));
+  for (let i = 0; i < live.length; i++) {
+    const a = live[i];
+    if (a.r <= 0.5) continue;
+    for (let j = i + 1; j < live.length; j++) {
+      const b = live[j];
+      if (b.x - b.r > a.x + a.r) break;
+      if (b.r <= 0.5) continue;
+      const dx = b.x - a.x, dy = b.y - a.y, rr = a.r + b.r, d2 = dx * dx + dy * dy;
+      if (d2 >= rr * rr || d2 < 1e-9) continue;
+      const dist = Math.sqrt(d2), nx = dx / dist, ny = dy / dist, push = (rr - dist) / 2;
+      a.x -= nx * push; a.y -= ny * push; b.x += nx * push; b.y += ny * push;
+      contacts.push(a, b, nx, ny, (b.ivx - a.ivx) * nx + (b.ivy - a.ivy) * ny);
+    }
+  }
+  const cap = PHY.rest * 6;                // stops overlapping dots from springing apart violently
+  for (const d of live) {
+    const r = d.r;
+    let hit = 0;
+    if (d.wrapX) {                         // a lane dot leaves one side and comes back in at the other
+      const span = W + r * 2;
+      if (d.x > W + r) { d.x -= span; d.px -= span; } else if (d.x < -r) { d.x += span; d.px += span; }
+    } else if (d.x < r) { d.x = r; hit |= 1; } else if (d.x > W - r) { d.x = W - r; hit |= 2; }
+    if (d.wrap) {                          // a rising dot leaves the top and comes back up from the floor
+      const span = H + r * 2;              // px moves with it, so the dot keeps the speed it had
+      if (d.y < -r) { d.y += span; d.py += span; d.rx = Math.random() * W; }
+      else if (d.y > H + r) { d.y -= span; d.py -= span; }
+    } else if (d.y < r) { d.y = r; hit |= 4; } else if (d.y > H - r) { d.y = H - r; hit |= 8; }
+    let cx = (d.x - d.px) / h - d.ivx, cy = (d.y - d.py) / h - d.ivy;
+    const c = Math.hypot(cx, cy);
+    if (c > cap) { cx *= cap / c; cy *= cap / c; }
+    d.vx = d.ivx + cx; d.vy = d.ivy + cy;
+    if (hit) {                             // edges: bounce if it hit hard, and roll to a stop
+      const fr = d.soft ? 1 : Math.exp(-2.2 * h);
+      if (hit & 3) { const into = hit & 1 ? -d.ivx : d.ivx; if (into > 0) d.vx = (hit & 1 ? 1 : -1) * bounceOff(into, d.soft); d.vy *= fr; }
+      if (hit & 12) { const into = hit & 4 ? -d.ivy : d.ivy; if (into > 0) d.vy = (hit & 4 ? 1 : -1) * bounceOff(into, d.soft); d.vx *= fr; }
+    }
+  }
+  const grip = (1 - Math.exp(-PHY.friction * h)) / 2;
+  for (let c = 0; c < contacts.length; c += 5) {
+    const a = contacts[c], b = contacts[c + 1], nx = contacts[c + 2], ny = contacts[c + 3], pre = contacts[c + 4];
+    const soft = a.soft && b.soft;
+    const vn = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
+    const target = pre >= 0 ? vn : soft ? -pre : (-pre > PHY.rest ? -scn.restitution * pre : vn);
+    if (target > vn) { const j = (target - vn) / 2; a.vx -= j * nx; a.vy -= j * ny; b.vx += j * nx; b.vy += j * ny; }
+    if (!soft) {                           // a little rolling resistance between touching dots
+      const jt = ((b.vx - a.vx) * -ny + (b.vy - a.vy) * nx) * grip;
+      a.vx -= jt * ny; a.vy += jt * nx; b.vx += jt * ny; b.vy -= jt * nx;
+    }
+  }
+}
+
+function step(dt, sub = SUB) {
+  now += dt;
+  const dimming = dimNow || 'opacity' in eases;   // read before the glide below can finish and drop it
+  dimNow = false;
+  for (const k in eases) {                 // dials gliding to where a scene or a tool sent them
+    const e = eases[k], t = Math.min(1, (now - e.t0) / e.dur), s = t * t * (3 - 2 * t);
+    scn[k] = e.from + (e.to - e.from) * s;
+    if (t >= 1) delete eases[k];
+  }
+  beat += dt * scn.pulseRate / 60;
+  if (dimming) for (const d of dots) if (d.dims) d.ta = Math.min(1, scn.opacity * d.ao);   // the scene's own dots, never the pile
+  neighbours();
+  const h = dt / sub;
+  for (let s = 0; s < sub; s++) {
+    for (const d of dots) {
+      let m = d.mode, tx = d.tx, ty = d.ty, gx = d.gx, gy = d.gy;
+      if (d.delay > 0) {
+        d.delay -= h;
+        if (d.delay > 0) { m = d.prev; tx = d.ox; ty = d.oy; gx = d.ogx; gy = d.ogy; }
+        else if (d.kick) { d.vx += d.kick[0]; d.vy += d.kick[1]; d.kick = null; }
+      }
+      if (m === 'seek') seek(d, h, tx, ty);
+      else if (m === 'float') drift(d, h);
+      else if (m === 'roam') roam(d, h);
+      else if (m === 'rise') lift(d, h);
+      else if (m === 'storm') churn(d, h);
+      else if (m === 'stream') flow(d, h);
+      else if (m === 'flock') swarm(d, h);
+      else if (m === 'walk') strut(d);
+      else if (m === 'phys') { d.vx += gx * h; d.vy += gy * h; }
+      else { const f = Math.exp(-5 * h); d.vx *= f; d.vy *= f; }   // 'hold': glide to a stop
+      if (walker && m !== 'walk') flee(d, h);
+      d.px = d.x; d.py = d.y; d.ivx = d.vx; d.ivy = d.vy;
+      d.x += d.vx * h; d.y += d.vy * h;
+    }
+    solve(h);
+  }
+  const kr = 1 - Math.exp(-dt * 5), kc = 1 - Math.exp(-dt / Math.max(0.02, scn.fade));
+  if (scn.cycle > 0) for (const d of dots) {   // living colour: each dot moves along its palette at a moment of its own
+    if (!d.pal || d.delay > 0) continue;
+    const c = d.pal[(d.ci + Math.floor(now / scn.cycle + d.ph / TAU)) % d.pal.length];
+    d.tcol[0] = c[0]; d.tcol[1] = c[1]; d.tcol[2] = c[2];
+  }
+  for (const d of dots) {
+    if (!(Number.isFinite(d.x) && Number.isFinite(d.y) && Number.isFinite(d.vx) && Number.isFinite(d.vy))) {
+      d.x = Math.random() * W; d.y = Math.random() * H; d.vx = 0; d.vy = 0;   // put a lost dot back on stage
+    }
+    if (d.delay > 0) continue;             // size and colour change as each dot sets off
+    d.r += (d.tr - d.r) * kr; d.a += (d.ta - d.a) * kr;
+    for (let c = 0; c < 3; c++) d.col[c] += (d.tcol[c] - d.col[c]) * kc;
+  }
+  const kl = 1 - Math.exp(-dt * 6);
+  for (let i = labels.length - 1; i >= 0; i--) {
+    const L = labels[i];
+    if (L.delay > 0) { L.delay -= dt; continue; }
+    L.a += (L.ta - L.a) * kl;
+    if (L.ta === 0 && L.a < 0.01) labels.splice(i, 1);
+  }
+  fade += (fadeTo - fade) * (1 - Math.exp(-dt * 4));
+}
+
+/* ---------- drawing ---------- */
+function draw() {
+  ctx.setTransform(view, 0, 0, view, 0, 0);
+  ctx.globalAlpha = 1; ctx.fillStyle = COLORS[SETTINGS.background] || SETTINGS.background; ctx.fillRect(0, 0, W, H);
+  for (const d of dots) {                  // motion blur follows how far each dot moved this frame
+    let bx = (d.x - d.fx) * SETTINGS.motionBlur, by = (d.y - d.fy) * SETTINGS.motionBlur;
+    if (bx * bx + by * by > 0.0625 * H * H) bx = by = 0;   // a jump (after R or a reload), not motion
+    d.bx = bx; d.by = by; d.fx = d.x; d.fy = d.y;
+  }
+  if (fade < 0.003) return;
+  ctx.lineCap = 'round';
+  // A pulse swells every dot and lets it go, beat after beat, a ripple spreading out from the middle.
+  // It changes only how big a dot is drawn, never where it is or how much room it takes.
+  const pulsing = scn.pulse > 0.001;
+  // A tremble sets every dot quivering around its place, each on a course of its own a few times a
+  // second, by up to that share of its own radius. Like the pulse, it changes only where a dot is
+  // drawn, never where it is: a picture still holds, and a recolour still moves nothing.
+  const shake = scn.tremble > 0.001 ? scn.tremble / 1.6 : 0;
+  for (let pass = 0; pass < 2; pass++) {   // faint dots first, so they sit behind
+    for (const d of dots) {
+      if ((d.ta >= 0.5) !== (pass === 1)) continue;
+      const a = d.a * fade;
+      if (d.r < 0.35 || a < 0.004) continue;
+      let r = d.r, x = d.x, y = d.y;
+      if (pulsing) { const ph = beat - Math.hypot(d.x - W / 2, d.y - H / 2) / H * 0.35, w = 0.5 - 0.5 * Math.cos(TAU * (ph - Math.floor(ph))); r *= 1 + scn.pulse * w * w; }
+      if (shake) {
+        const s = shake * d.r, t = now * d.k;
+        x += s * (Math.sin(t * 17 + d.ph) + 0.6 * Math.sin(t * 29 + d.ph * 2.3));
+        y += s * (Math.sin(t * 15 + d.ph * 1.7) + 0.6 * Math.sin(t * 26 + d.ph * 3.1));
+      }
+      const len = Math.hypot(d.bx, d.by), col = css(d.col);
+      if (len < 1) {
+        ctx.globalAlpha = a; ctx.fillStyle = col;
+        ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill();
+      } else {                             // a streak along the path of travel
+        ctx.globalAlpha = a * Math.max(0.4, r * 2 / (r * 2 + len * 0.8));
+        ctx.strokeStyle = col; ctx.lineWidth = r * 2;
+        ctx.beginPath(); ctx.moveTo(x - d.bx, y - d.by); ctx.lineTo(x, y); ctx.stroke();
+      }
+    }
+  }
+  for (const L of labels) {
+    const a = L.a * fade;
+    if (a < 0.004) continue;
+    ctx.globalAlpha = a; ctx.fillStyle = L.css;
+    ctx.font = `${L.weight || 600} ${Math.round(L.size)}px ${L.font || SETTINGS.labelFont}`;
+    ctx.textAlign = L.align || 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(L.text, L.x, L.y);
+  }
+  ctx.globalAlpha = 1;
+}
+
+/* ---------- 5 × 7 LED-sign letters ---------- */
+const FONT_SRC = {
+  A: '.###. #...# #...# ##### #...# #...# #...#',  B: '####. #...# #...# ####. #...# #...# ####.',
+  C: '.###. #...# #.... #.... #.... #...# .###.',  D: '####. #...# #...# #...# #...# #...# ####.',
+  E: '##### #.... #.... ####. #.... #.... #####',  F: '##### #.... #.... ####. #.... #.... #....',
+  G: '.###. #...# #.... #.### #...# #...# .####',  H: '#...# #...# #...# ##### #...# #...# #...#',
+  I: '.###. ..#.. ..#.. ..#.. ..#.. ..#.. .###.',  J: '..### ...#. ...#. ...#. ...#. #..#. .##..',
+  K: '#...# #..#. #.#.. ##... #.#.. #..#. #...#',  L: '#.... #.... #.... #.... #.... #.... #####',
+  M: '#...# ##.## #.#.# #.#.# #...# #...# #...#',  N: '#...# #...# ##..# #.#.# #..## #...# #...#',
+  O: '.###. #...# #...# #...# #...# #...# .###.',  P: '####. #...# #...# ####. #.... #.... #....',
+  Q: '.###. #...# #...# #...# #.#.# #..#. .##.#',  R: '####. #...# #...# ####. #.#.. #..#. #...#',
+  S: '.#### #.... #.... .###. ....# ....# ####.',  T: '##### ..#.. ..#.. ..#.. ..#.. ..#.. ..#..',
+  U: '#...# #...# #...# #...# #...# #...# .###.',  V: '#...# #...# #...# #...# #...# .#.#. ..#..',
+  W: '#...# #...# #...# #.#.# #.#.# #.#.# .#.#.',  X: '#...# #...# .#.#. ..#.. .#.#. #...# #...#',
+  Y: '#...# #...# .#.#. ..#.. ..#.. ..#.. ..#..',  Z: '##### ....# ...#. ..#.. .#... #.... #####',
+  0: '.###. #...# #..## #.#.# ##..# #...# .###.',  1: '..#.. .##.. ..#.. ..#.. ..#.. ..#.. .###.',
+  2: '.###. #...# ....# ...#. ..#.. .#... #####',  3: '##### ...#. ..#.. ...#. ....# #...# .###.',
+  4: '...#. ..##. .#.#. #..#. ##### ...#. ...#.',  5: '##### #.... ####. ....# ....# #...# .###.',
+  6: '..##. .#... #.... ####. #...# #...# .###.',  7: '##### ....# ...#. ..#.. .#... .#... .#...',
+  8: '.###. #...# #...# .###. #...# #...# .###.',  9: '.###. #...# #...# .#### ....# ...#. .##..',
+  ' ': '... ... ... ... ... ... ...',  '.': '. . . . . . #',  ',': '.. .. .. .. .. .# #.',
+  '!': '# # # # # . #',  '?': '.###. #...# ....# ...#. ..#.. ..... ..#..',  "'": '# # . . . . .',
+  '"': '#.# #.# ... ... ... ... ...',  '-': '... ... ... ### ... ... ...',  ':': '. # . . . # .',
+  '%': '##... ##..# ...#. ..#.. .#... #..## ...##',  '+': '..... ..#.. ..#.. ##### ..#.. ..#.. .....',
+  '=': '..... ..... ##### ..... ##### ..... .....',  '/': '..... ....# ...#. ..#.. .#... #.... .....',
+  '&': '.##.. #..#. #.#.. .#... #.#.# #..#. .##.#',  '#': '.#.#. .#.#. ##### .#.#. ##### .#.#. .#.#.',
+  '$': '..#.. .#### #.#.. .###. ..#.# ####. ..#..',  '£': '..##. .#..# .#... ###.. .#... .#... #####',
+  '€': '..### .#... ####. .#... ####. .#... ..###',  '(': '..# .#. #.. #.. #.. .#. ..#',
+  ')': '#.. .#. ..# ..# ..# .#. #..',  '*': '..... ..#.. #.#.# .###. #.#.# ..#.. .....',
+  '♥': '..... .#.#. ##### ##### .###. ..#.. .....',  '→': '..... ..#.. ...#. ##### ...#. ..#.. .....',
+};
+const ALIAS = { '’': "'", '‘': "'", '“': '"', '”': '"', '–': '-', '—': '-', '…': '.', '×': '*' };
+const FONT = {};
+for (const [ch, src] of Object.entries(FONT_SRC)) {
+  const rows = src.split(' '), px = [];
+  rows.forEach((row, y) => { for (let x = 0; x < row.length; x++) if (row[x] === '#') px.push([x, y]); });
+  FONT[ch] = { w: rows[0].length, px };
+}
+
+/* ---------- layouts: each returns target spots for the dots ---------- */
+// How a picture sits against the point it was given: 0 hangs its left (or top)
+// edge there, 1 its right (or bottom) edge, and 0.5 — the default everything
+// gets unless a scene says otherwise — centres it.
+const align01 = m => (m === 'left' || m === 'top') ? 0 : (m === 'right' || m === 'bottom') ? 1 : 0.5;
+const LAYOUTS = { text: layoutText, shape: layoutShape, grid: layoutGrid, field: layoutField,
+                  split: layoutSplit, bars: layoutBars, line: layoutLine, compose: layoutCompose,
+                  blank: () => ({ targets: [] }) };   // blank: every dot leaves; words only, or nothing
+const SHAPES = {
+  heart: 'M50 91 C50 91 5 63 5 33 C5 17 17 6 31 6 C40 6 47 11 50 19 C53 11 60 6 69 6 C83 6 95 17 95 33 C95 63 50 91 50 91 Z',
+  arrow: 'M2 34 H60 V10 L98 50 L60 90 V66 H2 Z',
+  star: starPath(5, 50, 22),
+};
+function starPath(n, R, r) {
+  let d = '';
+  for (let i = 0; i < n * 2; i++) {
+    const a = -Math.PI / 2 + i * Math.PI / n, q = i % 2 ? r : R;
+    d += `${i ? 'L' : 'M'}${(50 + q * Math.cos(a)).toFixed(2)} ${(54 + q * Math.sin(a)).toFixed(2)} `;
+  }
+  return d + 'Z';
+}
+
+function layoutText(sc) {
+  const lines = String(sc.text ?? '').split('\n');
+  if (sc.style === 'bold' || sc.style === 'outline') return layoutBold(sc, lines);
+  let missing = '';
+  const rows = lines.map(line => [...line].map(ch => {
+    const g = FONT[ALIAS[ch] || ch.toUpperCase()];
+    if (!g && !missing.includes(ch)) missing += ch;
+    return g || FONT[' '];
+  }));
+  const widths = rows.map(gs => gs.reduce((w, g) => w + g.w, 0) + Math.max(0, gs.length - 1));
+  const cols = Math.max(1, ...widths), tall = lines.length * 7 + (lines.length - 1) * 3;
+  const r = (sc.radius ?? SETTINGS.radius) * H;
+  // letters are drawn at the dots' own spacing, and only squeezed if the line is too long to fit
+  const s = Math.min(r * GAP.fill, (sc.width ?? 0.9) * W / cols, (sc.height ?? 0.55) * H / tall);
+  const ax = align01(sc.align), blockW = cols * s;
+  const x0 = (sc.x ?? 0.5) * W - blockW * ax;
+  const top = (sc.y ?? 0.5) * H - tall * s * align01(sc.valign);
+  const T = [];
+  rows.forEach((gs, li) => {
+    let x = x0 + (blockW - widths[li] * s) * ax;     // lines align the same way the block does
+    const y = top + li * 10 * s;
+    for (const g of gs) {
+      for (const [gx, gy] of g.px) T.push({ x: x + (gx + 0.5) * s, y: y + (gy + 0.5) * s, r });
+      x += (g.w + 1) * s;
+    }
+  });
+  return { targets: T, order: 'left', warn: missing && `no dot letter for "${missing}"` };
+}
+
+function layoutBold(sc, lines) {
+  const font = size => `${sc.weight || 900} ${size}px ${sc.font || SETTINGS.boldFont}`;
+  const c = scratch(); c.font = font(200);
+  const ms = lines.map(l => c.measureText(l));
+  const asc = Math.max(...ms.map(m => m.actualBoundingBoxAscent));
+  const desc = Math.max(...ms.map(m => m.actualBoundingBoxDescent));
+  const pitch = (asc + desc) * 1.25;
+  const widths = ms.map(m => m.actualBoundingBoxLeft + m.actualBoundingBoxRight);
+  const wRef = Math.max(1, ...widths), hRef = Math.max(1, asc + desc + (lines.length - 1) * pitch);
+  let k = Math.min((sc.width ?? 0.9) * W / wRef, (sc.height ?? 0.62) * H / hRef);
+  const r = (sc.radius ?? SETTINGS.radius) * H;
+  const draw = (g, z) => {
+    g.font = font(200 * z); g.textAlign = 'left'; g.textBaseline = 'alphabetic';
+    lines.forEach((l, i) => g.fillText(l, (wRef - widths[i]) * z * align01(sc.align) + ms[i].actualBoundingBoxLeft * z, asc * z + i * pitch * z));
+  };
+  if (sc.style === 'outline') {            // dots strung along the letters' edges, evenly, as an outlined shape is
+    const loops = traceEdges(g => draw(g, 1), wRef, hRef), gap = r * GAP.line;
+    const total = loops.reduce((a, l) => a + l.len, 0) || 1, thick = 2 * loops.area / total;   // the strokes' width
+    const budget = Math.min(sc.dots ?? N, N);
+    // The word shrinks until its edges hold the dots at their spacing, but never so far that the two
+    // edges of a stroke merge: past that it asks for more dots instead, as any picture does.
+    k = Math.min(k, Math.max(budget * gap / total, 1.4 * gap / Math.max(1e-6, thick)));
+    const want = Math.max(1, Math.floor(total * k / gap));
+    let n = want, warn;
+    if (sc.dots != null && want > budget) { n = budget; warn = `needs ${want} dots, only ${budget} given`; }
+    const x0 = (sc.x ?? 0.5) * W - wRef * k * align01(sc.align), y0 = (sc.y ?? 0.5) * H - hRef * k * align01(sc.valign);
+    const counts = apportion(loops.map(l => l.len), n), T = [];
+    loops.forEach((l, li) => {               // loops run left to right, so the word is written along its strokes
+      for (let j = 0; j < counts[li]; j++) { const p = l.at(l.len * j / counts[li]); T.push({ x: x0 + p[0] * k, y: y0 + p[1] * k, r, o: T.length / n, edge: true }); }
+    });
+    return { targets: T, order: 'natural', warn };
+  }
+  const bw = wRef * k, bh = hRef * k;
+  const res = sampleFill(g => draw(g, k), bw, bh, Math.min(sc.dots ?? N, N), sc.grid || 'square', r * GAP.fill, true);
+  const x0 = (sc.x ?? 0.5) * W - res.w * align01(sc.align), y0 = (sc.y ?? 0.5) * H - res.h * align01(sc.valign);
+  return { targets: res.pts.map(([x, y]) => ({ x: x0 + x, y: y0 + y, r })), order: 'left' };
+}
+
+// Rasterise a drawing and trace the edges of what it fills as closed loops, each knowing its length
+// and the point a given distance along it. Letters have no path to string dots along; this gives
+// them one. Marching squares: each cell of four pixels contributes the pieces of edge crossing it,
+// between the midpoints of its sides, and the midpoints are shared, so the pieces chain into loops.
+function traceEdges(draw, bw, bh) {
+  const q = Math.min(1, 900 / Math.max(bw, bh));
+  const cw = Math.max(2, Math.ceil(bw * q)), ch = Math.max(2, Math.ceil(bh * q));
+  const cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
+  const g = cv.getContext('2d', { willReadFrequently: true });
+  g.setTransform(q, 0, 0, q, 0, 0); g.fillStyle = '#fff'; draw(g);
+  const px = g.getImageData(0, 0, cw, ch).data;
+  const PW = cw + 2, PH = ch + 2, m = new Uint8Array(PW * PH);   // a border of empty pixels closes every loop
+  let filled = 0;
+  for (let y = 0; y < ch; y++) for (let x = 0; x < cw; x++) if (px[(y * cw + x) * 4 + 3] > 127) { m[(y + 1) * PW + x + 1] = 1; filled++; }
+  // sides of a cell: 0 top, 1 right, 2 bottom, 3 left; the pieces for each pattern of filled corners
+  const PIECES = [[], [[3, 2]], [[2, 1]], [[3, 1]], [[0, 1]], [[0, 1], [3, 2]], [[0, 2]], [[0, 3]],
+    [[0, 3]], [[0, 2]], [[0, 3], [2, 1]], [[0, 1]], [[3, 1]], [[2, 1]], [[3, 2]], []];
+  const sideKey = (x, y, s) => s === 0 ? (y * PW + x) * 2 : s === 2 ? ((y + 1) * PW + x) * 2 : s === 3 ? (y * PW + x) * 2 + 1 : (y * PW + x + 1) * 2 + 1;
+  const adj = new Map(), link = (a, b) => { const l = adj.get(a); if (l) l.push(b); else adj.set(a, [b]); };
+  for (let y = 0; y < PH - 1; y++) for (let x = 0; x < PW - 1; x++) {
+    const i = y * PW + x, c = m[i] * 8 + m[i + 1] * 4 + m[i + PW + 1] * 2 + m[i + PW];
+    for (const [a, b] of PIECES[c]) { const ka = sideKey(x, y, a), kb = sideKey(x, y, b); link(ka, kb); link(kb, ka); }
+  }
+  const at = key => { const v = key & 1, i = key >> 1, x = i % PW, y = (i - x) / PW; return v ? [x, y + 0.5] : [x + 0.5, y]; };
+  const seen = new Set(), loops = [];
+  for (const start of adj.keys()) {
+    if (seen.has(start)) continue;
+    const pts = []; let prev = -1, cur = start;
+    do { seen.add(cur); pts.push(at(cur)); const l = adj.get(cur), nxt = l[0] !== prev ? l[0] : l[1]; prev = cur; cur = nxt; } while (cur !== start && cur !== undefined && !seen.has(cur));
+    if (pts.length < 8) continue;          // a speck
+    for (let pass = 0; pass < 2; pass++) {   // soften the pixel staircase so the length and the spacing are true
+      const n = pts.length, out = [];
+      for (let i = 0; i < n; i++) { const a = pts[(i + n - 2) % n], b = pts[(i + n - 1) % n], c = pts[i], d = pts[(i + 1) % n], e = pts[(i + 2) % n]; out.push([(a[0] + b[0] + c[0] + d[0] + e[0]) / 5, (a[1] + b[1] + c[1] + d[1] + e[1]) / 5]); }
+      pts.splice(0, n, ...out);
+    }
+    const P = pts.map(([x, y]) => [(x - 1) / q, (y - 1) / q]), cum = [0];
+    for (let i = 0; i < P.length; i++) { const a = P[i], b = P[(i + 1) % P.length]; cum.push(cum[i] + Math.hypot(b[0] - a[0], b[1] - a[1])); }
+    const len = cum[P.length];
+    loops.push({ len, minX: Math.min(...P.map(p => p[0])), at: s => {
+      s = ((s % len) + len) % len;
+      let lo = 0, hi = P.length;
+      while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (cum[mid] <= s) lo = mid; else hi = mid; }
+      const a = P[lo], b = P[(lo + 1) % P.length], seg = cum[lo + 1] - cum[lo] || 1, t = (s - cum[lo]) / seg;
+      return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+    } });
+  }
+  loops.sort((a, b) => a.minX - b.minX);
+  loops.area = filled / (q * q);             // what the drawing covers, in its own units
+  return loops;
+}
+
+// Rasterise a drawing, then cover it with dots of the one fixed size. `gap` is the spacing those
+// dots need. When `shrink` is on, the drawing itself is scaled down so that the dots pack tightly
+// into it (right for words and shapes); otherwise the drawing keeps its size and the dots spread
+// out inside it (right for charts, where the axes have to stay put).
+function sampleFill(draw, bw, bh, want, grid, gap, shrink) {
+  const q = Math.min(1, 900 / Math.max(bw, bh));
+  const cw = Math.max(2, Math.ceil(bw * q)), ch = Math.max(2, Math.ceil(bh * q));
+  const cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
+  const g = cv.getContext('2d', { willReadFrequently: true });
+  g.setTransform(q, 0, 0, q, 0, 0); g.fillStyle = '#fff'; draw(g);
+  const px = g.getImageData(0, 0, cw, ch).data;
+  let filled = 0;
+  for (let i = 3; i < px.length; i += 4) if (px[i] > 127) filled++;
+  if (!filled || want < 1) return { pts: [], w: bw, h: bh };
+  const hit = (x, y) => {
+    const X = Math.floor(x * q), Y = Math.floor(y * q);
+    return X >= 0 && Y >= 0 && X < cw && Y < ch && px[(Y * cw + X) * 4 + 3] > 127;
+  };
+  // a spot counts when most of its cell is covered, so thin slivers don't grow stray dots
+  const inside = (x, y, e) => hit(x, y) + hit(x - e, y) + hit(x + e, y) + hit(x, y - e) + hit(x, y + e) >= 3;
+  const hex = grid === 'hex', rowK = hex ? Math.sqrt(3) / 2 : 1;
+  const spanOf = (s, ar) => (hex ? Math.min(s, Math.hypot(s / 2, s * rowK * ar)) : s * Math.min(1, ar));
+  const pointsAt = (s, ar) => {            // a grid centred on the shape, so letters stay symmetric
+    const pts = [], rh = s * rowK * ar, e = s * 0.25;
+    for (let j = Math.ceil(-bh / 2 / rh); j <= Math.floor(bh / 2 / rh); j++) {
+      const y = bh / 2 + j * rh, off = hex && (j & 1) ? 0.5 : 0;
+      for (let i = Math.ceil(-bw / 2 / s - off); i <= Math.floor(bw / 2 / s - off); i++) {
+        const x = bw / 2 + (i + off) * s;
+        if (inside(x, y, e)) pts.push([x, y]);
+      }
+    }
+    return pts;
+  };
+  // Dot counts jump in steps as the grid changes, so also try rows a few percent closer or further
+  // apart than columns, and keep whichever lands nearest the number of dots available.
+  const s0 = Math.sqrt(filled / (q * q) / (want * rowK));
+  let best = [], bestS = s0, bestAr = 1;
+  for (const ar of [1, 0.97, 1.03, 0.94, 1.06, 0.91, 1.09]) {
+    let lo = s0 * 0.4, hi = s0 * 2, pts = pointsAt(hi, ar), sAt = hi;
+    while (pts.length > want && hi < s0 * 50) { lo = hi; hi *= 1.5; pts = pointsAt(hi, ar); sAt = hi; }
+    for (let it = 0; it < 22; it++) {
+      const s = (lo + hi) / 2, p2 = pointsAt(s, ar);
+      if (p2.length > want) lo = s; else { hi = s; pts = p2; sAt = s; }
+    }
+    if (pts.length > best.length) { best = pts; bestS = sAt; bestAr = ar; }
+    if (best.length >= want * 0.985) break;
+  }
+  let scale = 1;
+  if (spanOf(bestS, bestAr) < gap) {       // the dots are too big for that spacing: use fewer of them
+    bestAr = 1; bestS = gap / spanOf(1, 1);
+    best = pointsAt(bestS, 1);
+  } else if (shrink) {                     // scale the drawing down so the dots sit snugly in it
+    scale = gap / spanOf(bestS, bestAr);
+    // About the ORIGIN, not the centre: the box we hand back is bw*scale wide, and
+    // callers place it by that number. Scaling about the centre would leave the dots
+    // sitting in the middle of the ORIGINAL box, i.e. shifted right and down by
+    // half the difference — which is most of the stage when scale is small.
+    for (const p of best) { p[0] *= scale; p[1] *= scale; }
+  }
+  return { pts: best, w: bw * scale, h: bh * scale };
+}
+
+function svgPath(d) {
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('style', 'position:absolute;left:0;top:0;width:0;height:0;overflow:hidden;visibility:hidden');
+  const p = document.createElementNS(NS, 'path');
+  p.setAttribute('d', d); svg.appendChild(p); document.body.appendChild(svg);
+  return { el: p, box: p.getBBox(), len: p.getTotalLength(), remove: () => svg.remove() };
+}
+
+// core colours the dots nearer the centre than that fraction of the radius (0.5 is the inner half of
+// the radius, which is a quarter of a disc's dots). Any filled shape; the rest keep the shape's colour.
+function coreOf(T, sc) {
+  if (sc.core == null) return;
+  const c = sc.coreColor || 'magenta';
+  for (const t of T) if ((t.o ?? 1) <= sc.core) { t.c = c; t.hl = true; }
+}
+function layoutShape(sc) {
+  let n = Math.min(sc.dots ?? N, N);
+  const size = (sc.size ?? 0.78) * H, r = (sc.radius ?? SETTINGS.radius) * H;
+  const cx = (sc.x ?? 0.5) * W, cy = (sc.y ?? 0.5) * H, T = [];
+  const kind = sc.path ? 'path' : (sc.shape || 'disc');
+  if (kind === 'disc') {                   // sunflower packing, as wide as those dots need
+    let R = r * GAP.fill * Math.sqrt(n / Math.PI);
+    if (R > size / 2) { R = size / 2; n = Math.max(1, Math.floor(Math.PI * (R / (r * GAP.fill)) ** 2)); }
+    for (let i = 0; i < n; i++) {
+      const q = R * Math.sqrt((i + 0.5) / n), a = i * GOLDEN;
+      T.push({ x: cx + q * Math.cos(a), y: cy + q * Math.sin(a), r, o: q / R });
+    }
+    coreOf(T, sc);
+    return { targets: T, order: 'center' };
+  }
+  if (kind === 'ring') {
+    let R = n * r * GAP.line / TAU;
+    if (R > size / 2) { R = size / 2; n = Math.max(1, Math.floor(TAU * R / (r * GAP.line))); }
+    for (let i = 0; i < n; i++) {
+      const a = -Math.PI / 2 + i / n * TAU;
+      T.push({ x: cx + R * Math.cos(a), y: cy + R * Math.sin(a), r, o: i / n });
+    }
+    return { targets: T, order: 'natural' };
+  }
+  const d = sc.path || SHAPES[kind];
+  if (!d) throw new Error(`unknown shape "${kind}"`);
+  const p = svgPath(d);
+  try {
+    const b = p.box;
+    let k = Math.min(size / (b.height || 1), (sc.width ?? 0.94) * W / (b.width || 1));
+    if (sc.outline) {                      // dots strung along the edge, evenly and always the same size
+      k = Math.min(k, n * r * GAP.line / (p.len || 1));
+      n = Math.min(n, Math.max(1, Math.floor(p.len * k / (r * GAP.line))));
+      const x0 = cx - b.width * k * align01(sc.align), y0 = cy - b.height * k * align01(sc.valign);
+      // A compound path (several pieces, each starting with an absolute M) is strung piece by
+      // piece, so no dot lands where one piece ends and the next begins. A closed piece leaves a
+      // gap of one spacing before its own start; an open one gets a dot at both ends.
+      const pieces = (d.match(/M[^M]*/g) || [d]).map(seg => { const q = svgPath(seg); const o = { len: q.len, el: q.el, closed: /[Zz]\s*$/.test(seg.trim()), remove: q.remove }; return o; });
+      const counts = apportion(pieces.map(q => q.len), n);
+      let i = 0;
+      pieces.forEach((q, pi) => {
+        const m = counts[pi];
+        for (let j = 0; j < m; j++, i++) {
+          const at = q.closed ? q.len * j / m : q.len * j / Math.max(1, m - 1);
+          const pt = q.el.getPointAtLength(at);
+          T.push({ x: x0 + (pt.x - b.x) * k, y: y0 + (pt.y - b.y) * k, r, o: i / n, edge: true });
+        }
+        q.remove();
+      });
+      return { targets: T, order: 'natural', box: { x: x0, y: y0, w: b.width * k, h: b.height * k } };
+    }
+    const bw = b.width * k, bh = b.height * k, shape = new Path2D(d);
+    const res = sampleFill(g => { g.scale(k, k); g.translate(-b.x, -b.y); g.fill(shape); }, bw, bh, n, sc.grid || 'hex', r * GAP.fill, true);
+    const x0 = cx - res.w * align01(sc.align), y0 = cy - res.h * align01(sc.valign), far = Math.hypot(res.w, res.h) / 2 || 1;
+    for (const [x, y] of res.pts) T.push({ x: x0 + x, y: y0 + y, r, o: Math.hypot(x - res.w / 2, y - res.h / 2) / far });
+    coreOf(T, sc);
+    if (sc.highlightRegion) {              // light the dots inside a second path, in this path's own units
+      const region = new Path2D(sc.highlightRegion), g = scratch();
+      const z = 200 / Math.max(1, b.x + b.width, b.y + b.height);   // keep the test inside the scratch canvas
+      g.setTransform(z, 0, 0, z, 0, 0);
+      const color = sc.highlightColor || 'magenta';
+      for (const t of T) {
+        const u = b.x + (t.x - x0) / (res.w || 1) * b.width, v = b.y + (t.y - y0) / (res.h || 1) * b.height;
+        if (g.isPointInPath(region, u * z, v * z)) { t.c = color; t.hl = true; }
+      }
+      g.setTransform(1, 0, 0, 1, 0, 0);
+    }
+    return { targets: T, order: 'center', box: { x: x0, y: y0, w: res.w, h: res.h } };
+  } finally { p.remove(); }
+}
+
+function layoutGrid(sc) {
+  const n = Math.min(sc.dots ?? N, N), aw = (sc.width ?? 0.9) * W, ah = (sc.height ?? 0.7) * H;
+  const r = (sc.radius ?? SETTINGS.radius) * H;
+  let rows = 1, cols = n;
+  if (sc.cols) { cols = sc.cols; rows = Math.ceil(n / cols); }
+  else {
+    let best = -Infinity;
+    for (let rw = 1; rw <= n; rw++) {      // the arrangement whose shape best matches the space it has
+      const c = Math.ceil(n / rw);
+      if (c * r * GAP.grid > aw || rw * r * GAP.grid > ah) continue;
+      const score = -Math.abs(Math.log((c / rw) / (aw / ah))) + (rw * c === n ? 0.25 : 0);
+      if (score > best) { best = score; rows = rw; cols = c; }
+    }
+    if (best === -Infinity) {              // too many dots to fit at that size: pack as squarely as we can
+      rows = Math.max(1, Math.round(Math.sqrt(n * ah / aw))); cols = Math.ceil(n / rows);
+    }
+  }
+  const s = Math.min(r * GAP.grid, aw / cols, ah / rows);
+  const cx = (sc.x ?? 0.5) * W, cy = (sc.y ?? 0.5) * H, T = [];
+  for (let i = 0; i < n; i++) {
+    const row = Math.floor(i / cols), col = i % cols;
+    T.push({ x: cx + (col - (cols - 1) / 2) * s, y: cy + (row - (rows - 1) / 2) * s, r, o: col / Math.max(1, cols - 1) });
+  }
+  highlightSome(T, sc);
+  return { targets: T, order: 'random' };
+}
+
+function highlightSome(T, sc) {          // light up a share (0.2) or a count (12) of a grid
+  const color = sc.highlightColor || 'magenta';
+  if (sc.highlightPath || sc.highlightShape) { highlightInside(T, sc, color); return; }
+  if (!sc.highlight) return;
+  const n = T.length;
+  const k = sc.highlight < 1 ? Math.round(sc.highlight * n) : Math.min(n, Math.round(sc.highlight));
+  const idx = T.map((_, i) => i), pick = sc.pick || 'random';
+  if (pick === 'random') shuffle(idx, rng(sc.seed ?? 7));
+  else if (pick === 'left' || pick === 'right') { idx.sort((a, b) => T[a].x - T[b].x || T[a].y - T[b].y); if (pick === 'right') idx.reverse(); }
+  else {                                 // 'center', 'edges', or a point [x, y] in fractions of the stage
+    let cx, cy;
+    if (Array.isArray(pick)) { cx = pick[0] * W; cy = pick[1] * H; }
+    else {
+      let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+      for (const t of T) { x0 = Math.min(x0, t.x); x1 = Math.max(x1, t.x); y0 = Math.min(y0, t.y); y1 = Math.max(y1, t.y); }
+      cx = (x0 + x1) / 2; cy = (y0 + y1) / 2;
+    }
+    idx.sort((a, b) => Math.hypot(T[a].x - cx, T[a].y - cy) - Math.hypot(T[b].x - cx, T[b].y - cy));
+    if (pick === 'edges') idx.reverse();
+  }
+  for (const i of idx.slice(0, k)) { T[i].c = color; T[i].hl = true; }
+}
+
+// Light up the dots of a grid that fall inside a shape: a named one (heart, star...) or any SVG
+// path, sized and placed the way a shape scene would be. The grid itself does not move, so this
+// is how a picture appears INSIDE a picture that is already standing on the stage.
+function highlightInside(T, sc, color) {
+  const d = sc.highlightPath || SHAPES[sc.highlightShape];
+  if (!d) throw new Error(`unknown shape "${sc.highlightShape}"`);
+  const p = svgPath(d);
+  try {
+    const b = p.box, size = (sc.highlightSize ?? 0.7) * H;
+    const k = Math.min(size / (b.height || 1), (sc.highlightWidth ?? 0.94) * W / (b.width || 1));
+    const x0 = (sc.highlightX ?? 0.5) * W - b.width * k / 2, y0 = (sc.highlightY ?? 0.5) * H - b.height * k / 2;
+    const path = new Path2D(d), g = scratch();
+    g.setTransform(1, 0, 0, 1, 0, 0);
+    for (const t of T) if (g.isPointInPath(path, (t.x - x0) / k + b.x, (t.y - y0) / k + b.y)) { t.c = color; t.hl = true; }
+  } finally { p.remove(); }
+}
+
+// A grid that covers the whole stage, rather than a tidy block sized to the dots. The cells come out
+// as square as the dots on hand allow, and any dots left over are spare. jitter knocks each dot off
+// its spot by up to half a cell, which turns a perfect grid into a hand-placed one.
+function layoutField(sc) {
+  const n = Math.min(sc.dots ?? N, N), m = sc.margin ?? 0;
+  const aw = (1 - m * 2) * W, ah = (1 - m * 2) * H, r = (sc.radius ?? SETTINGS.radius) * H;
+  let rows = sc.rows ?? 0, cols = sc.cols ?? 0;
+  if (rows && !cols) cols = Math.floor(n / rows);
+  else if (cols && !rows) rows = Math.floor(n / cols);
+  else if (!rows) {                      // the squarest cells these dots can be spread into
+    let best = Infinity;
+    for (let rw = 1; rw <= n; rw++) {
+      const c = Math.floor(n / rw);
+      if (!c) break;
+      const score = Math.abs(Math.log((aw / c) / (ah / rw))) + (n - rw * c) / n * 0.5;
+      if (score < best) { best = score; rows = rw; cols = c; }
+    }
+  }
+  rows = Math.max(1, rows); cols = Math.max(1, cols);
+  const cw = aw / cols, ch = ah / rows, jit = sc.jitter ?? 0;
+  const rand = rng(sc.seed ?? 11), T = [];   // seeded, so a replay lands every dot back where it was
+  for (let i = 0; i < rows * cols; i++) {
+    const row = Math.floor(i / cols), col = i % cols;
+    T.push({ x: (m * W) + (col + 0.5) * cw + (rand() - 0.5) * jit * cw,
+             y: (m * H) + (row + 0.5) * ch + (rand() - 0.5) * jit * ch,
+             r, o: col / Math.max(1, cols - 1) });
+  }
+  highlightSome(T, sc);
+  return { targets: T, order: 'random' };
+}
+
+function layoutSplit(sc) {
+  const groups = sc.groups || [{ share: 1 }];
+  const counts = apportion(groups.map(g => g.share ?? 1), Math.min(sc.dots ?? N, N));
+  const r = (sc.radius ?? SETTINGS.radius) * H, gap = r * GAP.clump, T = [], labels = [];
+  groups.forEach((g, gi) => {
+    const k = counts[gi];
+    if (!k) return;
+    const R = gap * Math.sqrt(k * Math.sqrt(3) / (2 * Math.PI));
+    const cx = (g.x ?? (gi + 0.5) / groups.length) * W, cy = (g.y ?? sc.y ?? 0.45) * H;
+    for (let i = 0; i < k; i++) {
+      const q = R * Math.sqrt((i + 0.5) / k), a = i * GOLDEN;
+      T.push({ x: cx + q * Math.cos(a), y: cy + q * Math.sin(a), r, c: g.color, o: q / R });
+    }
+    if (g.label) labels.push({ text: String(g.label), x: cx, y: Math.min(cy + R + 0.1 * H, 0.93 * H),
+      size: (g.labelSize ?? 0.075) * H, color: g.labelColor || g.color || SETTINGS.color, weight: 700 });
+  });
+  return { targets: T, labels, order: 'random' };
+}
+
+function layoutBars(sc) {
+  const vals = sc.values || [], nb = vals.length;
+  if (!nb) return { targets: [] };
+  const counts = sc.perDot ? vals.map(v => Math.max(0, Math.min(N, Math.round(v / sc.perDot))))
+                           : apportion(vals, Math.min(sc.dots ?? N, N));
+  const left = (sc.left ?? 0.08) * W, right = (sc.right ?? 0.92) * W;
+  const base = (sc.baseline ?? 0.8) * H, top = (sc.top ?? 0.16) * H;
+  const slot = (right - left) / nb, maxC = Math.max(1, ...counts);
+  const r = (sc.radius ?? SETTINGS.radius) * H, s = r * GAP.bars;
+  let cols = Math.max(1, sc.cols | 0);     // widen the bars until the tallest one fits the height...
+  while (!sc.cols && cols < 30 && (cols + 1) * s <= slot * 0.75 && Math.ceil(maxC / cols) * s > base - top) cols++;
+  // ...unless the scene fixes cols, which keeps a bar that has not changed exactly where it was
+  const lsize = (sc.labelSize ?? 0.045) * H;
+  const T = [], labels = [];
+  counts.forEach((k, b) => {
+    const cx = left + slot * (b + 0.5), rows = Math.ceil(k / cols);
+    const col = sc.colors ? sc.colors[b % sc.colors.length] : undefined;
+    for (let i = 0; i < k; i++) {
+      const row = Math.floor(i / cols), inRow = Math.min(cols, k - row * cols), c = i % cols;
+      T.push({ x: cx + (c - (inRow - 1) / 2) * s, y: base - (row + 0.5) * s, r, c: col, o: (b + row / Math.max(1, rows)) / nb });
+    }
+    const name = sc.labels && sc.labels[b];
+    if (name != null && typeof name !== 'object' && name !== '') labels.push({ text: String(name), x: cx, y: base + lsize * 1.3, size: lsize });
+    if (sc.showValues) labels.push({ text: `${sc.prefix || ''}${vals[b]}${sc.suffix || ''}`, x: cx, y: base - rows * s - lsize * 0.9,
+      size: lsize * 1.15, weight: 700, color: col || sc.color || SETTINGS.color });
+  });
+  return { targets: T, labels, order: 'natural' };
+}
+
+function layoutLine(sc) {
+  const vals = sc.values || [];
+  if (vals.length < 2) return { targets: [] };
+  const n = Math.min(sc.dots ?? N, N);
+  const left = (sc.left ?? 0.07) * W, right = (sc.right ?? 0.93) * W;
+  const base = (sc.baseline ?? 0.8) * H, top = (sc.top ?? 0.16) * H;
+  const lo = sc.zero ? 0 : Math.min(...vals), hi = Math.max(...vals);
+  const P = vals.map((v, i) => [left + (right - left) * i / (vals.length - 1), base - (v - lo) / ((hi - lo) || 1) * (base - top)]);
+  const poly = [];                         // a smooth curve through the points (Catmull-Rom)
+  for (let i = 0; i < P.length - 1; i++) {
+    const p0 = P[i - 1] || P[i], p1 = P[i], p2 = P[i + 1], p3 = P[i + 2] || P[i + 1];
+    for (let q = 0; q < 24; q++) {
+      const t = q / 24, t2 = t * t, t3 = t2 * t;
+      poly.push([0, 1].map(k => 0.5 * (2 * p1[k] + (p2[k] - p0[k]) * t + (2 * p0[k] - 5 * p1[k] + 4 * p2[k] - p3[k]) * t2 + (3 * p1[k] - p0[k] - 3 * p2[k] + p3[k]) * t3)));
+    }
+  }
+  poly.push(P[P.length - 1].slice());
+  const T = [], lsize = (sc.labelSize ?? 0.045) * H, r = (sc.radius ?? SETTINGS.radius) * H;
+  if (sc.area) {                           // fill the area under the line instead
+    const res = sampleFill(g => {
+      g.beginPath(); g.moveTo(poly[0][0] - left, base - top);
+      for (const [x, y] of poly) g.lineTo(x - left, y - top);
+      g.lineTo(poly[poly.length - 1][0] - left, base - top); g.closePath(); g.fill();
+    }, right - left, base - top, n, sc.grid || 'hex', r * GAP.fill, false);
+    for (const [x, y] of res.pts) T.push({ x: left + x, y: top + y, r, o: x / (right - left) });
+  } else {                                 // string the dots along the curve, evenly and all one size
+    const acc = [0];
+    for (let i = 1; i < poly.length; i++) acc.push(acc[i - 1] + Math.hypot(poly[i][0] - poly[i - 1][0], poly[i][1] - poly[i - 1][1]));
+    const L = acc[acc.length - 1];
+    const use = Math.max(2, Math.min(n, Math.floor(L / (r * GAP.line)) + 1));
+    let seg = 1;
+    for (let j = 0; j < use; j++) {
+      const at = L * j / (use - 1);
+      while (seg < acc.length - 1 && acc[seg] < at) seg++;
+      const t = (at - acc[seg - 1]) / ((acc[seg] - acc[seg - 1]) || 1);
+      T.push({ x: poly[seg - 1][0] + (poly[seg][0] - poly[seg - 1][0]) * t, y: poly[seg - 1][1] + (poly[seg][1] - poly[seg - 1][1]) * t, r, o: j / Math.max(1, use - 1) });
+    }
+  }
+  const labels = [];
+  (sc.labels || []).forEach((name, i) => {
+    if (name != null && typeof name !== 'object' && name !== '' && i < P.length) labels.push({ text: String(name), x: P[i][0], y: base + lsize * 1.8, size: lsize });
+  });
+  return { targets: T, labels, order: 'natural' };
+}
+
+// Light the dot nearest each of a list of points, given as fractions of the picture's own box (0,0 is
+// its top left, 1,1 its bottom right). Works on any picture, including a compose: pins on a map,
+// the cities on a dotted world, the three cells of a grid that matter.
+function highlightAt(T, sc, box) {
+  if (!sc.highlightAt || !T.length) return;
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+  if (box) { x0 = box.x; x1 = box.x + box.w; y0 = box.y; y1 = box.y + box.h; }   // a path knows its own extent
+  else for (const t of T) { x0 = Math.min(x0, t.x); x1 = Math.max(x1, t.x); y0 = Math.min(y0, t.y); y1 = Math.max(y1, t.y); }
+  const color = sc.highlightColor || 'magenta', rx = (x1 - x0) || 1, ry = (y1 - y0) || 1;
+  for (const [fx, fy] of sc.highlightAt) {
+    const px = x0 + fx * rx, py = y0 + fy * ry;
+    let best = -1, bd = Infinity;
+    for (let i = 0; i < T.length; i++) {       // the nearest dot not already lit, so neighbours get their own
+      if (T[i].hl) continue;
+      const d = (T[i].x - px) ** 2 + (T[i].y - py) ** 2;
+      if (d < bd) { bd = d; best = i; }
+    }
+    if (best >= 0) { T[best].c = color; T[best].hl = true; }
+  }
+}
+
+// Several pictures on stage at once. Each part is a picture scene of its own, with its own place,
+// colour and dot budget, and the dots for all of them set off together. Give every part a `dots`
+// budget, or the first part takes the whole crowd and the rest go short.
+function layoutCompose(sc) {
+  const T = [], labels = [];
+  let warn = '';
+  for (const part of sc.parts || []) {
+    const fn = part && LAYOUTS[part.type];
+    if (!fn || part.type === 'compose') { warn += `${warn ? '; ' : ''}no part type "${part && part.type}"`; continue; }
+    const res = fn(part), P = res.targets || [];
+    paint(P, { color: sc.color, ...part });  // each part keeps its own colour, gradient or highlight
+    for (const t of P) { t.c = css(t.rgb); if (part.opacity != null) t.a = part.opacity; T.push(t); }
+    if (res.labels) labels.push(...res.labels);
+    if (res.warn) warn += `${warn ? '; ' : ''}${res.warn}`;
+  }
+  return { targets: T, labels, order: 'random', warn: warn || undefined };
+}
+
+/* ---------- matching dots to spots ---------- */
+function orderOf(T, how) {
+  if (!T.length) return [];
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  for (const t of T) { minX = Math.min(minX, t.x); maxX = Math.max(maxX, t.x); minY = Math.min(minY, t.y); maxY = Math.max(maxY, t.y); }
+  const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2, rx = (maxX - minX) || 1, ry = (maxY - minY) || 1;
+  const far = Math.hypot(rx, ry) / 2 || 1;
+  const f = {
+    left: t => (t.x - minX) / rx, right: t => (maxX - t.x) / rx,
+    top: t => (t.y - minY) / ry, bottom: t => (maxY - t.y) / ry,
+    center: t => Math.hypot(t.x - cx, t.y - cy) / far, edges: t => 1 - Math.hypot(t.x - cx, t.y - cy) / far,
+    natural: t => t.o ?? Math.random(), none: () => 0,
+  }[how] || (() => Math.random());
+  return T.map(t => Math.min(1, 0.85 * f(t) + 0.15 * Math.random()));   // a little chance keeps it organic
+}
+
+function paint(T, sc) {
+  const grad = sc.gradient ? [].concat(sc.gradient).map(toRGB) : null;
+  const cyc = sc.colors && sc.type !== 'bars' ? [].concat(sc.colors).map(toRGB) : null;
+  const base = toRGB(sc.color || SETTINGS.color);
+  T.forEach((t, j) => {
+    t.rgb = t.c ? toRGB(t.c)
+      : grad ? gradientAt(grad, t.o ?? j / Math.max(1, T.length - 1))
+      : cyc ? cyc[j % cyc.length].slice() : base.slice();
+    if (!t.c && !grad && cyc) { t.pal = cyc; t.ci = j % cyc.length; }   // for living colour
+  });
+}
+
+function assign(T) {                       // which dot goes to which spot: least total travel
+  const n = T.length;
+  if (!n) return [];
+  if (N > 320) return greedyAssign(T);
+  const cost = new Float64Array(n * N);
+  for (let i = 0; i < n; i++) for (let j = 0; j < N; j++) {
+    const dx = (T[i].x - dots[j].x) / H, dy = (T[i].y - dots[j].y) / H;
+    cost[i * N + j] = dx * dx + dy * dy;
+  }
+  return optimalAssign(cost, n, N);
+}
+function optimalAssign(cost, n, m) {       // least total cost, exactly: n rows (spots) onto m columns (dots), n <= m
+  // Rows join one at a time. Each finds its cheapest augmenting path over reduced costs with a dense
+  // Dijkstra; row and column potentials keep every reduced cost >= 0 and every matched pair at 0, so the
+  // path found is the cheapest way to fit the new row in without disturbing the optimum so far.
+  const rowPot = new Float64Array(n), colPot = new Float64Array(m);
+  const colOf = new Int32Array(n).fill(-1), owner = new Int32Array(m).fill(-1);
+  const dist = new Float64Array(m), via = new Int32Array(m), reached = new Uint8Array(m), order = new Int32Array(m);
+  for (let i = 0; i < n; i++) {            // each row starts at its cheapest column, so no reduced cost is negative;
+    let low = Infinity;                    // columns start at 0, and a column left over must stay there to be optimal
+    for (let j = 0; j < m; j++) if (cost[i * m + j] < low) low = cost[i * m + j];
+    rowPot[i] = low;
+  }
+  for (let r = 0; r < n; r++) {
+    let best = -1, bestD = Infinity, seen = 0, end = -1;
+    for (let j = 0; j < m; j++) {
+      const d = cost[r * m + j] - rowPot[r] - colPot[j];
+      dist[j] = d; via[j] = r; reached[j] = 0;
+      if (d < bestD) { bestD = d; best = j; }
+    }
+    for (;;) {
+      if (best < 0) {                      // only on non-finite costs: take any column not yet reached
+        for (let j = 0; j < m; j++) if (!reached[j]) { best = j; break; }
+        if (best < 0) break;
+      }
+      reached[best] = 1; order[seen++] = best;
+      if (owner[best] < 0) { end = best; break; }
+      const k = owner[best], row = k * m, off = dist[best] - rowPot[k];   // carry on from the row that holds it
+      best = -1; bestD = Infinity;
+      for (let j = 0; j < m; j++) {
+        if (reached[j]) continue;
+        const d = off + cost[row + j] - colPot[j];
+        if (d < dist[j]) { dist[j] = d; via[j] = k; }
+        if (dist[j] < bestD) { bestD = dist[j]; best = j; }
+      }
+    }
+    if (end < 0) continue;
+    const len = dist[end];                 // shift the potentials so that the whole path costs nothing
+    rowPot[r] += len;
+    for (let s = 0; s < seen - 1; s++) {
+      const j = order[s], gap = len - dist[j];
+      rowPot[owner[j]] += gap; colPot[j] -= gap;
+    }
+    for (let j = end; ; ) {                // then flip it: each row on the path takes the column it reached
+      const i = via[j], held = colOf[i];
+      owner[j] = i; colOf[i] = j;
+      if (i === r) break;
+      j = held;
+    }
+  }
+  return Array.from(colOf);
+}
+function greedyAssign(T) {                 // faster, near-optimal matching for big dot counts
+  // Pairing every spot with every dot and sorting the lot is n*N pairs: 1.5 million at 1250 dots,
+  // and a scene change that stalls for a second or more. A spot only ever wants a dot near it, so
+  // the dots go into a grid of cells about one dot apart, each spot collects its K nearest through
+  // the rings of cells around it, and only those n*K pairs are sorted and taken closest-first:
+  // the same greedy as the full sort, on a short list. Measured against the full sort, the dots
+  // travel the same distance to within a fraction of a percent, so the move reads the same.
+  const n = T.length, K = Math.min(16, N);
+  const cell = Math.max(1, Math.sqrt(W * H / N));
+  const cols = Math.max(1, Math.ceil(W / cell)), rows = Math.max(1, Math.ceil(H / cell));
+  const colOf = x => Math.max(0, Math.min(cols - 1, Math.floor(x / cell)));
+  const rowOf = y => Math.max(0, Math.min(rows - 1, Math.floor(y / cell)));
+  const start = new Int32Array(cols * rows + 1), at = new Int32Array(N), who = new Int32Array(N);
+  const px = new Float64Array(N), py = new Float64Array(N);
+  for (let j = 0; j < N; j++) { at[j] = rowOf(dots[j].y) * cols + colOf(dots[j].x); start[at[j] + 1]++; }
+  for (let c = 0; c < cols * rows; c++) start[c + 1] += start[c];
+  const fill = start.slice(0, -1);
+  for (let j = 0; j < N; j++) {        // who[start[c] .. start[c+1]) are the dots in cell c, with their positions
+    const q = fill[at[j]]++; who[q] = j; px[q] = dots[j].x; py[q] = dots[j].y;
+  }
+  const taken = new Uint8Array(N), out = new Array(n).fill(-1);
+  const rings = Math.max(cols, rows);      // enough rings to reach every cell from any cell
+  const bd = new Float64Array(K), bj = new Int32Array(K);   // a spot's nearest dots so far, closest first
+  // The nearest `want` dots to (x, y) that are not yet taken, into bd/bj; returns how many it found.
+  // Ring r holds the cells at chessboard distance r, and every cell beyond it is at least r cells
+  // away, so once `want` are in hand and the furthest of them is within r cells, the rest can't beat it.
+  const nearest = (x, y, want) => {
+    const cx = colOf(x), cy = rowOf(y);
+    let found = 0;
+    for (let r = 0; r <= rings; r++) {
+      const y0 = Math.max(0, cy - r), y1 = Math.min(rows - 1, cy + r);
+      const x0 = Math.max(0, cx - r), x1 = Math.min(cols - 1, cx + r);
+      if (y0 > cy - r && y1 < cy + r && x0 > cx - r && x1 < cx + r) break;   // the ring is off the grid
+      for (let yy = y0; yy <= y1; yy++) {
+        const edge = yy === cy - r || yy === cy + r, stepX = edge ? 1 : x1 - x0 || 1;
+        for (let xx = x0; xx <= x1; xx += stepX) {
+          if (!edge && xx !== cx - r && xx !== cx + r) continue;
+          const c = yy * cols + xx;
+          for (let q = start[c]; q < start[c + 1]; q++) {
+            const j = who[q];
+            if (taken[j]) continue;
+            const d = (px[q] - x) ** 2 + (py[q] - y) ** 2;
+            if (found === want && d >= bd[found - 1]) continue;
+            let k = found < want ? found++ : found - 1;
+            while (k > 0 && bd[k - 1] > d) { bd[k] = bd[k - 1]; bj[k] = bj[k - 1]; k--; }
+            bd[k] = d; bj[k] = j;
+          }
+        }
+      }
+      if (found === want && bd[found - 1] <= (r * cell) ** 2) break;
+    }
+    return found;
+  };
+  // Each round: every spot still waiting lists its K nearest free dots, the pairs are sorted and
+  // taken closest-first. Spots whose candidates all went to closer spots go round again against
+  // what is left, which is where the full sort's choices for them get reproduced. Four rounds
+  // settle a whole crowd in practice; anything still waiting after that takes the nearest free dot.
+  const pd = new Float64Array(n * K), pi = new Int32Array(n * K), pj = new Int32Array(n * K);
+  let left = n;
+  for (let round = 0; round < 4 && left; round++) {
+    let m = 0;
+    for (let i = 0; i < n; i++) {
+      if (out[i] >= 0) continue;
+      const f = nearest(T[i].x, T[i].y, K);
+      for (let k = 0; k < f; k++) { pd[m] = bd[k]; pi[m] = i; pj[m] = bj[k]; m++; }
+    }
+    const order = new Int32Array(m);
+    for (let q = 0; q < m; q++) order[q] = q;
+    order.sort((a, b) => pd[a] - pd[b] || a - b);
+    for (let q = 0; q < m && left; q++) {
+      const i = pi[order[q]], j = pj[order[q]];
+      if (out[i] < 0 && !taken[j]) { out[i] = j; taken[j] = 1; left--; }
+    }
+  }
+  for (let i = 0; i < n && left; i++) {
+    if (out[i] >= 0 || !nearest(T[i].x, T[i].y, 1)) continue;
+    out[i] = bj[0]; taken[bj[0]] = 1; left--;
+  }
+  return out;
+}
+
+/* ---------- scenes ---------- */
+function applyLayout(sc) {
+  const res = LAYOUTS[sc.type](sc);
+  let T = res.targets || [];
+  const need = T.length;
+  if (need > N) T = T.slice(0, N);
+  highlightAt(T, sc, res.box);
+  if (sc.highlightScale) for (const t of T) if (t.hl) t.r *= sc.highlightScale;   // lit dots can be bigger
+  paint(T, sc);
+  const pick = sc.assign === 'random' ? shuffle([...Array(N).keys()]).slice(0, T.length) : assign(T);
+  const stagger = (sc.stagger ?? STAGGER[sc.type] ?? 1) / (SETTINGS.speed * scn.speed);
+  const ord = orderOf(T, sc.order || res.order || 'random');
+  const used = new Uint8Array(N);
+  T.forEach((t, j) => {
+    const d = dots[pick[j]];
+    used[pick[j]] = 1;
+    retarget(d, 'seek', stagger * ord[j]);
+    d.tx = t.x; d.ty = t.y; d.tr = t.r; d.ta = t.a ?? sc.opacity ?? 1; d.tcol = t.rgb; d.dims = true;
+    if (t.pal) { d.pal = t.pal; d.ci = t.ci; }
+  });
+  const spare = sparesOf(sc), R = (sc.radius ?? SETTINGS.radius) * H;
+  const spareCol = toRGB(sc.extrasColor || SETTINGS.extrasColor || SETTINGS.color);
+  dots.forEach((d, i) => {
+    if (used[i]) return;
+    if (spare === 'dim') {                 // faint, drifting behind the picture
+      retarget(d, 'float', Math.random() * stagger);
+      d.ta = sc.extrasOpacity ?? 0.2; d.tr = R; d.tcol = spareCol.slice();
+    } else if (spare === 'drop') {         // let go: they fall to the floor and wait there, in shot
+      retarget(d, 'phys', Math.random() * stagger * 0.6);
+      d.gx = 0; d.gy = PHY.gravity * (SETTINGS.speed * scn.speed) ** 2;
+      d.ta = sc.extrasOpacity ?? SETTINGS.extrasOpacity ?? 0.35; d.tr = R; d.tcol = spareCol.slice();
+    } else { retarget(d, 'hold', Math.random() * stagger * 0.5); d.ta = 0; d.tr = 0; }
+  });
+  note = need > N ? `needs ${need} dots, only ${N} exist` : `uses ${need} of ${N} dots`;
+  if (res.warn) note += `; ${res.warn}`;
+  if (!sc.jitter) for (let i = 0; i < T.length; i++) {   // every dot is one size, so a small scene can
+                                         // run out of room. Jitter is allowed to touch: that is the point of it.
+    let tight = false;
+    for (let j = i + 1; j < T.length; j++) {
+      if (T[i].edge || T[j].edge) continue;   // an outline meets itself at corners and crosses pictures on purpose
+      const hs = sc.highlightScale || 1, ri = T[i].hl ? T[i].r / hs : T[i].r, rj = T[j].hl ? T[j].r / hs : T[j].r;
+      const dx = T[i].x - T[j].x, dy = T[i].y - T[j].y, rr = (ri + rj) * 0.92;   // lit dots are allowed to be big
+      if (dx * dx + dy * dy < rr * rr) { tight = true; break; }
+    }
+    if (tight) { note += '; too small for this many dots'; break; }
+  }
+  return res.labels || [];
+}
+
+function applyFloat(sc) {
+  const R = (sc.radius ?? SETTINGS.radius) * H, jit = sc.sizeJitter ?? 0;
+  const cyc = sc.colors ? [].concat(sc.colors).map(toRGB) : null, base = toRGB(sc.color || SETTINGS.color);
+  const stagger = (sc.stagger ?? STAGGER.float) / (SETTINGS.speed * scn.speed);
+  dots.forEach((d, i) => {
+    retarget(d, 'float', Math.random() * stagger);
+    d.tr = R * (1 - jit / 2 + Math.random() * jit); d.ta = sc.opacity ?? 1; d.dims = true;
+    d.tcol = cyc ? cyc[i % cyc.length].slice() : base.slice();
+    if (cyc) { d.pal = cyc; d.ci = i % cyc.length; }
+  });
+  note = `${N} dots drifting`;
+}
+
+// Everything lifts on a column of air, spread across the stage, each dot in a lane of its own.
+function applyRise(sc) {
+  const R = (sc.radius ?? SETTINGS.radius) * H;
+  const cyc = sc.colors ? [].concat(sc.colors).map(toRGB) : null, base = toRGB(sc.color || SETTINGS.color);
+  const stagger = (sc.stagger ?? STAGGER.rise) / (SETTINGS.speed * scn.speed);
+  scn.lift = sc.lift ?? 1; scn.sway = sc.sway ?? 1; scn.bob = sc.bob ?? 1;
+  const lanes = shuffle([...Array(N).keys()]);
+  dots.forEach((d, i) => {
+    retarget(d, 'rise', Math.random() * stagger);
+    d.rx = (lanes[i] + 0.15 + Math.random() * 0.7) / N * W;
+    d.tr = R; d.ta = sc.opacity ?? 1; d.dims = true;
+    d.tcol = cyc ? cyc[i % cyc.length].slice() : base.slice();
+    if (cyc) { d.pal = cyc; d.ci = i % cyc.length; }
+  });
+  note = `${N} dots rising`;
+}
+
+// A chosen few light up and gather near the middle; the rest keep the default colour and keep out
+// of that space. Nothing settles: everything goes on drifting, very gently.
+function applySpotlight(sc) {
+  const R = (sc.radius ?? SETTINGS.radius) * H;
+  const want = sc.count ?? 0.1;
+  const n = Math.max(0, Math.min(N, Math.round(want < 1 ? want * N : want)));
+  const cx = (sc.x ?? 0.5) * W, cy = (sc.y ?? 0.5) * H, clear = sc.clear ?? 1.25;
+  const rw = Math.max(R * 3, 0.15 * W * (sc.spread ?? 1)), rh = Math.max(R * 3, 0.36 * H * (sc.spread ?? 1));
+  const lit = toRGB(sc.color || 'magenta'), rest = toRGB(sc.restColor || SETTINGS.color);
+  const near = dots.map((d, i) => [Math.hypot((d.x - cx) / rw, (d.y - cy) / rh), i]).sort((a, b) => a[0] - b[0]);
+  const chosen = new Uint8Array(N);       // the ones already nearest the middle have least distance to go
+  for (let i = 0; i < n; i++) chosen[near[i][1]] = 1;
+  const stagger = (sc.stagger ?? STAGGER.spotlight) / (SETTINGS.speed * scn.speed);
+  dots.forEach((d, i) => {
+    retarget(d, 'roam', Math.random() * stagger);
+    d.tr = R; d.ta = sc.opacity ?? 1; d.dims = true; d.rx = cx; d.ry = cy; d.rk = chosen[i] ? 0 : 1;
+    d.rw = rw * (chosen[i] ? 1 : clear); d.rh = rh * (chosen[i] ? 1 : clear);
+    d.tcol = (chosen[i] ? lit : rest).slice();
+  });
+  note = `${n} of ${N} dots lit`;
+}
+
+function applyStorm(sc) {
+  const R = (sc.radius ?? SETTINGS.radius) * H;
+  const cyc = sc.colors ? [].concat(sc.colors).map(toRGB) : null, base = toRGB(sc.color || SETTINGS.color);
+  scn.gust = sc.gust ?? 1; scn.eddy = sc.eddy ?? 0.55; scn.swirl = sc.swirl ?? 0;
+  scn.eyeX = (sc.x ?? 0.5) * W; scn.eyeY = (sc.y ?? 0.5) * H;
+  const stagger = (sc.stagger ?? STAGGER.storm) / (SETTINGS.speed * scn.speed);
+  dots.forEach((d, i) => {
+    retarget(d, 'storm', Math.random() * stagger);
+    d.tr = R; d.ta = sc.opacity ?? 1; d.dims = true;
+    d.tcol = cyc ? cyc[i % cyc.length].slice() : base.slice();
+    if (cyc) { d.pal = cyc; d.ci = i % cyc.length; }
+  });
+  note = `${N} dots in the storm`;
+}
+
+// A murmuration: the whole crowd flying as one, sheets and swirls of it turning together; or as
+// several flocks, each its own body in a stretch of the stage of its own, left to right. `flocks`
+// is how many, alike, or a list of them, each with its share of the crowd and a colour of its own.
+function applyFlock(sc) {
+  const R = (sc.radius ?? SETTINGS.radius) * H;
+  const cyc = sc.colors ? [].concat(sc.colors).map(toRGB) : null, base = toRGB(sc.color || SETTINGS.color);
+  const list = Array.isArray(sc.flocks) ? sc.flocks.filter(f => f && typeof f === 'object')
+    : Array.from({ length: Math.max(1, Math.round(+sc.flocks) || 1) }, () => ({}));
+  const spec = (list.length ? list : [{}]).slice(0, Math.min(N, 32)), nf = spec.length;
+  const shares = spec.map(f => Math.max(0, +(f.share ?? 1) || 0));
+  if (!shares.some(v => v > 0)) shares.fill(1);
+  const counts = apportion(shares, N), sig = counts.join();
+  scn.cohesion = sc.cohesion ?? 1; scn.alignment = sc.alignment ?? 1; scn.separation = sc.separation ?? 1;
+  scn.range = sc.range ?? 0.16; scn.eyeX = (sc.x ?? 0.5) * W; scn.eyeY = (sc.y ?? 0.5) * H; scn.flocks = nf; scn.avoid = sc.avoid ?? 1;
+  // Each flock's stretch of the stage, as fractions of its width from x: together the middle four
+  // fifths, wider for a bigger flock, though not in proportion, so a small one still has room to turn.
+  const wide = shares.map(Math.sqrt), all = wide.reduce((a, b) => a + b, 0);
+  scn.zones = [];
+  for (let k = 0, at = -0.4; k < nf; k++) { const span = 0.8 * wide[k] / all; scn.zones.push(at, at + span); at += span; }
+  // A flock after flocks of the same sizes keeps its members. Otherwise the dots furthest left join
+  // the left-most flock and so on across, so each flock gathers where its dots already are.
+  if (!dots.every(d => d.mode === 'flock' && d.fn === sig)) {
+    const order = [...Array(N).keys()].sort((a, b) => dots[a].x - dots[b].x);
+    let at = 0;
+    counts.forEach((c, k) => { for (let j = 0; j < c; j++) { const d = dots[order[at++]]; d.fk = k; d.fn = sig; } });
+  }
+  const own = spec.map(f => (f.color ? toRGB(f.color) : null));
+  const stagger = (sc.stagger ?? STAGGER.flock) / (SETTINGS.speed * scn.speed);
+  dots.forEach((d, i) => {
+    retarget(d, 'flock', Math.random() * stagger);
+    d.tr = R; d.ta = sc.opacity ?? 1; d.dims = true;
+    const k = d.fk % nf, ci = nf > 1 ? k : i;   // several flocks take a colour each; one flock alternates them
+    if (own[k]) { d.tcol = own[k].slice(); return; }     // a flock's own colour holds: it does not cycle
+    d.tcol = cyc ? cyc[ci % cyc.length].slice() : base.slice();
+    if (cyc) { d.pal = cyc; d.ci = ci % cyc.length; }
+  });
+  note = nf > 1 ? `${N} dots in ${nf} flocks` : `${N} dots in the flock`;
+}
+
+// Lanes of dots flowing across the stage, each lane at its own pace, forever. The top lane takes the
+// dots already nearest the top, and so on down, so joining a lane is a short trip.
+function applyStream(sc) {
+  const R = (sc.radius ?? SETTINGS.radius) * H;
+  const lanes = (sc.lanes && sc.lanes.length ? sc.lanes : [{ y: 0.5 }]).map((l, i) => ({ ...l, i }));
+  const counts = apportion(lanes.map(l => l.share ?? 1), N);
+  const stagger = (sc.stagger ?? STAGGER.stream) / (SETTINGS.speed * scn.speed);
+  const order = [...Array(N).keys()].sort((a, b) => dots[a].y - dots[b].y);
+  let at = 0;
+  for (const l of [...lanes].sort((a, b) => (a.y ?? 0.5) - (b.y ?? 0.5))) {
+    const col = toRGB(l.color || sc.color || SETTINGS.color);
+    for (let j = 0; j < counts[l.i]; j++) {
+      const d = dots[order[at++]];
+      retarget(d, 'stream', Math.random() * stagger);
+      d.ry = (l.y ?? 0.5) * H; d.rh = Math.max(0, (l.height ?? 0.25) * H / 2 - R); d.flow = l.speed ?? 1;
+      d.tr = R; d.ta = l.opacity ?? sc.opacity ?? 1; d.dims = true; d.tcol = col.slice();
+    }
+  }
+  note = `${N} dots in ${lanes.length} lane${lanes.length === 1 ? '' : 's'}`;
+}
+
+// One dot walks; every other dot is left where the last scene put it, to be scattered on the way.
+function applyWalk(sc) {
+  const R = (sc.radius ?? SETTINGS.radius) * H, sp = SETTINGS.speed * scn.speed;
+  const y = (sc.y ?? 0.5) * H, x0 = (sc.from ?? 0.04) * W, x1 = (sc.to ?? 0.96) * W;
+  scn.walk = {
+    t0: now, x0, x1, y, loop: !!sc.loop, cross: Math.max(0.5, sc.seconds ?? 9) / sp,
+    cadence: (sc.cadence ?? 1.9) * sp, hop: (sc.hop ?? 0.055) * H,
+    reach: (sc.reach ?? 0.42) * H, fear: (sc.fear ?? 1) * 3 * H * sp * sp,
+  };
+  scn.calm = sc.calm ?? 0.25;            // a crowd that barely stirs, so a gap stays open once one opens
+  const crowd = toRGB(sc.crowdColor || SETTINGS.color);
+  const n = Math.max(1, Math.min(N, (sc.walkers | 0) || 1));   // the dots nearest the starting mark take the parts
+  const far = d => Math.hypot(d.x - x0, d.y - y);
+  const cast = dots.map((d, i) => i).sort((a, b) => far(dots[a]) - far(dots[b])).slice(0, n);
+  const picked = new Set(cast);
+  dots.forEach((d, i) => {
+    if (picked.has(i)) return;
+    retarget(d, 'float', 0);
+    d.tr = R; d.ta = sc.opacity ?? 1; d.dims = true; d.rw = 0; d.tcol = crowd.slice();   // the walker keeps its full light
+  });
+  walkers = cast.map((i, k) => {
+    const d = dots[i];
+    retarget(d, 'walk', 0);
+    d.wo = k * scn.walk.cross * 0.08;      // in a line, each a twelfth of the crossing behind the one ahead
+    d.tr = R * (sc.walkerSize ?? 1); d.ta = 1; d.tcol = toRGB(sc.color || SETTINGS.color);
+    return d;
+  });
+  walker = walkers[0];
+  note = `${n} dot${n > 1 ? 's' : ''} walking, ${N - n} getting out of the way`;
+}
+
+function dirOf(dir) {
+  if (Array.isArray(dir)) { const l = Math.hypot(dir[0], dir[1]) || 1; return [dir[0] / l, dir[1] / l]; }
+  return DIRS[dir] || DIRS.down;
+}
+function applyGravity(sc) {                // dots keep their colour and size unless told otherwise
+  const alive = [];
+  dots.forEach((d, i) => { if ((d.was || d.mode === 'walk') && d.ta > 0) alive.push(i); });   // the last scene's, however dim; never the pile
+  const groups = sc.groups || [{ share: 1, dir: sc.dir, color: sc.color }];
+  const counts = apportion(groups.map(g => g.share ?? 1), alive.length);
+  const g0 = PHY.gravity * (sc.strength ?? 1) * (SETTINGS.speed * scn.speed) ** 2;
+  const pool = new Set(alive);
+  const vecs = groups.map(g => dirOf(g.dir ?? sc.dir));
+  const mean = [0, 1].map(k => vecs.reduce((s, v) => s + v[k], 0) / vecs.length);
+  const order = groups.map((_, i) => i).sort((a, b) => counts[a] - counts[b]);
+  order.forEach((gi, n) => {               // smaller groups take the dots already nearest their side
+    const g = groups[gi], v = vecs[gi];
+    let ax = v[0] - mean[0], ay = v[1] - mean[1];   // the axis that tells the groups apart
+    if (Math.hypot(ax, ay) < 1e-6) { ax = v[0]; ay = v[1]; }
+    const along = i => dots[i].x * ax + dots[i].y * ay;
+    const members = n === order.length - 1 ? [...pool] : [...pool].sort((a, b) => along(b) - along(a)).slice(0, counts[gi]);
+    for (const i of members) {
+      pool.delete(i);
+      const d = dots[i];
+      // A dot already falling (or fallen) this way is left lying where it is: gravity played again
+      // on a fallen crowd changes its colour, its size or its light where it rests, and moves nothing.
+      // Only a dot starting to fall gets the nudge that keeps a crowd from dropping in columns.
+      const lying = d.mode === 'phys' && !(d.delay > 0) && d.gx * v[0] + d.gy * v[1] > 0.999 * Math.hypot(d.gx, d.gy) * Math.hypot(v[0], v[1]);
+      if (!lying) {
+        retarget(d, 'phys', (sc.stagger ?? 0) * Math.random());
+        d.vx += (Math.random() - 0.5) * 0.03 * H; d.vy += (Math.random() - 0.5) * 0.03 * H;
+      }
+      d.gx = v[0] * g0; d.gy = v[1] * g0;
+      if (g.color || sc.color) d.tcol = toRGB(g.color || sc.color);
+      if (sc.radius) d.tr = sc.radius * H;
+      if (sc.opacity != null) d.ta = sc.opacity;
+      d.dims = true;
+    }
+  });
+  note = `${alive.length} dots under gravity`;
+}
+
+// A label the next scene repeats exactly (same words, place, size, colour) stays on stage rather
+// than fading out and back in, so a list can build up a line per click without blinking.
+const labelKey = L => [L.text, Math.round(L.x), Math.round(L.y), Math.round(L.size), L.css, L.font || '', L.align || 'center', L.weight || 600].join('|');
+function setLabels(list, delay) {
+  const want = new Map();
+  for (const L of list) {
+    const n = { ...L, a: 0, ta: 1, delay, css: css(toRGB(L.color || SETTINGS.labelColor)) };
+    want.set(labelKey(n), n);
+  }
+  for (const L of labels) {
+    const k = labelKey(L);
+    if (L.ta === 1 && want.has(k)) want.delete(k);   // already up and staying: leave it be
+    else { L.ta = 0; L.delay = 0; }
+  }
+  for (const n of want.values()) labels.push(n);
+}
+
+// The modes that run themselves, as against the layouts, which send the dots to fixed places.
+const MODES = { float: applyFloat, gravity: applyGravity, rise: applyRise,
+                spotlight: applySpotlight, storm: applyStorm, walk: applyWalk, stream: applyStream, flock: applyFlock };
+// Scenes that never settle, so a reload plays them forward instead of snapping to the end...
+const FLOW = new Set(['float', 'gravity', 'rise', 'spotlight', 'storm', 'walk', 'stream', 'flock']);
+// ...and the ones that start from wherever the dots already were, so the scene before them matters.
+const CARRIES_ON = new Set(['gravity', 'walk']);
+
+function go(i) {
+  if (!SCENES.length) return;
+  cur = Math.max(0, Math.min(SCENES.length - 1, i));
+  const sc = SCENES[cur] || {}, was = scn;
+  scn = { ...DIALS, speed: sc.speed ?? PACE[sc.type] ?? 1, bounce: sc.bounce ?? 0.35,
+    wander: sc.wander ?? 1, restitution: 0.1 + 0.7 * (sc.bounce ?? 0.4),
+    pulse: sc.pulse ?? 0, pulseRate: sc.pulseRate ?? 60, tremble: sc.tremble ?? 0, cycle: sc.cycle ?? 0, fade: sc.fade ?? 0.25, opacity: sc.opacity ?? 1 };
+  note = ''; walker = null; walkers = [];
+  for (const d of dots) { d.was = d.dims; d.pal = null; d.ci = -1; d.dims = false; }
+  missedColors.clear();
+  let own = [];
+  try {
+    if (MODES[sc.type]) MODES[sc.type](sc);
+    else if (LAYOUTS[sc.type]) own = applyLayout(sc);
+    else note = `unknown scene type "${sc.type}"`;
+  } catch (err) { console.error(err); note = `error: ${err.message}`; }
+  for (const d of dots) if (d.dims) d.ao = scn.opacity ? d.ta / scn.opacity : 1;
+  // ease: the dials glide from where the last scene left them instead of jumping, so a storm that
+  // follows a storm gathers or calms rather than changing at the cut (The Ramp, as a glide)
+  eases = {};
+  if (sc.ease > 0) for (const k of GLIDES) {
+    if (Number.isFinite(was[k]) && Number.isFinite(scn[k]) && was[k] !== scn[k]) { eases[k] = { from: was[k], to: scn[k], t0: now, dur: sc.ease }; scn[k] = was[k]; }
+  }
+  if (sc.burst) {
+    const bx = (sc.burstX ?? 0.5) * W, by = (sc.burstY ?? 0.5) * H;
+    for (const d of dots) {
+      const dx = d.x - bx, dy = d.y - by, l = Math.hypot(dx, dy) || 1;
+      const s = sc.burst * 1.3 * H * (0.6 + 0.4 * Math.random()), kick = [dx / l * s, dy / l * s];
+      if (d.delay > 0) d.kick = kick; else { d.vx += kick[0]; d.vy += kick[1]; }
+    }
+  }
+  const free = [].concat(sc.labels || []).filter(L => L && typeof L === 'object').map(L => ({
+    text: String(L.text ?? ''), x: (L.x ?? 0.5) * W, y: (L.y ?? 0.9) * H, size: (L.size ?? 0.05) * H,
+    color: L.color, align: L.align, weight: L.weight, font: L.font }));
+  setLabels(own.concat(free), sc.labelDelay ?? (sc.type === 'gravity' ? 0.3 : 0.9));
+  if (missedColors.size) note += `; unknown colour ${[...missedColors].map(c => `"${c}"`).join(', ')}`;
+  updateHud(); saveHash(); tellPresenter();
+}
+
+// Jump straight to the settled state of a scene (used when reloading and by replay).
+function snapTo(i) {
+  i = Math.max(0, Math.min(SCENES.length - 1, i));
+  let j = i;
+  while (j > 0 && CARRIES_ON.has((SCENES[j] || {}).type)) j--;
+  for (let k = j; k <= i; k++) { go(k); settle(SCENES[k] || {}); }
+}
+// Put a scene that go() has just set up where the live show would have taken it. A picture is
+// finished outright, and the spare dots it dropped are set down on the floor by restPile below;
+// a scene that never settles is instead played 2.5 s forward, as a reload always did, but in
+// single substeps: a crowd mid-drift or mid-storm looks the same at a thirtieth of the cost.
+// Sideways gravity is the one thing restPile cannot place, so it keeps the fine physics.
+function settle(sc) {
+  const down = d => d.mode !== 'phys' || (d.gx === 0 && d.gy > 0);
+  if (!FLOW.has(sc.type) || (sc.type === 'gravity' && dots.every(down))) { finishNow(); restPile(); return; }
+  if (sc.type === 'gravity') { for (let f = 0; f < 150; f++) step(1 / 60); return; }
+  for (let f = 0; f < 75; f++) step(1 / 30, 1);
+}
+function finishNow() {
+  for (const d of dots) {
+    d.delay = 0; d.kick = null;
+    if (d.mode === 'seek') { d.x = d.tx; d.y = d.ty; d.vx = 0; d.vy = 0; }
+    d.r = d.tr; d.a = d.ta; d.col = d.tcol.slice();
+  }
+  for (let i = labels.length - 1; i >= 0; i--) {
+    if (labels[i].ta) { labels[i].a = 1; labels[i].delay = 0; } else labels.splice(i, 1);
+  }
+}
+// Every falling dot set down at rest, where the physics would have left it: on the floor wherever
+// there is room, else dropped onto whatever is lying there and rolled off anything it lands on
+// top of until it sits in a hollow, against a wall or on the floor, the way a round thing comes to
+// rest. Dots already resting on the floor stay exactly where they are. Lowest dots land first, as
+// they would. This takes a few milliseconds; letting the physics settle a pile is 150 frames of
+// every dot against every neighbour, most of a second at 1250 dots.
+function restPile() {
+  const heap = [];                         // dots at rest, sorted by x
+  const at = x => { let lo = 0, hi = heap.length; while (lo < hi) { const m = (lo + hi) >> 1; if (heap[m].x < x) lo = m + 1; else hi = m; } return lo; };
+  const add = d => heap.splice(at(d.x), 0, d);
+  const each = (x, span, fn) => { for (let q = at(x - span); q < heap.length && heap[q].x <= x + span; q++) if (fn(heap[q]) === false) return false; return true; };
+  const phys = dots.filter(d => d.mode === 'phys' && d.r > 0.5).sort((a, b) => b.y - a.y);
+  const falling = [], rmax = phys.reduce((m, d) => Math.max(m, d.r), 0), REACH = 0.1 * W;
+  for (const d of phys) {                  // a dot on the floor, still, and clear of every other such dot
+    const still = d.y >= H - d.r - 1 && Math.hypot(d.vx, d.vy) <= PHY.rest    // stays put. Anything stacked
+      && each(d.x, d.r + rmax, e => Math.hypot(d.x - e.x, d.y - e.y) >= d.r + e.r - 1);   // is placed again: it lands
+    if (still) add(d); else falling.push(d);   // back in its hollow, unless the floor has room for it
+  }
+  // Where a dot of radius r, falling at x from above fromY, first meets the heap or the floor.
+  const land = (x, r, fromY) => {
+    let y = H - r;
+    each(x, r + rmax, e => { const rr = r + e.r, dx = x - e.x; if (Math.abs(dx) >= rr) return;
+      const ye = e.y - Math.sqrt(rr * rr - dx * dx); if (ye >= fromY - 0.5 && ye < y) y = ye; });
+    return y;
+  };
+  // Room on the floor at x for a dot of radius r: its centre once there is, or null when the floor
+  // is full. The floor here is all but frictionless: a dot landing on a row of resting dots shoves
+  // the row along and sinks in where it fell, and a push runs the length of a touching row, so the
+  // physics fills the whole floor before anything stays stacked. So the row is shoved towards its
+  // nearest slack to make room, each dot in it by no more than one width, and the dot goes in.
+  const floorRoom = (x, r) => {
+    const row = [];
+    for (const e of heap) if (e.y >= H - e.r - 1) row.push(e);   // the dots on the floor, by x
+    let best = null;
+    const open = (lo, hi) => {             // the nearest centre to x in [lo, hi], if the gap is wide enough
+      lo = Math.max(lo, r); hi = Math.min(hi, W - r);
+      if (lo > hi) return;
+      const p = Math.max(lo, Math.min(hi, x));
+      if (best === null || Math.abs(p - x) < Math.abs(best - x)) best = p;
+    };
+    let edge = 0;                          // where the last floor dot ends, as a limit on the next centre
+    for (const e of row) { open(edge, e.x - e.r - r); edge = e.x + e.r + r; }
+    open(edge, W);
+    if (best === null || best === x) return best;
+    if (row.length < heap.length) return null;   // something already stacked on the row: leave it be
+    const dir = best > x ? 1 : -1;         // shove the row that way: the dot clears its neighbour on the
+    let p = x;                             // other side, and each dot ahead moves just enough to clear
+    for (const e of row) if (dir * (e.x - x) < 0 && dir * (p - e.x) < e.r + r) p = e.x + dir * (e.r + r);
+    let px = p, pr = r;
+    for (let q = dir > 0 ? 0 : row.length - 1; q >= 0 && q < row.length; q += dir) {
+      const e = row[q];
+      if (dir * (e.x - x) < 0) continue;
+      if (dir * (e.x - px) >= pr + e.r) break;
+      e.x = px + dir * (pr + e.r); e.fx = e.x; px = e.x; pr = e.r;
+    }
+    return p;
+  };
+  for (const d of falling) {
+    const r = d.r;
+    let x = Math.max(r, Math.min(W - r, d.x)), y, s = null;
+    const spot = floorRoom(x, r);
+    if (spot !== null) { x = spot; y = H - r; }
+    else {                                 // the floor is full: a heap flows, so it lands on the lowest point
+      y = land(x, r, -Infinity);           // of the heap within reach of where it fell, nearest first
+      for (let k = 1, x0 = x; k * 2 * r <= REACH; k++) for (const xi of [x0 - k * 2 * r, x0 + k * 2 * r]) {
+        if (xi < r || xi > W - r) continue;
+        const yi = land(xi, r, -Infinity);
+        if (yi > y + 0.5) { y = yi; x = xi; }
+      }
+    }
+    for (let moves = 0; moves < 24; moves++) {
+      if (y >= H - r - 1e-6) break;        // on the floor
+      const touching = [];                 // what it rests on now
+      each(x, r + rmax + 1, e => { if (Math.abs(Math.hypot(x - e.x, y - e.y) - (r + e.r)) <= 0.5) touching.push(e); });
+      if (!touching.length) break;         // nothing under it (a dot above the pile's top edge)
+      const lx = touching[0].x, hx = touching[touching.length - 1].x;
+      if (touching.length > 1 && lx < x && x < hx) break;   // in a hollow between two
+      s = x <= lx ? touching[0] : touching[touching.length - 1];   // the outermost one, to roll over
+      // roll off s, down the side the dot already leans to (inward, at a wall), until something
+      // stops it or it passes the widest point and drops again
+      let side = x > s.x + 1e-6 ? 1 : x < s.x - 1e-6 ? -1 : 0;
+      if (!side) side = x >= W - r - 1e-6 ? -1 : x <= r + 1e-6 ? 1 : (d.ph < Math.PI ? -1 : 1);
+      if ((side > 0 && x >= W - r - 1e-6) || (side < 0 && x <= r + 1e-6)) break;   // leaning into a wall: wedged
+      const R2 = r + s.r, th0 = Math.atan2(side * (x - s.x), s.y - y);
+      let th = Math.PI / 2, stop = null;
+      const cf = (s.y - (H - r)) / R2;                       // the floor
+      if (cf > -1 && cf < 1) { const t = Math.acos(cf); if (t > th0 && t < th) { th = t; stop = 'floor'; } }
+      const sw = side * ((side > 0 ? W - r : r) - s.x) / R2;   // the wall on that side
+      if (sw > 0 && sw < 1) { const t = Math.asin(sw); if (t > th0 && t < th) { th = t; stop = 'wall'; } }
+      each(s.x, R2 + r + rmax, t => {                         // another dot in the way
+        if (t === s) return;
+        const R3 = r + t.r, dx = t.x - s.x, dy = t.y - s.y, dd = Math.hypot(dx, dy);
+        if (dd < 1e-9 || dd > R2 + R3 || dd < Math.abs(R2 - R3)) return;
+        const a = (R2 * R2 - R3 * R3 + dd * dd) / (2 * dd), h2 = R2 * R2 - a * a;
+        if (h2 < 0) return;
+        const hh = Math.sqrt(h2), px = s.x + a * dx / dd, py = s.y + a * dy / dd;
+        for (const sg of [1, -1]) {
+          const qx = px + sg * hh * -dy / dd, qy = py + sg * hh * dx / dd;
+          const ax = side * (qx - s.x), ay = s.y - qy;
+          if (ax < -1e-6) continue;
+          const tt = Math.atan2(ax, ay);
+          if (tt > th0 + 1e-6 && tt < th + 1e-9) { th = tt; stop = t; }
+        }
+      });
+      x = Math.max(r, Math.min(W - r, s.x + side * R2 * Math.sin(th))); y = s.y - R2 * Math.cos(th);
+      if (stop === 'floor' || stop === 'wall') break;
+      if (stop === null) { y = land(x, r, y + 1e-6); continue; }   // past the widest point: falls on
+    }
+    if (!each(x, r + rmax, e => Math.hypot(x - e.x, y - e.y) >= r + e.r - 0.5)) y = land(x, r, -Infinity);   // never inside another
+    d.x = x; d.y = Math.max(r, y); d.vx = 0; d.vy = 0; d.fx = d.x; d.fy = d.y;
+    add(d);
+  }
+}
+function replay() {
+  if (cur > 0) { const i = cur; snapTo(i - 1); go(i); return; }
+  if (sparesDefault() === 'drop') restDots();
+  else for (const d of dots) { d.x = Math.random() * W; d.y = Math.random() * H; d.r = 0; }
+  go(0);
+}
+
+/* ---------- screen, controls, rehearsal bar ---------- */
+function resize() {
+  const bw = document.body.clientWidth, bh = document.body.clientHeight;
+  const bare = ['fs', 'nohud', 'bare'].some(c => document.body.classList.contains(c));
+  const pad = bare ? 0 : Math.min(28, bw * 0.04), reserve = bare ? 0 : 60;
+  const aw = Math.max(1, bw - pad * 2), ah = Math.max(1, bh - pad * 2 - reserve);
+  const scale = Math.min(aw / W, ah / H), cw = W * scale, chh = H * scale;
+  Object.assign(canvas.style, { width: cw + 'px', height: chh + 'px', left: (bw - cw) / 2 + 'px', top: pad + (ah - chh) / 2 + 'px' });
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = Math.max(1, Math.round(cw * dpr)); canvas.height = Math.max(1, Math.round(chh * dpr));
+  view = canvas.width / W;
+}
+function updateHud() {
+  const sc = SCENES[cur] || {};
+  $('#num').textContent = `${cur + 1} / ${SCENES.length}`;
+  $('#title').textContent = sc.title || sc.type || '';
+  const n = $('#note');
+  // The dot tally ("uses 640 of 1250 dots", "1250 dots drifting", "too small for this many dots") is
+  // for building a talk, not giving one, so the bar leaves it out and shows only what needs acting
+  // on: a scene short of dots, a letter the font lacks, a blocked window. Tooling can still read the
+  // whole note from the bar's data-note attribute.
+  n.dataset.note = note;
+  const routine = /^(uses \d+ of \d+ dots|\d+ dots? \w.*|\d+ of \d+ dots lit|too small for this many dots)$/;
+  const shown = note.split('; ').filter(s => s && !routine.test(s)).join('; ');
+  n.textContent = shown;
+  n.classList.toggle('warn', /needs|unknown|error|no dot|blocked/i.test(shown));
+  tellParent();
+}
+// Keeping the scene number in the address bar is a rehearsal convenience: a reload lands you back
+// where you were. Safari treats every file: URL as its own security origin and refuses to let a page
+// opened straight from disk touch its own address, so ask once and then stop asking, rather than
+// logging a security warning on every press of the clicker. Nothing else depends on this.
+let hashOk = true;
+function saveHash() {
+  const want = '#' + (cur + 1);
+  if (!hashOk || location.hash === want) return;
+  try {
+    history.replaceState(null, '', want);
+    hashOk = location.hash === want;     // some browsers refuse quietly instead of throwing
+  } catch (e) { hashOk = false; }
+}
+function toggleFullscreen() {
+  const d = document, el = d.documentElement;
+  if (d.fullscreenElement || d.webkitFullscreenElement) { (d.exitFullscreen || d.webkitExitFullscreen).call(d); return; }
+  const req = el.requestFullscreen || el.webkitRequestFullscreen;
+  const fail = () => { note = 'Fullscreen is blocked in this viewer. Open the file directly in Chrome.'; updateHud(); };
+  if (!req) return fail();
+  try { const p = req.call(el); if (p && p.catch) p.catch(fail); } catch (e) { fail(); }
+}
+for (const ev of ['fullscreenchange', 'webkitfullscreenchange']) document.addEventListener(ev, () => {
+  document.body.classList.toggle('fs', !!(document.fullscreenElement || document.webkitFullscreenElement));
+  resize();
+});
+
+const NEXT = ['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter', 'n', 'N'];
+const PREV = ['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'];   // P is the presenter window
+function handleKey(k) {                   // one place for the clicker, the keyboard and the presenter window
+  if (NEXT.includes(k)) go(cur + 1);
+  else if (PREV.includes(k)) go(cur - 1);
+  else if (k === 'Home') go(0);
+  else if (k === 'End') go(SCENES.length - 1);
+  else if (/^[1-9]$/.test(k)) go(+k - 1);
+  else if (k === '0') go(9);
+  else if (k === 'r' || k === 'R') replay();
+  else if (k === 'f' || k === 'F') toggleFullscreen();
+  else if (k === 'h' || k === 'H') { document.body.classList.toggle('nohud'); resize(); }
+  else if (k === 'b' || k === 'B' || k === '.') fadeTo = fadeTo ? 0 : 1;
+  else if (k === 'p' || k === 'P') openPresenter();
+  else return false;
+  return true;
+}
+addEventListener('keydown', e => {
+  if (!ready || e.metaKey || e.ctrlKey || e.altKey) return;
+  const k = e.key;
+  if ((k === ' ' || k === 'Enter') && e.target.closest && e.target.closest('button')) return;
+  if (handleKey(k)) e.preventDefault();
+});
+
+/* ---------- presenter notes: a second window, for the laptop screen ----------
+   Fullscreen takes over whichever display the browser window is on, and the other display shows
+   nothing of the talk. P opens this same file again in a small window, in presenter mode: drag
+   it to the laptop screen. It shows the scene you are on, the one coming next and the script
+   comments written above each scene, and its keys drive the wall. The two windows talk over
+   postMessage, which works for a file opened straight from disk. */
+let presenterWin = null;
+function openPresenter() {
+  if (presenterWin && !presenterWin.closed) { presenterWin.focus(); tellPresenter(); return; }
+  presenterWin = window.open(location.href.replace(/#.*$/, '') + '#presenter', 'dottie-presenter', 'width=1040,height=680');
+  note = presenterWin ? 'Presenter notes opened in a new window. Drag it to your laptop screen.'
+                      : 'The browser blocked the presenter window. Allow pop-ups for this file and press P again.';
+  updateHud();
+}
+function tellPresenter() {
+  if (presenterWin && !presenterWin.closed) presenterWin.postMessage({ sim: 'state', cur }, '*');
+}
+/* ---------- tooling: an editor holding this file in an iframe ----------
+   An editor (the director; see FOUNDATIONS.md in the repo this file came from) runs a talk inside
+   an iframe and drives it over postMessage: the same 'key' messages the presenter window sends,
+   plus go, snap and replay by scene number, and 'layout', which answers with where a picture scene
+   would put its dots and what it would write, without moving anything. The engine posts its state
+   to the parent after every scene change. None of this runs when the file is opened on its own.
+   'dials' (turnDials, above) is answered like 'key', from any window that may send keys: it turns
+   the scene's dials without a cut. */
+const tooling = (() => { try { return window.parent !== window; } catch (e) { return false; } })();
+function tellParent() {
+  if (!tooling) return;
+  parent.postMessage({ sim: 'state', version: ENGINE_VERSION, cur, count: SCENES.length, note, ready,
+    title: (SCENES[cur] || {}).title || '', dots: N, width: W, height: H }, '*');
+}
+// Where a picture scene puts its dots and what it writes, as its layout would place them. Ambient
+// and physics scenes have no layout, so they answer with nothing.
+function spotsOf(sc) {
+  if (!sc || !LAYOUTS[sc.type]) return { spots: [], labels: [], need: 0 };
+  const res = LAYOUTS[sc.type](sc);
+  let T = res.targets || [];
+  const need = T.length;
+  if (need > N) T = T.slice(0, N);
+  highlightAt(T, sc, res.box);
+  if (sc.highlightScale) for (const t of T) if (t.hl) t.r *= sc.highlightScale;
+  paint(T, sc);
+  return { spots: T.map(t => [Math.round(t.x), Math.round(t.y), +t.r.toFixed(1), t.rgb]), labels: res.labels || [], warn: res.warn, need };
+}
+// Turn the scene's dials without a cut: each one named eases from where it stands to the value given,
+// over `over` seconds (1 by default, 0 at once), and the next scene sets them afresh. x and y move the
+// storm's eye or the flock's home, as fractions of the stage; avoid is how hard several flocks keep apart; cycle and fade change at once; opacity
+// dims or lights every dot the scene uses, and never the spare ones waiting on the floor.
+const DIAL_KEYS = { speed: 'speed', wander: 'wander', calm: 'calm', lift: 'lift', sway: 'sway', bob: 'bob', gust: 'gust', eddy: 'eddy',
+  swirl: 'swirl', x: 'eyeX', y: 'eyeY', cohesion: 'cohesion', alignment: 'alignment', separation: 'separation', range: 'range',
+  avoid: 'avoid', pulse: 'pulse', pulseRate: 'pulseRate', cycle: 'cycle', fade: 'fade', opacity: 'opacity' };
+function turnDials(m) {
+  const over = Number.isFinite(+m.over) ? Math.max(0, +m.over) : 1;
+  for (const [k, key] of Object.entries(DIAL_KEYS)) {
+    const v = m[k];
+    if (typeof v !== 'number' || !Number.isFinite(v)) continue;
+    const to = k === 'x' ? v * W : k === 'y' ? v * H : v;
+    if (!over || !GLIDES.includes(key)) { scn[key] = to; delete eases[key]; if (key === 'opacity') dimNow = true; }
+    else eases[key] = { from: scn[key], to, t0: now, dur: over };
+  }
+}
+addEventListener('message', e => {
+  const m = e.data;
+  if (!m || typeof m !== 'object' || !m.sim) return;
+  if (m.sim === 'hello') { tellPresenter(); tellParent(); }
+  else if (m.sim === 'key' && ready && typeof m.key === 'string') handleKey(m.key);
+  else if (m.sim === 'dials' && ready) turnDials(m);   // like a key, from any window that may send keys
+  else if (!tooling) return;
+  else if (m.sim === 'go' && ready) go(m.i | 0);
+  else if (m.sim === 'snap' && ready) snapTo(m.i | 0);
+  else if (m.sim === 'replay' && ready) replay();
+  else if (m.sim === 'hud') { document.body.classList.toggle('bare', !!m.hidden); resize(); }   // the stage alone, black to the edges
+  else if (m.sim === 'layout') {
+    let out;
+    if (!ready) out = { spots: [], labels: [], need: 0, notReady: true };
+    else try { out = spotsOf(m.scene); } catch (err) { out = { spots: [], labels: [], need: 0, warn: `error: ${err.message}` }; }
+    parent.postMessage({ sim: 'targets', id: m.id, ...out }, '*');
+  }
+});
+
+// The script comments above each scene, read back out of this file's own source, so the presenter
+// window can show them without the talk having to carry its notes twice.
+function scriptNotes() {
+  const src = [...document.scripts].map(s => s.textContent).find(t => t.includes('const SCENES')) || '';
+  const a = src.indexOf('const SCENES'), b = src.indexOf('2. ENGINE', a);
+  const lines = src.slice(a, b > 0 ? b : undefined).split('\n');
+  const notes = [], acts = [];
+  let buf = [], act = '', block = null;
+  const clean = t => t.replace(/^[\s=*/]+|[\s=*/]+$/g, '');
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (block) {
+      block.push(line.replace('*/', ''));
+      if (line.includes('*/')) { act = block.map(clean).filter(Boolean).join('\n'); block = null; }
+      continue;
+    }
+    if (line.startsWith('/*')) {
+      block = [line.replace('/*', '').replace('*/', '')];
+      if (line.includes('*/')) { act = block.map(clean).filter(Boolean).join('\n'); block = null; }
+      continue;
+    }
+    if (line.startsWith('//')) { buf.push(line.replace(/^\/\/ ?/, '').replace(/<\\\//g, '</').replace(/<\\!--/g, '<!--')); continue; }   // a note is written so it cannot end the script
+    if (/^\{\s*title\s*:/.test(line)) { notes.push(buf.join('\n').trim()); acts.push(act); buf = []; continue; }
+    if (line) buf = [];                      // code: whatever comments came before it were not a cue
+  }
+  return { notes, acts };
+}
+
+function presenterView() {
+  document.body.classList.add('presenter');
+  const style = document.createElement('style');
+  style.textContent = `
+    body.presenter { background: #0e0e11; color: #ebe7e0; overflow: auto; }
+    body.presenter #stage, body.presenter #bar, body.presenter #help { display: none; }
+    #pv { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 14px; padding: 18px 22px; font: 500 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    #pv .top { display: flex; align-items: baseline; gap: 18px; color: #9a958d; font-variant-numeric: tabular-nums; }
+    #pv .top .n { font-size: 22px; color: #ebe7e0; font-weight: 700; }
+    #pv .top .act { flex: 1; min-width: 0; white-space: pre-wrap; font-size: 13px; line-height: 1.35; max-height: 4.2em; overflow: hidden; }
+    #pv .main { flex: 1; min-height: 0; display: grid; grid-template-columns: 3fr 2fr; gap: 26px; }
+    #pv section { min-height: 0; overflow: auto; }
+    #pv .k { font-size: 12px; letter-spacing: .14em; color: #8a8580; }
+    #pv h1 { margin: 2px 0 10px; font-size: 30px; line-height: 1.2; }
+    #pv h2 { margin: 2px 0 10px; font-size: 21px; line-height: 1.25; color: #d8d3cb; }
+    #pv pre { margin: 0; white-space: pre-wrap; font: inherit; color: #c9c4bb; }
+    #pv .next { border-left: 1px solid #2c2c31; padding-left: 26px; }
+    #pv ol { margin: 16px 0 0; padding: 0; list-style: none; color: #76726b; font-size: 14px; }
+    #pv .foot { display: flex; gap: 10px; align-items: center; color: #76726b; font-size: 13px; }
+    #pv button { font: 600 14px system-ui, sans-serif; padding: 6px 14px; border-radius: 8px; border: 1px solid #333; background: #1a1a1f; color: #ebe7e0; cursor: pointer; }
+    #pv .clock { margin-left: auto; font-size: 20px; color: #ebe7e0; }`;
+  document.head.appendChild(style);
+  const { notes, acts } = scriptNotes();
+  const root = document.createElement('div'); root.id = 'pv'; document.body.appendChild(root);
+  const esc = t => String(t ?? '').replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+  let at = 0, t0 = 0;
+  const send = key => { if (window.opener && !window.opener.closed) window.opener.postMessage({ sim: 'key', key }, '*'); };
+  function render() {
+    const sc = SCENES[at] || {}, nx = SCENES[at + 1];
+    const name = s => esc(s ? (s.title || s.type) : '');
+    root.innerHTML = `
+      <div class="top"><span class="n">${at + 1} / ${SCENES.length}</span><span class="act">${esc(acts[at] || '')}</span><span class="clock" id="pv-clock">00:00</span></div>
+      <div class="main">
+        <section class="now"><div class="k">NOW</div><h1>${name(sc)}</h1><pre>${esc(notes[at] || '')}</pre></section>
+        <section class="next"><div class="k">NEXT</div><h2>${nx ? name(nx) : 'End of the talk'}</h2><pre>${esc(nx ? notes[at + 1] || '' : '')}</pre>
+          <ol start="${at + 3}">${SCENES.slice(at + 2, at + 8).map(s => `<li>${name(s)}</li>`).join('')}</ol></section>
+      </div>
+      <div class="foot"><button id="pv-prev">← back</button><button id="pv-next">next →</button>
+        <span>Keys here drive the wall: → ← space, 1–9, R replay, B black. ${window.opener ? '' : 'Open this window with P from the talk itself, or the keys will have nothing to drive.'}</span></div>`;
+    root.querySelector('#pv-prev').onclick = () => send('ArrowLeft');
+    root.querySelector('#pv-next').onclick = () => send('ArrowRight');
+  }
+  render();
+  setInterval(() => {
+    const el = document.getElementById('pv-clock');
+    if (!el) return;
+    const s = t0 ? Math.floor((Date.now() - t0) / 1000) : 0;
+    el.textContent = `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+  }, 500);
+  addEventListener('message', e => {
+    const m = e.data;
+    if (!m || typeof m !== 'object' || m.sim !== 'state') return;
+    at = Math.max(0, Math.min(SCENES.length - 1, m.cur | 0));
+    if (!t0 && at > 0) t0 = Date.now();      // the clock starts on the first click
+    render();
+  });
+  addEventListener('keydown', e => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const k = e.key;
+    if (NEXT.includes(k) || PREV.includes(k) || k === 'Home' || k === 'End' || /^[0-9]$/.test(k) || /^[rRbB.]$/.test(k)) { send(k); e.preventDefault(); }
+  });
+  if (window.opener && !window.opener.closed) window.opener.postMessage({ sim: 'hello' }, '*');
+}
+canvas.addEventListener('click', e => {
+  if (!ready) return;
+  const r = canvas.getBoundingClientRect();
+  go(cur + (e.clientX - r.left < r.width * 0.3 ? -1 : 1));
+});
+$('#prev').onclick = () => ready && go(cur - 1);
+$('#next').onclick = () => ready && go(cur + 1);
+$('#replay').onclick = () => ready && replay();
+$('#full').onclick = toggleFullscreen;
+$('#keys').onclick = () => {
+  const h = $('#help');
+  h.hidden = !h.hidden;
+  $('#keys').setAttribute('aria-expanded', String(!h.hidden));
+};
+let idleTimer = 0;
+addEventListener('pointermove', () => {
+  document.body.classList.remove('idle'); clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => document.body.classList.add('idle'), 2500);
+});
+addEventListener('resize', resize);
+
+let last = 0;
+function frame(t) {
+  const dt = last ? Math.min(0.05, Math.max(0.001, (t - last) / 1000)) : 1 / 60;
+  last = t;
+  step(dt); draw();
+  requestAnimationFrame(frame);
+}
+
+if (/^#presenter$/.test(location.hash)) { presenterView(); return; }   // the second window: notes, no stage
+makeDots(); resize(); requestAnimationFrame(frame);
+// Wait (briefly) for the web font, so word shapes are measured in the right typeface.
+const fontsReady = document.fonts && document.fonts.load
+  ? Promise.all([document.fonts.load(`900 100px ${SETTINGS.boldFont}`), document.fonts.load(`600 40px ${SETTINGS.labelFont}`)]).catch(() => {})
+  : Promise.resolve();
+Promise.race([fontsReady, new Promise(r => setTimeout(r, 1500))]).then(() => {
+  ready = true;
+  const m = /^#(\d+)$/.exec(location.hash);
+  const i = m ? Math.min(SCENES.length, Math.max(1, +m[1])) - 1 : 0;
+  if (i > 0) snapTo(i); else go(0);
+});
+})();
+</script>
+</body>
+</html>
